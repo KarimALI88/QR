@@ -4,7 +4,7 @@ const PhoneAnimation = ({ children }) => {
         <div className="w-80 h-[550px] bg-white rounded-3xl shadow-lg border-8 border-black overflow-hidden relative">
           {/* Content Area */}
           <div className="flex flex-col items-center justify-start h-full p-4 bg-mainColor">
-            
+            {children}
           </div>
         </div>
       </div>
@@ -12,4 +12,3 @@ const PhoneAnimation = ({ children }) => {
   };
   
   export default PhoneAnimation;
-  
