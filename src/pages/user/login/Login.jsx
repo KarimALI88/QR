@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../../../assets/imgs/QR-LOGO2.PNG";
+// import logo from "../../../assets/imgs/QR-LOGO2.PNG";
 import { Input } from "@material-tailwind/react";
 import { BiLogoGmail } from "react-icons/bi";
 import { MdKey } from "react-icons/md";
