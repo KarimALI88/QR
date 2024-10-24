@@ -37,6 +37,7 @@ const Login = () => {
 
           {/* register */}
           <p>if you don't have an account <Link to={"/register"} className="text-mainColor underline text-lg">signup</Link></p>
+          
           {/* button submit */}
           <div className="w-[80%] md:w-[70%] lg:w-[60%] mx-auto my-5">
             <button className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-white hover:bg-secondColor">
@@ -44,16 +45,14 @@ const Login = () => {
             </button>
           </div>
 
-
-
         </div>
       </div>
       <div className="flex-1 h-[100vh]">
-        <img
+        {/* <img
           src="https://scontent.fcai21-3.fna.fbcdn.net/v/t39.30808-6/464195703_122093879780593961_5587514318428451731_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeFztKNupb9DbGjEIQIlDRlIolqylHxk7dGiWrKUfGTt0Xmjgef5LMLifdzb_HuyWeWMlLfS9qLAaaoUAVGWKIs0&_nc_ohc=qccAo4FMdakQ7kNvgEsyYjz&_nc_zt=23&_nc_ht=scontent.fcai21-3.fna&_nc_gid=AjBjlZQchP8LZLsHwSMt8v-&oh=00_AYBDeEunQxbgbW0DuZJtwNugjwSj8yCX-25MD5SyedoDTA&oe=671FF015"
           alt="login img"
           className="h-[100vh] object-cover object-right"
-        />
+        /> */}
       </div>
     </div>
   );
