@@ -9,7 +9,7 @@ const Login = () => {
   return (
     <div className="flex flex-col md:flex-row">
       <div className="flex-1  p-4 min-h-[100%] flex-col">
-        <img src={logo} alt="OFX QR CODE" className="w-52 lg:w-72" />
+        {/* <img src={logo} alt="OFX QR CODE" className="w-52 lg:w-72" /> */}
         <div className="text-center my-20 mx-auto">
           <h3 className="text-mainColor font-semibold text-3xl">
             Welcome to OFX Login
