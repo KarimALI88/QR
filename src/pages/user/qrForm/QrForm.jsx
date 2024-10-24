@@ -10,7 +10,7 @@ const QrForm = () => {
   return (
     <div>
         <MainNavbar />
-      <div className="p-10 shadow-sm m-10 bg-[#f5f5f5] flex flex-wrap gap-5 items-center">
+      <div className="p-10 shadow-sm m-10 bg-[#f5f5f5] flex flex-wrap gap-5 items-center justify-center">
         <QrGoal icon={<FaWhatsapp size={30} className="text-mainColor"/>} feature={"whatsapp"}/>
         <QrGoal icon={<FaFacebook size={30} className="text-mainColor"/>} feature={"facebook"}/>
         <QrGoal icon={<FaYoutube size={30} className="text-mainColor"/>} feature={"youtube"}/>
