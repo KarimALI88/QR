@@ -10,11 +10,11 @@ const Register = () => {
   return (
     <div className="flex flex-col md:flex-row">
       <div className="flex-1 h-[100vh]">
-        {/* <img
+        <img
           src="https://img.freepik.com/free-vector/qr-code-concept-illustration_114360-5853.jpg?t=st=1729773958~exp=1729777558~hmac=955d814eb03a45c1edf8d06e91fb100430faa59a2001a16bd473ba1b7d5a30f3&w=740"
           alt="login img"
           className="h-[100vh] object-cover object-right"
-        /> */}
+        />
       </div>
       {/* ------------------------------------------------------------------- */}
       <div className="flex-1  p-4 h-[100%] flex-col">
