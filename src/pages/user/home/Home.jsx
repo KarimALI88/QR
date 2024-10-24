@@ -9,7 +9,7 @@ const Home = () => {
       <MainNavbar />
       <Header />
       <div className="my-10 mx-auto">
-        <h3 className="text-5xl font-black text-center py-3 underline text-mainColor">PACKAGES</h3>
+        <h3 className="text-5xl w-fit mx-auto font-black text-center p-4 rounded-tl-3xl rounded-br-3xl border-4 border-mainColor text-mainColor">PACKAGES</h3>
         <div className="my-10 px-10 flex justify-center items-center flex-wrap ">
           <PackageCard
             title="Web Hosting Deluxe"
