@@ -60,7 +60,7 @@ const Register = () => {
           {/* button submit */}
           <div className="w-[80%] md:w-[70%] lg:w-[60%] mx-auto my-5">
             <button className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-white hover:bg-secondColor">
-              Login
+              Register
             </button>
           </div>
         </div>

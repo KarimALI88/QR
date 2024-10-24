@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom'
 import Home from './user/home/Home'
 import Login from './user/login/Login'
 import Register from './user/register/Register'
+import QrForm from './user/qrForm/QrForm'
 
 const UserLayout = () => {
   return (
@@ -10,6 +11,8 @@ const UserLayout = () => {
         <Route path='' element={<Home />}/>
         <Route path='/login' element={<Login />}/>
         <Route path='/register' element={<Register />}/>
+        <Route path='/generate-qr' element={<QrForm />}/>
+
     </Routes>
   )
 }
