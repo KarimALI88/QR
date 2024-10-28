@@ -1,12 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 // import logo from "./../../../assets/imgs/QR-LOGO2.png";
 import { Input } from "@material-tailwind/react";
 import { BiLogoGmail } from "react-icons/bi";
 import { MdKey } from "react-icons/md";
 import { IoPhonePortrait } from "react-icons/io5";
 import { Link } from "react-router-dom";
+import axios from "axios";
+// ${import.meta.env.VITE_LINK_API}
 
 const Register = () => {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [phone, setPhone] = useState("")
+
+
+  const userRegister = async () => {
+    try {
+      const response = await axios.post(`https://backend.ofx-qrcode.com/api/signup`, {
+        email,
+        password,
+        phone
+      })
+      console.log("logged in", response)
+    } catch (error) {
+      console.error("error", error)
+    }
+  }
+
   return (
     <div className="flex flex-col md:flex-row">
       <div className="flex-1 h-[100vh]">
@@ -28,6 +48,8 @@ const Register = () => {
           <div className="w-[80%] md:w-[70%] lg:w-[60%] mx-auto my-10">
             <Input
               label="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="e.g., your-email@gmail.com"
               className="w-full flex items-center h-[50px] appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
               icon={<BiLogoGmail size={25} />}
@@ -39,6 +61,8 @@ const Register = () => {
             <Input
               label="phone"
               placeholder="01061472185"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
               className="w-full flex items-center h-[50px] appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
               icon={<IoPhonePortrait size={25} />}
             />
@@ -49,6 +73,8 @@ const Register = () => {
             <Input
               label="password"
               placeholder="**********************"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full flex items-center h-[50px] appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
               icon={<MdKey size={25} />}
             />
@@ -59,7 +85,7 @@ const Register = () => {
 
           {/* button submit */}
           <div className="w-[80%] md:w-[70%] lg:w-[60%] mx-auto my-5">
-            <button className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-white hover:bg-secondColor">
+            <button onClick={userRegister} className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-white hover:bg-secondColor">
               Register
             </button>
           </div>
