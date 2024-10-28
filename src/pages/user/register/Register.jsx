@@ -16,16 +16,29 @@ const Register = () => {
 
   const userRegister = async () => {
     try {
-      const response = await axios.post(`https://backend.ofx-qrcode.com/api/signup`, {
-        email,
-        password,
-        phone
-      })
-      console.log("logged in", response)
+      const response = await fetch(`https://backend.ofx-qrcode.com/api/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          phone
+        })
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      console.log("logged in", data);
     } catch (error) {
-      console.error("error", error)
+      console.error("error", error);
     }
   }
+  
 
   return (
     <div className="flex flex-col md:flex-row">
