@@ -5,6 +5,7 @@ import Login from './user/login/Login'
 import Register from './user/register/Register'
 import QrForm from './user/qrForm/QrForm'
 import PackageOneTwo from './user/qrBigPackages/PackageOneTwo'
+import Profile from './user/profile/Profile'
 
 const UserLayout = () => {
   return (
@@ -14,6 +15,7 @@ const UserLayout = () => {
         <Route path='/register' element={<Register />}/>
         <Route path='/generate-qr' element={<QrForm />}/>
         <Route path='/qr' element={<PackageOneTwo />}/>
+        <Route path='/profile' element={<Profile />}/>
     </Routes>
   )
 }

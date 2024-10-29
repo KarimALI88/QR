@@ -130,11 +130,13 @@ const PackageOneTwo = () => {
         "application/pdf": [".pdf"], // Accepts PDF files
       },
     });
+
+
   return (
     <div>
       <MainNavbar />
       <div className="p-10">
-        <div className="flex flex-col md:flex-row h-screen space-y-5 md:space-y-0 md:space-x-5 flex-wrap">
+        <div className="flex flex-col md:flex-row h-screen space-y-5 md:space-y-0 md:space-x-5 flex-wrap items-center">
           <div className="flex-1 my-10">
             <h1 className="text-mainColor text-2xl font-black flex gap-4 items-center flex-wrap">
               <span className="text-white flex justify-center items-center w-10 h-10 text-center rounded-full bg-mainColor">
@@ -243,7 +245,7 @@ const PackageOneTwo = () => {
                   Company Description
                 </Typography>
                 <Input
-                  maxLength={16}
+                  maxLength={50}
                   placeholder="OFX marketing agency"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
@@ -433,7 +435,7 @@ const PackageOneTwo = () => {
                     Facebook Link
                   </Typography>
                   <Input
-                    maxLength={16}
+                    
                     placeholder="facebook.com"
                     value={facebookLink}
                     onChange={(e) => setFacebookLink(e.target.value)}
@@ -453,7 +455,7 @@ const PackageOneTwo = () => {
                     Instgram Link
                   </Typography>
                   <Input
-                    maxLength={16}
+                    
                     placeholder="instgram.com"
                     value={instgramLink}
                     onChange={(e) => setInstgramLink(e.target.value)}
@@ -473,7 +475,7 @@ const PackageOneTwo = () => {
                     Linkedin
                   </Typography>
                   <Input
-                    maxLength={16}
+                    
                     placeholder="Linkedin"
                     value={linkedinLink}
                     onChange={(e) => setLinkedinLink(e.target.value)}
@@ -493,7 +495,7 @@ const PackageOneTwo = () => {
                     Youtube Link
                   </Typography>
                   <Input
-                    maxLength={16}
+                    
                     placeholder="01100942108"
                     value={youtubeLink}
                     onChange={(e) => setYoutubeLink(e.target.value)}
@@ -513,7 +515,7 @@ const PackageOneTwo = () => {
                     Whatsapp Number
                   </Typography>
                   <Input
-                    maxLength={16}
+                    
                     placeholder="01100942108"
                     value={whatsappLink}
                     onChange={(e) => setWhatsappLink(e.target.value)}
@@ -533,7 +535,7 @@ const PackageOneTwo = () => {
                     Behance Link
                   </Typography>
                   <Input
-                    maxLength={16}
+                    
                     placeholder="01100942108"
                     value={beLink}
                     onChange={(e) => setBeLink(e.target.value)}
@@ -554,6 +556,13 @@ const PackageOneTwo = () => {
               phone1={phone1}
               phone2={phone2}
               mp3={mp3}
+              pdf={pdf}
+              facebook={facebookLink}
+              instgram={instgramLink}
+              behance={beLink}
+              linkedin={linkedinLink}
+              whatsapp={whatsappLink}
+              youtube={youtubeLink}
             />
           </div>
         </div>
