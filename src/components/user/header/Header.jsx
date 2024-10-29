@@ -10,7 +10,7 @@ const Header = () => {
           Generate your Profile and Website by Create Your Own{" "}
           <span className="text-mainColor">OFX QR Code</span>
         </h1>
-        <Link to="/generate-qr" className="bg-mainColor px-5 py-5 font-semibold text-white hover:bg-secondColor">
+        <Link to="/qr" className="bg-mainColor px-5 py-5 font-semibold text-white hover:bg-secondColor">
           Generate QR Code
         </Link>
       </div>
