@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import MainNavbar from "../../../components/user/navbar/MainNavbar";
 import { Input, Typography } from "@material-tailwind/react";
 import PhoneAnimation from "../../../components/user/phone/PhoneAnimation";
@@ -12,36 +12,72 @@ import {
   FaLinkedin,
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import { Spinner } from "@material-tailwind/react";
+import axios from "axios";
+import { Select, Option } from "@material-tailwind/react";
+import { Dialog } from "@material-tailwind/react";
 
 const PackageOneTwo = () => {
+  const [image, setImage] = useState("");
+  const [openModal, setOpenModal] = useState(false);
   const [coverImage, setCoverImage] = useState(null);
+  const [coverImageFile, setCoverImageFile] = useState(null);
   const [logoImage, setLogoImage] = useState(null);
+  const [logoImageFile, setLogoImageFile] = useState(null);
   const [mp3, setMp3] = useState(null);
+  const [mp3File, setMp3File] = useState(null);
   const [centerImage, setCenterImage] = useState(null);
   const [pdf, setPDF] = useState(null);
+  const [pdfFile, setPdfFile] = useState(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [phone1, setPhone1] = useState("");
   const [phone2, setPhone2] = useState("");
   const [activeInputs, setActiveInputs] = useState({
     facebook: true,
-    instgram: true,
-    linkedin: true,
-    youtube: true,
-    be: true,
-    whatsapp: true,
+    instgram: false,
+    linkedin: false,
+    youtube: false,
+    be: false,
+    whatsapp: false,
   });
+  const [token, setToken] = useState("");
   const [facebookLink, setFacebookLink] = useState("");
   const [instgramLink, setInstgramLink] = useState("");
   const [linkedinLink, setLinkedinLink] = useState("");
   const [youtubeLink, setYoutubeLink] = useState("");
   const [whatsappLink, setWhatsappLink] = useState("");
   const [beLink, setBeLink] = useState("");
-  const [color, setColor] = useState("#053B5C")
-  
+  const [color, setColor] = useState("#053B5C");
+  const [loading, setLoading] = useState(false);
+  const [selectedFont, setSelectedFont] = useState("Roboto");
+  const fonts = [
+    { name: "Roboto", style: "Roboto, sans-serif" },
+    { name: "Noto Sans", style: "Noto Sans, sans-serif" },
+    { name: "Lalezar", style: "Lalezar, cursive" },
+    { name: "Cairo", style: "Cairo, sans-serif" },
+    { name: "Amiri", style: "Amiri, serif" },
+    { name: "Tajawal", style: "Tajawal, sans-serif" },
+    { name: "Changa", style: "Changa, sans-serif" },
+    { name: "El Messiri", style: "El Messiri, sans-serif" },
+    { name: "Almarai", style: "Almarai, sans-serif" },
+    { name: "IBM Plex Sans", style: "IBM Plex Sans, sans-serif" },
+  ];
+
+  const handleOpen = () => setOpenModal(!openModal);
+
+  useEffect(() => {
+    const tn = localStorage.getItem("tn");
+    setToken(tn);
+  }, []);
+
+  console.log("cover image", coverImageFile);
+  console.log("logo image", logoImageFile);
+
   // Handle drop for cover image
   const onDropCover = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
+    setCoverImageFile(file);
     const reader = new FileReader();
     reader.onloadend = () => {
       setCoverImage(reader.result);
@@ -54,6 +90,7 @@ const PackageOneTwo = () => {
   // Handle drop for pdf
   const onDropPDF = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
+    setPdfFile(file);
     const reader = new FileReader();
     reader.onloadend = () => {
       setPDF(reader.result);
@@ -66,6 +103,7 @@ const PackageOneTwo = () => {
   // Handle drop for logo image
   const onDropLogo = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
+    setLogoImageFile(file);
     const reader = new FileReader();
     reader.onloadend = () => {
       setLogoImage(reader.result);
@@ -90,6 +128,7 @@ const PackageOneTwo = () => {
   // Handle drop for MP3
   const onDropMP3 = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
+    setMp3File(file);
     const reader = new FileReader();
     reader.onloadend = () => {
       setMp3(reader.result);
@@ -131,7 +170,52 @@ const PackageOneTwo = () => {
       },
     });
 
+  const getQr = async () => {
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("cover", coverImageFile);
+      formData.append("logo", logoImageFile);
+      formData.append("mp3", mp3File);
+      formData.append("pdf", pdfFile);
+      formData.append("title", name);
+      formData.append("description", description);
+      formData.append("color", color);
+      formData.append("font", selectedFont);
+      formData.append("phones[]", "01061476538");
+      formData.append("phones[]", "01061479563");
+      formData.append("package_id", "2");
 
+      const response = await axios.post(
+        "https://backend.ofx-qrcode.com/api/qrcode/smart",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("response qr", response);
+      setLoading(false);
+      setOpenModal(true);
+      setImage(`https://backend.ofx-qrcode.com/storage/${response.data.qr_code}`);
+    } catch (error) {
+      console.log("error", error);
+      setLoading(false);
+    }
+  };
+
+
+  const downloadImage = (imageSrc) => {
+    const link = document.createElement("a");
+    link.href = imageSrc;
+    link.download = "qr-code.png"; // Set the default filename here
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
   return (
     <div>
       <MainNavbar />
@@ -146,7 +230,6 @@ const PackageOneTwo = () => {
             </h1>
             <br />
             <div className="flex flex-wrap gap-5">
-
               {/* color  */}
               <div className="w-[300px]  ">
                 <Typography
@@ -183,7 +266,7 @@ const PackageOneTwo = () => {
                     <img
                       src={coverImage}
                       alt="Cover Preview"
-                      className="w-full h-[100px] mt-4 rounded-lg"
+                      className="w-[100px] h-[100px] mt-4 rounded-lg"
                     />
                   ) : (
                     <p>Drag & drop an image here, or click to select one</p>
@@ -209,7 +292,7 @@ const PackageOneTwo = () => {
                     <img
                       src={logoImage}
                       alt="logo Preview"
-                      className="w-full h-[100px] mt-4 rounded-lg"
+                      className="w-[100px] h-[100px] mt-4 rounded-lg"
                     />
                   ) : (
                     <p>Drag & drop an image here, or click to select one</p>
@@ -337,6 +420,29 @@ const PackageOneTwo = () => {
                 </div>
               </div>
 
+              {/* font */}
+              <div className="w-[300px]">
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="mb-1 mt-10 font-semibold text-lg"
+                >
+                  Choose Font
+                </Typography>
+                <Select
+                  id="font-select"
+                  label="Select Font"
+                  onChange={(val) => setSelectedFont(val)}
+                  value={selectedFont}
+                  className="h-[60px]"
+                >
+                  {fonts.map((font) => (
+                    <Option key={font.name} value={font.style}>
+                      {font.name}
+                    </Option>
+                  ))}
+                </Select>
+              </div>
             </div>
 
             <div>
@@ -435,7 +541,6 @@ const PackageOneTwo = () => {
                     Facebook Link
                   </Typography>
                   <Input
-                    
                     placeholder="facebook.com"
                     value={facebookLink}
                     onChange={(e) => setFacebookLink(e.target.value)}
@@ -455,7 +560,6 @@ const PackageOneTwo = () => {
                     Instgram Link
                   </Typography>
                   <Input
-                    
                     placeholder="instgram.com"
                     value={instgramLink}
                     onChange={(e) => setInstgramLink(e.target.value)}
@@ -475,7 +579,6 @@ const PackageOneTwo = () => {
                     Linkedin
                   </Typography>
                   <Input
-                    
                     placeholder="Linkedin"
                     value={linkedinLink}
                     onChange={(e) => setLinkedinLink(e.target.value)}
@@ -495,7 +598,6 @@ const PackageOneTwo = () => {
                     Youtube Link
                   </Typography>
                   <Input
-                    
                     placeholder="01100942108"
                     value={youtubeLink}
                     onChange={(e) => setYoutubeLink(e.target.value)}
@@ -515,7 +617,6 @@ const PackageOneTwo = () => {
                     Whatsapp Number
                   </Typography>
                   <Input
-                    
                     placeholder="01100942108"
                     value={whatsappLink}
                     onChange={(e) => setWhatsappLink(e.target.value)}
@@ -535,7 +636,6 @@ const PackageOneTwo = () => {
                     Behance Link
                   </Typography>
                   <Input
-                    
                     placeholder="01100942108"
                     value={beLink}
                     onChange={(e) => setBeLink(e.target.value)}
@@ -544,6 +644,30 @@ const PackageOneTwo = () => {
                 </div>
               )}
             </div>
+
+            {/* submit */}
+            <div className="my-5 w-48">
+              <button
+                onClick={getQr}
+                className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-5 hover:bg-secondColor"
+              >
+                {loading ? <Spinner className="mx-auto" /> : "Submit"}
+              </button>
+            </div>
+
+            <Dialog
+              open={openModal}
+              handler={handleOpen}
+              className="p-10 text-center"
+            >
+              <img src={image} alt="qr" className="block mx-auto my-10" />
+              <button
+                onClick={() => downloadImage(image)}
+                className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor w-full"
+              >
+                Download
+              </button>
+            </Dialog>
           </div>
           {/* ======================================== */}
           <div className="flex-1 shadow-none w-[200px]">
@@ -563,6 +687,7 @@ const PackageOneTwo = () => {
               linkedin={linkedinLink}
               whatsapp={whatsappLink}
               youtube={youtubeLink}
+              selectedFont={selectedFont}
             />
           </div>
         </div>

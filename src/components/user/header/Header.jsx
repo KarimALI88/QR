@@ -1,6 +1,6 @@
 import React from "react";
-import PhoneAnimation from "../phone/PhoneAnimation";
 import { Link } from "react-router-dom";
+import HomeVideo from "../homeVideo/HomeVideo";
 
 const Header = () => {
   return (
@@ -15,7 +15,7 @@ const Header = () => {
         </Link>
       </div>
       <div className="flex-1">
-        <PhoneAnimation />
+        <HomeVideo />
       </div>
     </div>
   );

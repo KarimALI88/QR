@@ -24,6 +24,7 @@ const PhoneAnimation = ({
   whatsapp,
   youtube,
   behance,
+  selectedFont
 }) => {
   // console.log(color)
   return (
@@ -32,7 +33,7 @@ const PhoneAnimation = ({
         {/* Content Area */}
         <div
           className={`flex flex-col items-center justify-start h-full overflow-auto`}
-          style={{ backgroundColor: color }}
+          style={{ backgroundColor: color, fontFamily: selectedFont }}
         >
           <div className="w-[100%] h-[200px] relative mb-14">
             <img src={image} alt="" className="h-[100%] w-[100%]" />
