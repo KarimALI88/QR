@@ -1,12 +1,13 @@
 import React from 'react';
 
-const PackageCard = ({ title, price, savings, features, freeFeature }) => {
+const PackageCard = ({ title, price, savings, features, description }) => {
   return (
     <div className="bg-white shadow-sm rounded-lg overflow-hidden max-w-[300px] mx-auto my-3 border-mainColor border-solid border-2">
       <div className="px-6 py-8">
-        <div className="flex flex-col justify-between gap-4 items-center">
+        <div className="flex flex-col justify-between gap-4">
           <h2 className="text-2xl font-bold text-mainColor">{title}</h2>
-          <p className="text-4xl font-bold text-gray-500">{price}</p>
+          <p className="text-xl font-semibold text-gray-400">{description}</p>
+          <p className="text-3xl font-bold text-gray-500">{price}</p>
         </div>
         <p className="text-gray-500 mt-2">
           <span className="text-green-500 font-bold">{savings}</span> SAVE
@@ -29,12 +30,10 @@ const PackageCard = ({ title, price, savings, features, freeFeature }) => {
             </li>
           ))}
         </ul>
-        <p className="text-gray-500 mt-8">
-          <span className="text-secondColor font-bold">{freeFeature}</span>
-        </p>
+        
       </div>
       <div className="bg-gray-100 px-6 py-4">
-        <button className="w-full bg-mainColor hover:bg-blue-600 text-white font-bold py-3 px-6 rounded">
+        <button className="w-full bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded">
           Buy Now
         </button>
       </div>

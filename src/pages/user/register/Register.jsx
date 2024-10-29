@@ -1,44 +1,61 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import logo from "./../../../assets/imgs/QR-LOGO2.png";
 import { Input } from "@material-tailwind/react";
 import { BiLogoGmail } from "react-icons/bi";
 import { MdKey } from "react-icons/md";
 import { IoPhonePortrait } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 // ${import.meta.env.VITE_LINK_API}
+import { toast } from "react-toastify";
+import { Spinner } from "@material-tailwind/react";
 
 const Register = () => {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [phone, setPhone] = useState("")
-
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const userRegister = async () => {
+    setLoading(true);
     try {
-      const response = await fetch(`https://backend.ofx-qrcode.com/api/signup`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
+      const response = await axios({
+        method: "post",
+        url: `https://backend.ofx-qrcode.com/api/signup`,
+        data: {
           email,
           password,
-          phone
-        })
+          phone,
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
-  
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
-  
-      const data = await response.json();
-      console.log("logged in", data);
+      console.log("response", response);
+      toast.success("registered successfully");
+      setLoading(false);
+      navigate("/login");
     } catch (error) {
-      console.error("error", error);
+      // console.log("error", error.message);
+      setLoading(false);
+      if (error.response && error.response.data && error.response.data.errors) {
+        const emailError = error.response.data.errors.email
+          ? error.response.data.errors.email[0]
+          : "";
+        const phoneError = error.response.data.errors.phone
+          ? error.response.data.errors.phone[0]
+          : "";
+        const passwordError = error.response.data.errors.password
+          ? error.response.data.errors.password[0]
+          : "";
+
+        toast.error(`Errors: ${emailError} ${phoneError} ${passwordError}`);
+      } else {
+        toast.error("An unexpected error occurred");
+      }
     }
-  }
-  
+  };
 
   return (
     <div className="flex flex-col md:flex-row">
@@ -94,12 +111,20 @@ const Register = () => {
           </div>
 
           {/* register */}
-          <p>already have an account <Link to={"/login"} className="text-mainColor underline text-lg">login</Link></p>
+          <p>
+            already have an account{" "}
+            <Link to={"/login"} className="text-mainColor underline text-lg">
+              login
+            </Link>
+          </p>
 
           {/* button submit */}
           <div className="w-[80%] md:w-[70%] lg:w-[60%] mx-auto my-5">
-            <button onClick={userRegister} className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-white hover:bg-secondColor">
-              Register
+            <button
+              onClick={userRegister}
+              className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white hover:bg-secondColor"
+            >
+              {loading ? <Spinner className="mx-auto" /> : "Register"}
             </button>
           </div>
         </div>

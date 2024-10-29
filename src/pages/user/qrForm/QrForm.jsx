@@ -78,13 +78,13 @@ const QrForm = () => {
         <button onClick={() => setFeature("email")}>
           <QrGoal
             icon={<SiGmail size={30}  />}
-            feature={"Email"}
-            selected={feature === "Email" ? true : false}
+            feature={"email"}
+            selected={feature === "email" ? true : false}
           />
         </button>
       </div>
       {/* =============================================================================== */}
-      <div className="py-5 px-10">
+      <div className="py-5 px-10 max-w-[80%]">
         {feature === "whatsapp" && <WhatsappForm />}
         {feature === "facebook" && <FaceForm />}
         {feature === "youtube" && <YoutubeForm />}

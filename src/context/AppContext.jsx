@@ -1,15 +1,20 @@
-import React, {createContext, useState} from 'react'
+import React, { createContext, useState, useEffect } from "react";
 
-export const AppContext = createContext()
+export const AppContext = createContext();
 
 const ContextProvider = (props) => {
-    const [mode,setMode] = useState("light")
-    return (
-        <AppContext.Provider value={{mode, setMode}}>
-            {props.children}
-        </AppContext.Provider>
-    )
-}
+  const [token, setToken] = useState("");
 
+  useEffect(() => {
+    const tn = localStorage.getItem("tn");
+    tn ? setToken(tn) : setToken("");
+  }, []);
 
-export default ContextProvider
+  return (
+    <AppContext.Provider value={{ token, setToken }}>
+      {props.children}
+    </AppContext.Provider>
+  );
+};
+
+export default ContextProvider;
