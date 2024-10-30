@@ -3,7 +3,7 @@ import phoneanimation from "../../../assets/imgs/phoneanimation.gif";
 
 const HomeVideo = () => {
   return (
-    <div className="w-[300px] h-[500px]">
+    <div className="w-[320px] h-[550px] my-5">
       <img src={phoneanimation} alt="animation" className="w-[100%] h-[100%]" />
     </div>
   );

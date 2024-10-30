@@ -81,7 +81,7 @@ const Register = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="e.g., your-email@gmail.com"
-              className="w-full flex items-center h-[50px] appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
+              className="w-full flex items-center h-[65px]  appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
               icon={<BiLogoGmail size={25} />}
             />
           </div>
@@ -93,7 +93,7 @@ const Register = () => {
               placeholder="01061472185"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full flex items-center h-[50px] appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
+              className="w-full flex items-center h-[65px] appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
               icon={<IoPhonePortrait size={25} />}
             />
           </div>
@@ -105,18 +105,18 @@ const Register = () => {
               placeholder="**********************"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full flex items-center h-[50px] appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
+              className="w-full flex items-center h-[65px] appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
               icon={<MdKey size={25} />}
             />
           </div>
 
           {/* register */}
-          <p>
+          <h5 className="mt-11 block">
             already have an account{" "}
             <Link to={"/login"} className="text-mainColor underline text-lg">
               login
             </Link>
-          </p>
+          </h5>
 
           {/* button submit */}
           <div className="w-[80%] md:w-[70%] lg:w-[60%] mx-auto my-5">
