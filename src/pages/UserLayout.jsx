@@ -15,7 +15,7 @@ const UserLayout = () => {
         <Route path='/register' element={<Register />}/>
         <Route path='/generate-qr' element={<QrForm />}/>
         <Route path='/qr' element={<PackageOneTwo />}/>
-        <Route path='/profile' element={<Profile />}/>
+        <Route path='/qr/:id' element={<Profile />}/>
     </Routes>
   )
 }
