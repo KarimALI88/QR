@@ -51,6 +51,9 @@ const PackageOneTwo = () => {
   const [color, setColor] = useState("#053B5C");
   const [loading, setLoading] = useState(false);
   const [selectedFont, setSelectedFont] = useState("Roboto");
+  const [branches, setBranches] = useState([
+    { name: "", location: "", number: "" }, // Initial branch
+  ]);
   const fonts = [
     { name: "Roboto", style: "Roboto, sans-serif" },
     { name: "Noto Sans", style: "Noto Sans, sans-serif" },
@@ -65,6 +68,14 @@ const PackageOneTwo = () => {
   ];
 
   const handleOpen = () => setOpenModal(!openModal);
+  const addBranch = () => {
+    setBranches([...branches, { name: "", location: "", number: "" }]);
+  };
+  const handleInputChange = (index, field, value) => {
+    const updatedBranches = [...branches];
+    updatedBranches[index][field] = value;
+    setBranches(updatedBranches);
+  };
 
   useEffect(() => {
     const tn = localStorage.getItem("tn");
@@ -200,13 +211,14 @@ const PackageOneTwo = () => {
       console.log("response qr", response);
       setLoading(false);
       setOpenModal(true);
-      setImage(`https://backend.ofx-qrcode.com/storage/${response.data.qr_code}`);
+      setImage(
+        `https://backend.ofx-qrcode.com/storage/${response.data.qr_code}`
+      );
     } catch (error) {
       console.log("error", error);
       setLoading(false);
     }
   };
-
 
   const downloadImage = (imageSrc) => {
     const link = document.createElement("a");
@@ -645,6 +657,87 @@ const PackageOneTwo = () => {
               )}
             </div>
 
+            {/* branches */}
+            <div>
+              <div>
+                <h1 className="text-mainColor text-2xl font-black flex gap-4 items-center flex-wrap my-10">
+                  <span className="text-white flex justify-center items-center w-10 h-10 text-center rounded-full bg-mainColor">
+                    3
+                  </span>{" "}
+                  Branches
+                </h1>
+                <div>
+                  {branches.map((branch, index) => (
+                    <div key={index} className="flex flex-wrap gap-5">
+                      {/* Branch Name */}
+                      <div className="w-[300px]">
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="mb-1 mt-10 font-semibold text-lg"
+                        >
+                          Branch Name
+                        </Typography>
+                        <Input
+                          placeholder="New Cairo"
+                          value={branch.name}
+                          onChange={(e) =>
+                            handleInputChange(index, "name", e.target.value)
+                          }
+                          className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900"
+                        />
+                      </div>
+                      {/* Branch Location */}
+                      <div className="w-[300px]">
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="mb-1 mt-10 font-semibold text-lg"
+                        >
+                          Branch Location
+                        </Typography>
+                        <Input
+                          placeholder="location link from GPS"
+                          value={branch.location}
+                          onChange={(e) =>
+                            handleInputChange(index, "location", e.target.value)
+                          }
+                          className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900"
+                        />
+                      </div>
+                      {/* Branch Number */}
+                      <div className="w-[300px]">
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="mb-1 mt-10 font-semibold text-lg"
+                        >
+                          Branch Number
+                        </Typography>
+                        <Input
+                          placeholder="Branch Number"
+                          value={branch.number}
+                          onChange={(e) =>
+                            handleInputChange(index, "number", e.target.value)
+                          }
+                          className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                  {/* Add Branch Button */}
+                  <div className="my-10">
+                    <button
+                      onClick={addBranch}
+                      className="text-2xl font-normal text-black px-3 py-1 bg-gray-400 text-center block"
+                    >
+                      Add Branch +
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* submit */}
             <div className="my-5 w-48">
               <button
@@ -688,6 +781,7 @@ const PackageOneTwo = () => {
               whatsapp={whatsappLink}
               youtube={youtubeLink}
               selectedFont={selectedFont}
+              branches={branches}
             />
           </div>
         </div>

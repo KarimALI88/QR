@@ -125,7 +125,8 @@ const MainNavbar = () => {
                       }`}
                     >
                       <Typography
-                        as="span"
+                        as={Link}
+                        to="/admin/my-qrs"
                         variant="small"
                         className="font-normal"
                         color={isLastItem ? "red" : "inherit"}

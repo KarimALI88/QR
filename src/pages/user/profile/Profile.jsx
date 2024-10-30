@@ -8,9 +8,23 @@ import {
   FaLinkedin,
 } from "react-icons/fa";
 import mp3 from "../../../assets/imgs/الاخلاص.mp3";
+import { FaLocationDot } from "react-icons/fa6";
 import { FaPhoneAlt } from "react-icons/fa";
+import {
+  Collapse,
+  Button,
+  Card,
+  Typography,
+  CardBody,
+} from "@material-tailwind/react";
+import { useState } from "react";
 
 const Profile = () => {
+  const [open, setOpen] = useState(false);
+  const toggleOpen = () => setOpen((cur) => !cur);
+
+
+  
   return (
     <div
       className="flex flex-col items-center justify-start h-full overflow-auto"
@@ -22,7 +36,7 @@ const Profile = () => {
             "https://scontent.fcai21-3.fna.fbcdn.net/v/t39.30808-6/464195703_122093879780593961_5587514318428451731_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeFztKNupb9DbGjEIQIlDRlIolqylHxk7dGiWrKUfGTt0Xmjgef5LMLifdzb_HuyWeWMlLfS9qLAaaoUAVGWKIs0&_nc_ohc=1mgNl8G7qtAQ7kNvgGT5Ewv&_nc_zt=23&_nc_ht=scontent.fcai21-3.fna&_nc_gid=AdkBxlX4zVPeqmrmMBeOhY9&oh=00_AYB0nbsktabMzcPU2q0pOJ2McC5w4SeDJ3zoN-jxb9m_wQ&oe=67268795"
           }
           alt=""
-          className="h-[100%] w-[100%]"
+          className="h-[100%] w-[100%] object-cover"
         />
         <div className="absolute top-[95%] left-[50%] transform -translate-x-1/2 -translate-y-1/2">
           <img
@@ -46,7 +60,7 @@ const Profile = () => {
           </p>
         </div>
         <div className="flex gap-5 items-center justify-center">
-          <FaPhoneAlt size={40} color="white"/>
+          <FaPhoneAlt size={40} color="white" />
           <h3 className="text-white text-3xl font-semibold my-5 text-center">
             0161472185 - 0110942108
           </h3>
@@ -62,6 +76,30 @@ const Profile = () => {
           <FaBehance size={60} className="text-white text-3xl" />
           <FaLinkedin size={60} className="text-white text-3xl" />
           <FaYoutube size={60} className="text-white text-3xl" />
+        </div>
+        <div className="my-5 mx-auto">
+          <h4 className="text-white text-center text-3xl font-black">
+            Branches
+          </h4>
+          <div className="mx-auto">
+            <Button onClick={toggleOpen} className="w-8/12 py-4 text-xl mt-5 mx-auto block">
+              Branche MiddleTown
+            </Button>
+            <Collapse open={open}>
+              <Card className="my-4 mx-auto w-8/12 p-4">
+                <div className="flex justify-evenly">
+                  <div className="flex gap-2 items-center cursor-pointer">
+                    <FaLocationDot size={30} color="#053B5C"/>
+                    <button className="text-[#053B5C] text-lg font-semibold">Location</button>
+                  </div>
+                  <div className="flex gap-2 items-center cursor-pointer">
+                    <FaPhoneAlt size={30} color="#053B5C"/>
+                    <button className="text-[#053B5C] text-lg font-semibold">01061472185</button>
+                  </div>
+                </div>
+              </Card>
+            </Collapse>
+          </div>
         </div>
       </div>
     </div>

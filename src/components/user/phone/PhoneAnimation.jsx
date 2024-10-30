@@ -7,7 +7,15 @@ import {
   FaWhatsappSquare,
   FaLinkedin,
 } from "react-icons/fa";
-
+import {
+  Collapse,
+  Button,
+  Card,
+  Typography,
+  CardBody,
+} from "@material-tailwind/react";
+import { FaLocationDot } from "react-icons/fa6";
+import { FaPhoneAlt } from "react-icons/fa";
 const PhoneAnimation = ({
   image,
   logo,
@@ -24,7 +32,8 @@ const PhoneAnimation = ({
   whatsapp,
   youtube,
   behance,
-  selectedFont
+  selectedFont,
+  branches
 }) => {
   // console.log(color)
   return (
@@ -47,10 +56,10 @@ const PhoneAnimation = ({
           </div>
           <div>
             <h1 className="text-center p-1 text-white text-xl font-bold uppercase">
-              {name}
+              {name ? name : "OFX"}
             </h1>
             <p className="mx-auto p-1 text-center text-gray-500 text-lg font-medium capitalize">
-              {description}
+              {description ? description : "marketing agency"}
             </p>
             <div>
               <h3 className="text-white text-lg font-semibold my-3 text-center">
@@ -103,6 +112,34 @@ const PhoneAnimation = ({
                 <FaYoutube size={40} className="text-white text-3xl" />
               )}
             </div>
+            {/* {branches.map((branch, index) => (
+              <div key={index}>
+                <Button
+                  // onClick={toggleOpen}
+                  className="w-full py-4 text-xl mt-5 mx-auto block"
+                >
+                  Branch {branch.name}
+                </Button>
+                <Collapse open={true}>
+                  <Card className="my-4 mx-auto w-full p-4">
+                    <div className="flex justify-start flex-wrap gap-3">
+                      <div className="flex gap-2 items-center cursor-pointer">
+                        <FaLocationDot size={30} color="#053B5C" />
+                        <button className="text-[#053B5C] text-lg font-semibold">
+                          Location
+                        </button>
+                      </div>
+                      <div className="flex gap-2 items-center cursor-pointer">
+                        <FaPhoneAlt size={30} color="#053B5C" />
+                        <button className="text-[#053B5C] text-lg font-semibold">
+                          {branch.number}
+                        </button>
+                      </div>
+                    </div>
+                  </Card>
+                </Collapse>
+              </div>
+            ))} */}
           </div>
         </div>
         {/* data */}

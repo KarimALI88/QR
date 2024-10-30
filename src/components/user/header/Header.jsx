@@ -14,7 +14,7 @@ const Header = () => {
           Generate QR Code
         </Link>
       </div>
-      <div className="flex-1">
+      <div className="flex-1 w-full h-full">
         <HomeVideo />
       </div>
     </div>
