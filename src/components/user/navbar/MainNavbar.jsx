@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Navbar,
   Collapse,
@@ -7,10 +7,33 @@ import {
   IconButton,
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
-import logo from '../../../assets/imgs/QR-LOGO2.png';
-
+import logo from "../../../assets/imgs/QR-LOGO2.png";
+import {
+  Menu,
+  MenuHandler,
+  MenuList,
+  MenuItem,
+  Avatar,
+  Card,
+} from "@material-tailwind/react";
 const MainNavbar = () => {
   const [openNav, setOpenNav] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    const tn = localStorage.tn;
+    tn ? setToken(tn) : "";
+  }, []);
+  const closeMenu = () => setIsMenuOpen(false);
+  const profileMenuItems = [
+    {
+      label: "My Dashboard",
+    },
+    {
+      label: "Sign Out",
+    },
+  ];
 
   React.useEffect(() => {
     window.addEventListener(
@@ -67,14 +90,65 @@ const MainNavbar = () => {
             <div className="hidden lg:block lg:ml-12">{navList}</div>
           </div>
           {/* Sign in Button */}
-          <div className="ml-auto hidden lg:block">
-            <Button
-              size="lg"
-              className="rounded-none bg-mainColor hover:bg-secondColor text-white font-[600]"
+          {token ? (
+            <Menu
+              open={isMenuOpen}
+              handler={setIsMenuOpen}
+              placement="bottom-end"
             >
-              <Link to="/login">Sign in</Link>
-            </Button>
-          </div>
+              <MenuHandler>
+                <Button
+                  variant="text"
+                  color="blue-gray"
+                  className="flex items-center justify-start gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto"
+                >
+                  <Avatar
+                    variant="circular"
+                    size="md"
+                    alt="tania andrew"
+                    className="border border-gray-900 p-0.5"
+                    src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
+                  />
+                </Button>
+              </MenuHandler>
+              <MenuList className="p-1">
+                {profileMenuItems.map(({ label }, key) => {
+                  const isLastItem = key === profileMenuItems.length - 1;
+                  return (
+                    <MenuItem
+                      key={label}
+                      onClick={closeMenu}
+                      className={`flex items-center gap-2 rounded ${
+                        isLastItem
+                          ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
+                          : ""
+                      }`}
+                    >
+                      <Typography
+                        as="span"
+                        variant="small"
+                        className="font-normal"
+                        color={isLastItem ? "red" : "inherit"}
+                      >
+                        {label}
+                      </Typography>
+                    </MenuItem>
+                  );
+                })}
+              </MenuList>
+            </Menu>
+          ) : (
+            <div className="ml-auto hidden lg:block">
+              <Button
+                size="lg"
+                className="rounded-none bg-mainColor hover:bg-secondColor text-white font-[600]"
+              >
+                <Link to="/login">Sign in</Link>
+              </Button>
+            </div>
+          )}
+          {/* profile button */}
+
           {/* Hamburger Icon */}
           <IconButton
             variant="text"

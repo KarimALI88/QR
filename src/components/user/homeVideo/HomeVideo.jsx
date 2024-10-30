@@ -1,10 +1,10 @@
 import React from 'react'
-import phone from '../../../assets/imgs/phoneanimation.gif'
+import phoneanimation from '../../../assets/imgs/phoneanimation.gif'
 
 const HomeVideo = () => {
   return (
-    <div className='w-[100%] flex justify-center items-center'>
-        <img src={phone}/>
+    <div>
+        <img src={phoneanimation} alt='animation' className="w-[300px] h-[500px]"/>
     </div>
   )
 }
