@@ -6,6 +6,7 @@ import {
   Button,
   IconButton,
 } from "@material-tailwind/react";
+import { FaChartSimple, FaPowerOff } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import logo from "../../../assets/imgs/QR-LOGO2.png";
 import {
@@ -26,14 +27,7 @@ const MainNavbar = () => {
     tn ? setToken(tn) : "";
   }, []);
   const closeMenu = () => setIsMenuOpen(false);
-  const profileMenuItems = [
-    {
-      label: "My Dashboard",
-    },
-    {
-      label: "Sign Out",
-    },
-  ];
+  
 
   React.useEffect(() => {
     window.addEventListener(
@@ -112,30 +106,33 @@ const MainNavbar = () => {
                 </Button>
               </MenuHandler>
               <MenuList className="p-1">
-                {profileMenuItems.map(({ label }, key) => {
-                  const isLastItem = key === profileMenuItems.length - 1;
-                  return (
-                    <MenuItem
-                      key={label}
-                      onClick={closeMenu}
-                      className={`flex items-center gap-2 rounded ${
-                        isLastItem
-                          ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
-                          : ""
-                      }`}
-                    >
-                      <Typography
-                        as={Link}
-                        to="/admin/my-qrs"
-                        variant="small"
-                        className="font-normal"
-                        color={isLastItem ? "red" : "inherit"}
-                      >
-                        {label}
-                      </Typography>
-                    </MenuItem>
-                  );
-                })}
+                <MenuItem
+                  onClick={closeMenu}
+                  className={`flex items-center gap-2 rounded`}
+                >
+                  <Typography
+                    as={Link}
+                    to="/admin/my-qrs"
+                    variant="small"
+                    className="font-normal flex items-center gap-2 text-lg"
+                  >
+                    <FaChartSimple /> dashboard
+                  </Typography>
+                </MenuItem>
+                <MenuItem
+                  onClick={closeMenu}
+                  className={`flex items-center gap-2 rounded`}
+                >
+                  <Typography
+                    as={Link}
+                    to="/admin/my-qrs"
+                    variant="small"
+                    className="font-normal flex items-center gap-2 text-lg"
+                    color="red"
+                  >
+                    <FaPowerOff /> Sign Out
+                  </Typography>
+                </MenuItem>
               </MenuList>
             </Menu>
           ) : (
