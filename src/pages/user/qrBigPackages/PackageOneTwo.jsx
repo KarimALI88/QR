@@ -232,7 +232,7 @@ const PackageOneTwo = () => {
     <div>
       <MainNavbar />
       <div className="p-10">
-        <div className="flex flex-col md:flex-row h-screen space-y-5 md:space-y-0 md:space-x-5 flex-wrap items-center">
+        <div className="flex flex-col md:flex-row h-screen space-y-5 md:space-y-0 md:space-x-5 flex-wrap">
           <div className="flex-1 my-10">
             <h1 className="text-mainColor text-2xl font-black flex gap-4 items-center flex-wrap">
               <span className="text-white flex justify-center items-center w-10 h-10 text-center rounded-full bg-mainColor">
@@ -464,7 +464,7 @@ const PackageOneTwo = () => {
                 </span>{" "}
                 Company Social Media
               </h1>
-              <div className="flex items-center gap-5">
+              <div className="flex items-center gap-5 flex-wrap">
                 <FaFacebook
                   size={40}
                   className={`cursor-pointer ${

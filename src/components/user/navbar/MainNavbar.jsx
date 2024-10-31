@@ -76,7 +76,7 @@ const MainNavbar = () => {
 
   return (
     <div className="max-h-[768px] max-w-full">
-      <Navbar className="sticky top-0 z-10 h-max py-5 max-w-full rounded-none shadow-none">
+      <Navbar className="sticky top-0 z-10 h-max py-5 max-w-full rounded-none shadow-sm">
         <div className="flex items-center justify-between w-full">
           {/* Logo and Navigation Links */}
           <div className="flex items-center">
@@ -161,7 +161,7 @@ const MainNavbar = () => {
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
-                className="h-6 w-6"
+                className="h-6 w-6 text-black"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 strokeWidth={2}
@@ -175,7 +175,7 @@ const MainNavbar = () => {
             ) : (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
+                className="h-6 w-6 text-black"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth={2}
