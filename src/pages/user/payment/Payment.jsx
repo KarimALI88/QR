@@ -47,6 +47,7 @@ const Payment = () => {
             </div>
           </div>
         )}
+        
         {/* vodafone section */}
         {activeSection === "vodafone" && (
           <div className="my-10 mx-auto w-[80%]">
