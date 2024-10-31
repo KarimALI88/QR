@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 
 const PackageCard = ({ title, price, savings, features, description }) => {
+  const navigate = useNavigate()
   return (
     <div className="bg-white shadow-sm rounded-lg overflow-hidden max-w-[300px] mx-auto my-3 border-mainColor border-solid border-2">
       <div className="px-6 py-8">
@@ -34,7 +36,7 @@ const PackageCard = ({ title, price, savings, features, description }) => {
         
       </div>
       <div className="bg-gray-100 px-6 py-4">
-        <button className="w-full bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded">
+        <button onClick={() => navigate("/payment")} className="w-full bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded">
           Buy Now
         </button>
       </div>
