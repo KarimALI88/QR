@@ -59,13 +59,25 @@ const Home = () => {
         <h3 className="text-5xl w-fit mx-auto font-black text-center p-4 rounded-tl-3xl rounded-br-3xl border-4 border-mainColor text-mainColor">
           THE GOAL
         </h3>
-        <p className="sm:w-[90%] md:w-[70%] leading-snug font-semibold text-xl my-5 mx-auto space-x-5 tracking-widest">
-          Take your QR codes to the next level! Customize the landing page they
-          link to. Tailor your page to showcase your brand’s personality,
-          identity, highlighting essential information, and connect with your
-          Clients. All in one seamless link, Just let you client choose his
-          preferred path toward you.
-        </p>
+        <div
+          className="flex flex-col items-center justify-center py-10 my-5"
+          style={{
+            background: "rgb(255,255,255)",
+            background:
+              "linear-gradient(152deg, rgba(255,255,255,1) 0%, rgba(5,59,92,1) 100%)",
+          }}
+        >
+          <img src="https://i.pinimg.com/originals/d4/8a/ea/d48aeae3ae7b221045128c4c0ee6e2ec.png" alt="goal image"/>
+          <div className="">
+            <p className="sm:w-[80%] leading-snug font-medium text-2xl my-5 mx-auto space-x-3 tracking-wide">
+              Take your QR codes to the next level! Customize the landing page
+              they link to. Tailor your page to showcase your brand’s
+              personality, identity, highlighting essential information, and
+              connect with your Clients. All in one seamless link, Just let you
+              client choose his preferred path toward you.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
