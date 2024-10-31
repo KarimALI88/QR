@@ -49,7 +49,7 @@ const MainNavbar = () => {
         to="/"
         variant="small"
         color="blue-gray"
-        className="p-4 text-md text-thirdColor hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
+        className="p-4 text-md text-gray-600 hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
       >
         Home
       </Typography>
@@ -58,7 +58,7 @@ const MainNavbar = () => {
         to="/products"
         variant="small"
         color="blue-gray"
-        className="p-4  text-md text-thirdColor hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
+        className="p-4  text-md text-gray-600 hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
       >
         Products
       </Typography>
@@ -67,7 +67,7 @@ const MainNavbar = () => {
         to="/contact-us"
         variant="small"
         color="blue-gray"
-        className="p-4 text-md text-thirdColor hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
+        className="p-4 text-md text-gray-600 hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
       >
         Contact Us
       </Typography>
