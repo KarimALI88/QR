@@ -10,8 +10,8 @@ const Header = () => {
     }}>
       <div className="mx-10 ">
         <h1 className="text-black text-5xl w-full my-10 font-black leading-tight ">
-          Generate your Profile, Identity and Website by Create Your Own{" "}
-          <span className="text-mainColor">OFX QR Code</span>
+        Easily connect with your customers
+        Generate your custom <strong className="text-mainColor">QR code</strong> with one simple click.
         </h1>
         <Link to="/qr" className="bg-mainColor px-5 py-5 font-semibold text-white hover:bg-secondColor">
           Generate QR Code

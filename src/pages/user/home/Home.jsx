@@ -5,6 +5,7 @@ import PackageCard from "../../../components/user/packageCard/PackageCard";
 import { Spinner } from "@material-tailwind/react";
 const Home = () => {
   const [packages, setPackages] = useState([]);
+
   const getPackages = async () => {
     try {
       const response = await fetch(
@@ -26,6 +27,7 @@ const Home = () => {
   useEffect(() => {
     getPackages();
   }, []);
+
   return (
     <div>
       <MainNavbar />
@@ -48,12 +50,23 @@ const Home = () => {
                 price={pack?.price_EGP + "EGP"}
                 savings="SAVE 28%"
                 features={pack?.features}
-                
               />
             ))}
           </div>
         </div>
       )}
+      <div className="my-10 mx-auto">
+        <h3 className="text-5xl w-fit mx-auto font-black text-center p-4 rounded-tl-3xl rounded-br-3xl border-4 border-mainColor text-mainColor">
+          THE GOAL
+        </h3>
+        <p className="sm:w-[90%] md:w-[70%] leading-snug font-semibold text-xl my-5 mx-auto space-x-5 tracking-widest">
+          Take your QR codes to the next level! Customize the landing page they
+          link to. Tailor your page to showcase your brand’s personality,
+          identity, highlighting essential information, and connect with your
+          Clients. All in one seamless link, Just let you client choose his
+          preferred path toward you.
+        </p>
+      </div>
     </div>
   );
 };

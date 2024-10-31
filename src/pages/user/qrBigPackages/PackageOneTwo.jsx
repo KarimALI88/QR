@@ -10,6 +10,8 @@ import {
   FaYoutube,
   FaWhatsappSquare,
   FaLinkedin,
+  FaLaptopCode,
+  FaPlus,
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { Spinner } from "@material-tailwind/react";
@@ -26,7 +28,8 @@ const PackageOneTwo = () => {
   const [logoImageFile, setLogoImageFile] = useState(null);
   const [mp3, setMp3] = useState(null);
   const [mp3File, setMp3File] = useState(null);
-  const [centerImage, setCenterImage] = useState(null);
+  const [menuImage, setMenuImage] = useState(null);
+  const [menuImageFile, setMenuImageFile] = useState(null);
   const [pdf, setPDF] = useState(null);
   const [pdfFile, setPdfFile] = useState(null);
   const [name, setName] = useState("");
@@ -40,11 +43,15 @@ const PackageOneTwo = () => {
     youtube: false,
     be: false,
     whatsapp: false,
+    portfolio: false,
+    other: false,
   });
   const [token, setToken] = useState("");
   const [facebookLink, setFacebookLink] = useState("");
+  const [portfolioLink, setPortfolioLink] = useState("");
   const [instgramLink, setInstgramLink] = useState("");
   const [linkedinLink, setLinkedinLink] = useState("");
+  const [otherLink, setOtherLink] = useState("");
   const [youtubeLink, setYoutubeLink] = useState("");
   const [whatsappLink, setWhatsappLink] = useState("");
   const [beLink, setBeLink] = useState("");
@@ -71,6 +78,7 @@ const PackageOneTwo = () => {
   const addBranch = () => {
     setBranches([...branches, { name: "", location: "", number: "" }]);
   };
+
   const handleInputChange = (index, field, value) => {
     const updatedBranches = [...branches];
     updatedBranches[index][field] = value;
@@ -127,9 +135,10 @@ const PackageOneTwo = () => {
   // handle center image
   const onDropCenterImage = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
+    setMenuImageFile(file);
     const reader = new FileReader();
     reader.onloadend = () => {
-      setCenterImage(reader.result);
+      setMenuImage(reader.result);
     };
     if (file) {
       reader.readAsDataURL(file);
@@ -228,6 +237,7 @@ const PackageOneTwo = () => {
     link.click();
     document.body.removeChild(link);
   };
+
   return (
     <div>
       <MainNavbar />
@@ -537,6 +547,34 @@ const PackageOneTwo = () => {
                     }))
                   }
                 />
+
+                <FaLaptopCode
+                  size={40}
+                  className={`cursor-pointer ${
+                    activeInputs.portfolio
+                      ? "text-secondColor"
+                      : "text-gray-400"
+                  }`}
+                  onClick={() =>
+                    setActiveInputs((prevState) => ({
+                      ...prevState,
+                      portfolio: !prevState.portfolio,
+                    }))
+                  }
+                />
+
+                <FaPlus
+                  size={40}
+                  className={`cursor-pointer ${
+                    activeInputs.other ? "text-secondColor" : "text-gray-400"
+                  }`}
+                  onClick={() =>
+                    setActiveInputs((prevState) => ({
+                      ...prevState,
+                      other: !prevState.other,
+                    }))
+                  }
+                />
               </div>
             </div>
 
@@ -548,7 +586,7 @@ const PackageOneTwo = () => {
                   <Typography
                     variant="small"
                     color="blue-gray"
-                    className="mb-1 mt-10 font-semibold text-lg"
+                    className="mb-1 mt-5 font-semibold text-lg"
                   >
                     Facebook Link
                   </Typography>
@@ -567,7 +605,7 @@ const PackageOneTwo = () => {
                   <Typography
                     variant="small"
                     color="blue-gray"
-                    className="mb-1 mt-10 font-semibold text-lg"
+                    className="mb-1 mt-5 font-semibold text-lg"
                   >
                     Instgram Link
                   </Typography>
@@ -586,7 +624,7 @@ const PackageOneTwo = () => {
                   <Typography
                     variant="small"
                     color="blue-gray"
-                    className="mb-1 mt-10 font-semibold text-lg"
+                    className="mb-1 mt-5 font-semibold text-lg"
                   >
                     Linkedin
                   </Typography>
@@ -605,12 +643,12 @@ const PackageOneTwo = () => {
                   <Typography
                     variant="small"
                     color="blue-gray"
-                    className="mb-1 mt-10 font-semibold text-lg"
+                    className="mb-1 mt-5 font-semibold text-lg"
                   >
                     Youtube Link
                   </Typography>
                   <Input
-                    placeholder="01100942108"
+                    placeholder="youtube.com"
                     value={youtubeLink}
                     onChange={(e) => setYoutubeLink(e.target.value)}
                     className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900"
@@ -624,7 +662,7 @@ const PackageOneTwo = () => {
                   <Typography
                     variant="small"
                     color="blue-gray"
-                    className="mb-1 mt-10 font-semibold text-lg"
+                    className="mb-1 mt-5 font-semibold text-lg"
                   >
                     Whatsapp Number
                   </Typography>
@@ -637,20 +675,58 @@ const PackageOneTwo = () => {
                 </div>
               )}
 
+              {/* portfolio */}
+              {activeInputs.portfolio && (
+                <div className="w-[300px]  ">
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="mb-1 mt-5 font-semibold text-lg"
+                  >
+                    portfolio Link
+                  </Typography>
+                  <Input
+                    placeholder="www.ofxegypt.com"
+                    value={portfolioLink}
+                    onChange={(e) => setPortfolioLink(e.target.value)}
+                    className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900"
+                  />
+                </div>
+              )}
+
               {/* Behance */}
               {activeInputs.be && (
                 <div className="w-[300px]  ">
                   <Typography
                     variant="small"
                     color="blue-gray"
-                    className="mb-1 mt-10 font-semibold text-lg"
+                    className="mb-1 mt-5 font-semibold text-lg"
                   >
                     Behance Link
                   </Typography>
                   <Input
-                    placeholder="01100942108"
+                    placeholder="behance.com"
                     value={beLink}
                     onChange={(e) => setBeLink(e.target.value)}
+                    className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900"
+                  />
+                </div>
+              )}
+
+              {/* other */}
+              {activeInputs.other && (
+                <div className="w-[300px]  ">
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="mb-1 mt-5 font-semibold text-lg"
+                  >
+                    Other Link
+                  </Typography>
+                  <Input
+                    placeholder="ex: drive link"
+                    value={otherLink}
+                    onChange={(e) => setOtherLink(e.target.value)}
                     className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900"
                   />
                 </div>
@@ -674,7 +750,7 @@ const PackageOneTwo = () => {
                         <Typography
                           variant="small"
                           color="blue-gray"
-                          className="mb-1 mt-10 font-semibold text-lg"
+                          className="mb-1 mt-5 font-semibold text-lg"
                         >
                           Branch Name
                         </Typography>
@@ -733,6 +809,49 @@ const PackageOneTwo = () => {
                     >
                       Add Branch +
                     </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* menu */}
+            <div>
+              <div>
+                <h1 className="text-mainColor text-2xl font-black flex gap-4 items-center flex-wrap my-5">
+                  <span className="text-white flex justify-center items-center w-10 h-10 text-center rounded-full bg-mainColor">
+                    4
+                  </span>{" "}
+                  Menue
+                </h1>
+                <div>
+                  <div className="flex flex-wrap gap-5">
+                    {/* Branch Name */}
+                    <div className="w-[300px]">
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="mb-1 mt-5 font-semibold text-lg"
+                      >
+                        Menu Image
+                      </Typography>
+                      <div
+                        {...getRootPropsImage()}
+                        className="border border-dashed border-gray-400 p-4 rounded-lg text-center"
+                      >
+                        <input {...getInputPropsImage()} />
+                        {menuImage ? (
+                          <img
+                            src={menuImage}
+                            alt="Cover Preview"
+                            className="w-[100px] h-[100px] mt-4 rounded-lg"
+                          />
+                        ) : (
+                          <p>
+                            Drag & drop an image or pdf here, or click to select one
+                          </p>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
