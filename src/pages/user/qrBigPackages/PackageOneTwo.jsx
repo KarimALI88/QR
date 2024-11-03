@@ -196,10 +196,10 @@ const PackageOneTwo = () => {
     setLoading(true);
     try {
       const formData = new FormData();
-      // formData.append("cover", coverImageFile);
-      // formData.append("logo", logoImageFile);
-      // formData.append("mp3[]", mp3File);
-      // formData.append("pdfs[]", pdfFile);
+      formData.append("cover", coverImageFile);
+      formData.append("logo", logoImageFile);
+      formData.append("mp3[]", mp3File);
+      formData.append("pdfs[]", pdfFile);
       formData.append("title", name);
       formData.append("description", description);
       formData.append("color", color);
