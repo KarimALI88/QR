@@ -55,11 +55,11 @@ const PackageOneTwo = () => {
   const [youtubeLink, setYoutubeLink] = useState("");
   const [whatsappLink, setWhatsappLink] = useState("");
   const [beLink, setBeLink] = useState("");
-  const [color, setColor] = useState("#053B5C");
+  const [color, setColor] = useState("#fff");
   const [loading, setLoading] = useState(false);
   const [selectedFont, setSelectedFont] = useState("Roboto");
   const [branches, setBranches] = useState([
-    { name: "", location: "", number: "" }, // Initial branch
+    { name: "", location: "", phones: "" }, // Initial branch
   ]);
   const fonts = [
     { name: "Roboto", style: "Roboto, sans-serif" },
@@ -76,7 +76,7 @@ const PackageOneTwo = () => {
 
   const handleOpen = () => setOpenModal(!openModal);
   const addBranch = () => {
-    setBranches([...branches, { name: "", location: "", number: "" }]);
+    setBranches([...branches, { name: "", location: "", phones: "" }]);
   };
 
   const handleInputChange = (index, field, value) => {
@@ -190,21 +190,85 @@ const PackageOneTwo = () => {
       },
     });
 
+  console.log("pdf", pdfFile);
+
   const getQr = async () => {
     setLoading(true);
     try {
       const formData = new FormData();
-      formData.append("cover", coverImageFile);
-      formData.append("logo", logoImageFile);
-      formData.append("mp3", mp3File);
-      formData.append("pdf", pdfFile);
+      // formData.append("cover", coverImageFile);
+      // formData.append("logo", logoImageFile);
+      // formData.append("mp3[]", mp3File);
+      // formData.append("pdfs[]", pdfFile);
       formData.append("title", name);
       formData.append("description", description);
       formData.append("color", color);
       formData.append("font", selectedFont);
+      formData.append("package_id", "2");
+
+      // Append phones individually
       formData.append("phones[]", "01061476538");
       formData.append("phones[]", "01061479563");
-      formData.append("package_id", "2");
+
+      // links
+      {
+        facebookLink.length > 0 &&
+          formData.append("links[0][url]", facebookLink);
+        formData.append("links[0][type]", "facebook");
+      }
+
+      {
+        instgramLink.length > 0 &&
+        formData.append("links[1][url]", instgramLink);
+        formData.append("links[1][type]", "instgram");
+      }
+
+      {
+        youtubeLink.length > 0 &&
+        formData.append("links[2][url]", youtubeLink);
+        formData.append("links[2][type]", "youtube");
+      }
+
+      {
+        beLink.length > 0 &&
+        formData.append("links[3][url]", beLink);
+        formData.append("links[3][type]", "behance");
+      }
+
+      {
+        otherLink.length > 0 &&
+        formData.append("links[4][url]", otherLink);
+        formData.append("links[4][type]", "other");
+      }
+
+      {
+        portfolioLink.length > 0 &&
+        formData.append("links[5][url]", portfolioLink);
+        formData.append("links[5][type]", "portfolio");
+      }
+
+      {
+        whatsappLink.length > 0 &&
+        formData.append("links[6][url]", `https://wa.me/${whatsappLink}`);
+        formData.append("links[6][type]", "whatsapp");
+      }
+
+      {
+        linkedinLink.length > 0 &&
+        formData.append("links[7][url]", linkedinLink);
+        formData.append("links[7][type]", "linkedin");
+      }
+
+      
+
+      
+
+      // Append each branch's details
+      branches.forEach((branch, index) => {
+        formData.append(`branches[${index}][name]`, branch.name);
+        formData.append(`branches[${index}][location]`, branch.location);
+        formData.append(`branches[${index}][phones][0]`, branch.phones);
+      });
 
       const response = await axios.post(
         "https://backend.ofx-qrcode.com/api/qrcode/smart",
@@ -781,7 +845,7 @@ const PackageOneTwo = () => {
                           className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900"
                         />
                       </div>
-                      {/* Branch Number */}
+                      {/* Branch phones */}
                       <div className="w-[300px]">
                         <Typography
                           variant="small"
@@ -792,9 +856,9 @@ const PackageOneTwo = () => {
                         </Typography>
                         <Input
                           placeholder="Branch Number"
-                          value={branch.number}
+                          value={branch.phones}
                           onChange={(e) =>
-                            handleInputChange(index, "number", e.target.value)
+                            handleInputChange(index, "phones", e.target.value)
                           }
                           className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900"
                         />
@@ -847,7 +911,8 @@ const PackageOneTwo = () => {
                           />
                         ) : (
                           <p>
-                            Drag & drop an image or pdf here, or click to select one
+                            Drag & drop an image or pdf here, or click to select
+                            one
                           </p>
                         )}
                       </div>

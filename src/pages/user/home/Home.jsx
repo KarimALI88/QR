@@ -3,21 +3,19 @@ import MainNavbar from "../../../components/user/navbar/MainNavbar";
 import Header from "../../../components/user/header/Header";
 import PackageCard from "../../../components/user/packageCard/PackageCard";
 import { Spinner } from "@material-tailwind/react";
+
 const Home = () => {
   const [packages, setPackages] = useState([]);
 
   const getPackages = async () => {
     try {
-      const response = await fetch(
-        `https://backend.ofx-qrcode.com/api/packages`
-      );
-
+      const response = await fetch(`${import.meta.env.VITE_API_LINK}/packages`);
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log("packages", data);
+      // console.log("packages", data);
       setPackages(data);
     } catch (error) {
       console.error("error", error);

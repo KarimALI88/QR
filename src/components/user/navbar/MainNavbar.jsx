@@ -47,7 +47,7 @@ const MainNavbar = () => {
       >
         Home
       </Typography>
-      <Typography
+      {/* <Typography
         as={Link}
         to="/products"
         variant="small"
@@ -55,8 +55,8 @@ const MainNavbar = () => {
         className="p-4  text-md text-gray-600 hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
       >
         Products
-      </Typography>
-      <Typography
+      </Typography> */}
+      {/* <Typography
         as={Link}
         to="/contact-us"
         variant="small"
@@ -64,7 +64,7 @@ const MainNavbar = () => {
         className="p-4 text-md text-gray-600 hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
       >
         Contact Us
-      </Typography>
+      </Typography> */}
     </ul>
   );
 

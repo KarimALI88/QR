@@ -6,8 +6,7 @@ import MyQrs from "./admin/dashboard/myqrCodes/MyQrs";
 
 const AdminLayout = () => {
   return (
-    <div className="flex gap-10">
-      
+    <div className="flex gap-96">
       <div>
         <MainSideBar />
       </div>

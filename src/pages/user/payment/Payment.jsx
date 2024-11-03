@@ -1,9 +1,50 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import MainNavbar from "../../../components/user/navbar/MainNavbar";
-import { SiVodafone } from "react-icons/si";
+import { Dialog } from "@material-tailwind/react";
+import { Input } from "@material-tailwind/react";
+import axios from "axios";
+import { AppContext } from "./../../../context/AppContext";
+import { Spinner } from "@material-tailwind/react";
 
 const Payment = () => {
   const [activeSection, setActiveSection] = useState("vodafone");
+  const [packageNumber, setPackageNumber] = useState("");
+  const [activationCode, setActivationCode] = useState("");
+  const [openModal, setOpenModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [success, setSuccess] = useState(false);
+  const { token } = useContext(AppContext);
+
+  const handleOpen = () => setOpenModal(!openModal);
+
+  const activeVcash = async () => {
+    setLoading(true);
+    try {
+      const response = await axios({
+        method: "post",
+        url: "https://backend.ofx-qrcode.com/api/codes/validate",
+        data: {
+          package_id: packageNumber,
+          code: activationCode,
+        },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("activation resp", response);
+      setLoading(false);
+      setMessage("successfully");
+      setSuccess(true);
+    } catch (error) {
+      console.error("error in api", error);
+      setLoading(false);
+      setMessage(error.response.data.message);
+      setSuccess(false);
+    }
+  };
+
   return (
     <div>
       <MainNavbar />
@@ -11,6 +52,7 @@ const Payment = () => {
         <h1 className="text-center text-4xl text-mainColor font-black my-5">
           Payment Methods
         </h1>
+
         {/* payment methods */}
         <div className="flex justify-center gap-8 items-center my-10 mx-auto flex-wrap">
           <button
@@ -47,7 +89,7 @@ const Payment = () => {
             </div>
           </div>
         )}
-        
+
         {/* vodafone section */}
         {activeSection === "vodafone" && (
           <div className="my-10 mx-auto w-[80%]">
@@ -64,6 +106,59 @@ const Payment = () => {
             </h3>
           </div>
         )}
+
+        {/* activate code */}
+        <div>
+          <button
+            onClick={handleOpen}
+            className="bg-mainColor px-5 py-5 font-semibold text-white hover:bg-secondColor block mx-auto my-10"
+          >
+            Active Account
+          </button>
+          <Dialog
+            open={openModal}
+            handler={handleOpen}
+            className="p-10 text-center"
+          >
+            <div className="my-10">
+              {message.length > 0 && (
+                <h4
+                  className={`font-semibold text-xl my-10 ${
+                    success === false ? "text-[red]" : "text-[green]"
+                  }`}
+                >
+                  {message}
+                </h4>
+              )}
+              <Input
+                placeholder="package number"
+                value={packageNumber}
+                onChange={(e) => setPackageNumber(e.target.value)}
+                className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                labelProps={{
+                  className: "before:content-none after:content-none",
+                }}
+              />
+            </div>
+            <div>
+              <Input
+                placeholder="activation code"
+                value={activationCode}
+                onChange={(e) => setActivationCode(e.target.value)}
+                className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                labelProps={{
+                  className: "before:content-none after:content-none",
+                }}
+              />
+            </div>
+            <button
+              onClick={activeVcash}
+              className="bg-mainColor px-3 py-3 w-full font-semibold text-white hover:bg-secondColor block mx-auto my-10"
+            >
+              {loading ? <Spinner className="mx-auto" /> : "Active an Account"}
+            </button>
+          </Dialog>
+        </div>
       </div>
     </div>
   );

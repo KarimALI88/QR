@@ -7,6 +7,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Spinner } from "@material-tailwind/react";
 import { AppContext } from './../../../context/AppContext';
+import loginImage from '../../../assets/imgs/loginImage.jpg'
+
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -18,7 +20,7 @@ const Login = () => {
   const userLogin = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`https://backend.ofx-qrcode.com/api/login`, {
+      const response = await fetch(`${import.meta.env.VITE_API_LINK}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -36,7 +38,7 @@ const Login = () => {
       }
 
       const data = await response.json();
-      console.log("logged in", data);
+      // console.log("logged in", data);
       setLoading(false);
       localStorage.setItem("tn", data.token);
       setToken(data.token)
@@ -103,7 +105,7 @@ const Login = () => {
       </div>
       <div className="flex-1 h-[100vh]">
         <img
-          src="https://scontent.fcai21-3.fna.fbcdn.net/v/t39.30808-6/464195703_122093879780593961_5587514318428451731_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeFztKNupb9DbGjEIQIlDRlIolqylHxk7dGiWrKUfGTt0Xmjgef5LMLifdzb_HuyWeWMlLfS9qLAaaoUAVGWKIs0&_nc_ohc=qccAo4FMdakQ7kNvgEsyYjz&_nc_zt=23&_nc_ht=scontent.fcai21-3.fna&_nc_gid=AjBjlZQchP8LZLsHwSMt8v-&oh=00_AYBDeEunQxbgbW0DuZJtwNugjwSj8yCX-25MD5SyedoDTA&oe=671FF015"
+          src={loginImage}
           alt="login img"
           className="h-[100vh] object-cover object-right"
         />

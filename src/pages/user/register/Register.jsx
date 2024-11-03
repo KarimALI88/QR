@@ -22,7 +22,7 @@ const Register = () => {
     try {
       const response = await axios({
         method: "post",
-        url: `https://backend.ofx-qrcode.com/api/signup`,
+        url: `${import.meta.env.VITE_API_LINK}/signup`,
         data: {
           email,
           password,
@@ -32,7 +32,7 @@ const Register = () => {
           "Content-Type": "application/json",
         },
       });
-      console.log("response", response);
+      // console.log("response", response);
       toast.success("registered successfully");
       setLoading(false);
       navigate("/login");

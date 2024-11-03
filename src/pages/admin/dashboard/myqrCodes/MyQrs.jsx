@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Card,
   CardHeader,
@@ -14,16 +14,17 @@ import {
 } from "@material-tailwind/react";
 import { FaSearch, FaDownload } from "react-icons/fa";
 import axios from "axios";
+import { AppContext } from './../../../../context/AppContext';
 
 const MyQrs = () => {
-  const TABLE_HEAD = ["QR", "Visitors", "Scan", "Status"];
+  const TABLE_HEAD = ["QR", "Devices", "Scan", "Status"];
   const [tableRows, setTableRows] = useState([]);
-  const [token, setToken] = useState("");
+  const {token} = useContext(AppContext)
 
-  useEffect(() => {
-    const tn = localStorage?.tn;
-    tn ? setToken(tn) : "";
-  }, []);
+  // useEffect(() => {
+  //   const tn = localStorage?.tn;
+  //   tn ? setToken(tn) : "";
+  // }, []);
 
   const getQrData = async () => {
     try {
@@ -36,14 +37,14 @@ const MyQrs = () => {
         },
       });
       console.log("response", response);
-      setTableRows(response.data);
+      setTableRows(response.data.qr_codes);
     } catch (error) {
       console.error("error in api", error);
     }
   };
 
   useEffect(() => {
-    getQrData();
+    {token && getQrData()}
   }, [token]);
 
   return (
@@ -100,7 +101,7 @@ const MyQrs = () => {
                   <td className={classes}>
                     <div className="flex items-center gap-3">
                       <img
-                        src={`https://backend.ofx-qrcode.com/storage/${row.qrcode}`}
+                        src={`https://backend.ofx-qrcode.com/storage/${row?.qr_code?.qrcode}`}
                         alt={"qr code"}
                         className="w-[70px] h-[70px]"
                       />
@@ -112,7 +113,7 @@ const MyQrs = () => {
                       color="blue-gray"
                       className="font-normal w-max"
                     >
-                      <Chip size="sm" variant="ghost" value={row.scan_count} />
+                      <Chip size="sm" variant="ghost" value={row?.device_count} />
                     </Typography>
                   </td>
                   <td className={classes}>
@@ -121,7 +122,7 @@ const MyQrs = () => {
                       color="blue-gray"
                       className="font-normal w-max"
                     >
-                      <Chip size="sm" variant="ghost" value={row.scan_count} />
+                      <Chip size="sm" variant="ghost" value={row?.qr_code?.scan_count} />
                     </Typography>
                   </td>
 
@@ -130,9 +131,9 @@ const MyQrs = () => {
                       <Chip
                         size="sm"
                         variant="ghost"
-                        value={row.is_active === 1 ? "active" : "stopped"}
+                        value={row?.qr_code?.is_active === 1 ? "active" : "stopped"}
                         color={
-                          row.is_active === 1
+                          row?.qr_code?.is_active === 1
                             ? "green"
                             : row.is_active === "stopped"
                             ? "red"

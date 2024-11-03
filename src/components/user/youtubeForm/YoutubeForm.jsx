@@ -23,7 +23,7 @@ const YoutubeForm = () => {
     try {
       const response = await axios({
         method: "post",
-        url: `https://backend.ofx-qrcode.com/api/generate-qrcode`,
+        url: `${import.meta.env.VITE_API_LINK}/generate-qrcode`,
         data: {
           link: link,
           package_id: "1",
@@ -33,7 +33,7 @@ const YoutubeForm = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("qr response", response);
+      // console.log("qr response", response);
       setOpenModal(true);
       setImage(`https://backend.ofx-qrcode.com${response.data.qr_code_url}`);
       setLoading(false)

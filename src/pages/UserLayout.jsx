@@ -16,11 +16,11 @@ const UserLayout = () => {
       <Route path="" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/qr/:id" element={<Profile />} />
       {token ? (
         <>
           <Route path="/generate-qr" element={<QrForm />} />
           <Route path="/qr" element={<PackageOneTwo />} />
-          <Route path="/qr/:id" element={<Profile />} />
           <Route path="/payment" element={<Payment />} />
         </>
       ) : (
