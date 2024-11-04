@@ -36,7 +36,7 @@ const Profile = () => {
         `${import.meta.env.VITE_API_LINK}/profile/qrcode/${id}`
       );
       setProfileData(response.data);
-      // console.log(response.data);
+      console.log(response.data);
     } catch (error) {
       console.log("error in api", error);
     }
@@ -212,6 +212,12 @@ const Profile = () => {
               </div>
             ))}
 
+          {profileData?.records && profileData?.records?.map((record, index) => (
+            <div className="mx-auto my-10">
+              <audio className="mx-auto block" key={index} src={`https://backend.ofx-qrcode.com/storage/${record.mp3_path}`} controls/>
+            </div>
+          ))}
+
           {profileData?.branches && (
             <div className="my-5 mx-auto">
               <h4 className="text-center text-3xl font-black">Branches</h4>
@@ -220,7 +226,7 @@ const Profile = () => {
                   <div className="mx-auto" key={index}>
                     <Button
                       onClick={() => toggleOpen(index)}
-                      className="w-8/12 py-4 text-xl mt-5 mx-auto block"
+                      className="min-w-8/12 py-4 text-xl mt-5 mx-auto block"
                     >
                       {branch?.name}
                     </Button>

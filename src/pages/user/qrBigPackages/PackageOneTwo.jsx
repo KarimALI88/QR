@@ -196,12 +196,24 @@ const PackageOneTwo = () => {
     setLoading(true);
     try {
       const formData = new FormData();
-      formData.append("cover", coverImageFile);
-      formData.append("logo", logoImageFile);
-      formData.append("mp3[]", mp3File);
-      // formData.append("pdfs[]", pdfFile);
-      formData.append("title", name);
-      formData.append("description", description);
+      {
+        coverImageFile && formData.append("cover", coverImageFile);
+      }
+      {
+        logoImageFile && formData.append("logo", logoImageFile);
+      }
+      {
+        mp3File && formData.append("mp3[]", mp3File);
+      }
+      {
+        pdfFile && formData.append("pdfs[]", pdfFile);
+      }
+      {
+        name && formData.append("title", name);
+      }
+      {
+        description && formData.append("description", description);
+      }
       formData.append("color", color);
       formData.append("font", selectedFont);
       formData.append("package_id", "2");
@@ -257,11 +269,14 @@ const PackageOneTwo = () => {
       }
 
       // Append each branch's details
-      branches.forEach((branch, index) => {
-        formData.append(`branches[${index}][name]`, branch.name);
-        formData.append(`branches[${index}][location]`, branch.location);
-        formData.append(`branches[${index}][phones][0]`, branch.phones);
-      });
+      {
+        branches.length >= 1 &&
+          branches.forEach((branch, index) => {
+            formData.append(`branches[${index}][name]`, branch.name);
+            formData.append(`branches[${index}][location]`, branch.location);
+            formData.append(`branches[${index}][phones][0]`, branch.phones);
+          });
+      }
 
       const response = await axios.post(
         "https://backend.ofx-qrcode.com/api/qrcode/smart",
@@ -276,10 +291,10 @@ const PackageOneTwo = () => {
 
       console.log("response qr", response);
       setLoading(false);
+      setOpenModal(true);
       setImage(
         `https://backend.ofx-qrcode.com/storage/${response.data.qr_code}`
       );
-      setOpenModal(true);
     } catch (error) {
       console.log("error", error);
       setLoading(false);
@@ -320,7 +335,7 @@ const PackageOneTwo = () => {
               Company Info
             </h1>
             <br />
-            
+
             <div className="flex flex-wrap gap-5">
               {/* color  */}
               <div className="w-[300px]  ">
