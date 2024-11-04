@@ -55,7 +55,7 @@ const PackageOneTwo = () => {
   const [youtubeLink, setYoutubeLink] = useState("");
   const [whatsappLink, setWhatsappLink] = useState("");
   const [beLink, setBeLink] = useState("");
-  const [color, setColor] = useState("#fff");
+  const [color, setColor] = useState("#ffffff");
   const [loading, setLoading] = useState(false);
   const [selectedFont, setSelectedFont] = useState("Roboto");
   const [branches, setBranches] = useState([
@@ -90,8 +90,8 @@ const PackageOneTwo = () => {
     setToken(tn);
   }, []);
 
-  console.log("cover image", coverImageFile);
-  console.log("logo image", logoImageFile);
+  // console.log("cover image", coverImageFile);
+  // console.log("logo image", logoImageFile);
 
   // Handle drop for cover image
   const onDropCover = useCallback((acceptedFiles) => {
@@ -190,7 +190,7 @@ const PackageOneTwo = () => {
       },
     });
 
-  console.log("pdf", pdfFile);
+  // console.log("pdf", pdfFile);
 
   const getQr = async () => {
     setLoading(true);
@@ -199,7 +199,7 @@ const PackageOneTwo = () => {
       formData.append("cover", coverImageFile);
       formData.append("logo", logoImageFile);
       formData.append("mp3[]", mp3File);
-      formData.append("pdfs[]", pdfFile);
+      // formData.append("pdfs[]", pdfFile);
       formData.append("title", name);
       formData.append("description", description);
       formData.append("color", color);
@@ -219,49 +219,42 @@ const PackageOneTwo = () => {
 
       {
         instgramLink.length > 0 &&
-        formData.append("links[1][url]", instgramLink);
+          formData.append("links[1][url]", instgramLink);
         formData.append("links[1][type]", "instgram");
       }
 
       {
-        youtubeLink.length > 0 &&
-        formData.append("links[2][url]", youtubeLink);
+        youtubeLink.length > 0 && formData.append("links[2][url]", youtubeLink);
         formData.append("links[2][type]", "youtube");
       }
 
       {
-        beLink.length > 0 &&
-        formData.append("links[3][url]", beLink);
+        beLink.length > 0 && formData.append("links[3][url]", beLink);
         formData.append("links[3][type]", "behance");
       }
 
       {
-        otherLink.length > 0 &&
-        formData.append("links[4][url]", otherLink);
+        otherLink.length > 0 && formData.append("links[4][url]", otherLink);
         formData.append("links[4][type]", "other");
       }
 
       {
         portfolioLink.length > 0 &&
-        formData.append("links[5][url]", portfolioLink);
+          formData.append("links[5][url]", portfolioLink);
         formData.append("links[5][type]", "portfolio");
       }
 
       {
         whatsappLink.length > 0 &&
-        formData.append("links[6][url]", `https://wa.me/${whatsappLink}`);
+          formData.append("links[6][url]", `https://wa.me/${whatsappLink}`);
         formData.append("links[6][type]", "whatsapp");
       }
 
       {
         linkedinLink.length > 0 &&
-        formData.append("links[7][url]", linkedinLink);
+          formData.append("links[7][url]", linkedinLink);
         formData.append("links[7][type]", "linkedin");
       }
-
-      
-
-      
 
       // Append each branch's details
       branches.forEach((branch, index) => {
@@ -283,10 +276,10 @@ const PackageOneTwo = () => {
 
       console.log("response qr", response);
       setLoading(false);
-      setOpenModal(true);
       setImage(
         `https://backend.ofx-qrcode.com/storage/${response.data.qr_code}`
       );
+      setOpenModal(true);
     } catch (error) {
       console.log("error", error);
       setLoading(false);
@@ -303,9 +296,21 @@ const PackageOneTwo = () => {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        background:
+          "linear-gradient(152deg, rgba(255,255,255,0.9) 0%, rgba(5,59,92,0.8) 100%)",
+        backgroundAttachment: "fixed",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        position: "fixed",
+        width: "100%",
+        height: "100vh",
+        overflowY: "auto", // Allows content to scroll within the fixed background
+      }}
+    >
       <MainNavbar />
-      <div className="p-10">
+      <div className="p-10 h-fit ">
         <div className="flex flex-col md:flex-row h-screen space-y-5 md:space-y-0 md:space-x-5 flex-wrap">
           <div className="flex-1 my-10">
             <h1 className="text-mainColor text-2xl font-black flex gap-4 items-center flex-wrap">
@@ -315,6 +320,7 @@ const PackageOneTwo = () => {
               Company Info
             </h1>
             <br />
+            
             <div className="flex flex-wrap gap-5">
               {/* color  */}
               <div className="w-[300px]  ">
@@ -331,7 +337,7 @@ const PackageOneTwo = () => {
                   type="color"
                   value={color}
                   onChange={(e) => setColor(e.target.value)}
-                  className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900"
+                  className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-black placeholder:opacity-100 focus:!border-t-gray-900"
                 />
               </div>
               {/* cover background */}
@@ -400,7 +406,7 @@ const PackageOneTwo = () => {
                   placeholder="OFX"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900"
+                  className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                 />
               </div>
 
@@ -418,7 +424,7 @@ const PackageOneTwo = () => {
                   placeholder="OFX marketing agency"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900"
+                  className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                 />
               </div>
 
@@ -436,7 +442,7 @@ const PackageOneTwo = () => {
                   placeholder="01061472185"
                   value={phone1}
                   onChange={(e) => setPhone1(e.target.value)}
-                  className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900"
+                  className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                 />
               </div>
 
@@ -454,7 +460,7 @@ const PackageOneTwo = () => {
                   placeholder="01100942108"
                   value={phone2}
                   onChange={(e) => setPhone2(e.target.value)}
-                  className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900"
+                  className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                 />
               </div>
 
@@ -542,7 +548,7 @@ const PackageOneTwo = () => {
                 <FaFacebook
                   size={40}
                   className={`cursor-pointer ${
-                    activeInputs.facebook ? "text-secondColor" : "text-gray-400"
+                    activeInputs.facebook ? "text-secondColor" : "text-gray-800"
                   }`}
                   onClick={() =>
                     setActiveInputs((prevState) => ({
@@ -554,7 +560,7 @@ const PackageOneTwo = () => {
                 <FaInstagramSquare
                   size={40}
                   className={`cursor-pointer ${
-                    activeInputs.instgram ? "text-secondColor" : "text-gray-400"
+                    activeInputs.instgram ? "text-secondColor" : "text-gray-800"
                   }`}
                   onClick={() =>
                     setActiveInputs((prevState) => ({
@@ -566,7 +572,7 @@ const PackageOneTwo = () => {
                 <FaYoutube
                   size={40}
                   className={`cursor-pointer ${
-                    activeInputs.youtube ? "text-secondColor" : "text-gray-400"
+                    activeInputs.youtube ? "text-secondColor" : "text-gray-800"
                   }`}
                   onClick={() =>
                     setActiveInputs((prevState) => ({
@@ -578,7 +584,7 @@ const PackageOneTwo = () => {
                 <FaWhatsappSquare
                   size={40}
                   className={`cursor-pointer ${
-                    activeInputs.whatsapp ? "text-secondColor" : "text-gray-400"
+                    activeInputs.whatsapp ? "text-secondColor" : "text-gray-800"
                   }`}
                   onClick={() =>
                     setActiveInputs((prevState) => ({
@@ -590,7 +596,7 @@ const PackageOneTwo = () => {
                 <FaLinkedin
                   size={40}
                   className={`cursor-pointer ${
-                    activeInputs.linkedin ? "text-secondColor" : "text-gray-400"
+                    activeInputs.linkedin ? "text-secondColor" : "text-gray-800"
                   }`}
                   onClick={() =>
                     setActiveInputs((prevState) => ({
@@ -602,7 +608,7 @@ const PackageOneTwo = () => {
                 <FaBehance
                   size={40}
                   className={`cursor-pointer ${
-                    activeInputs.be ? "text-secondColor" : "text-gray-400"
+                    activeInputs.be ? "text-secondColor" : "text-gray-800"
                   }`}
                   onClick={() =>
                     setActiveInputs((prevState) => ({
@@ -617,7 +623,7 @@ const PackageOneTwo = () => {
                   className={`cursor-pointer ${
                     activeInputs.portfolio
                       ? "text-secondColor"
-                      : "text-gray-400"
+                      : "text-gray-800"
                   }`}
                   onClick={() =>
                     setActiveInputs((prevState) => ({
@@ -630,7 +636,7 @@ const PackageOneTwo = () => {
                 <FaPlus
                   size={40}
                   className={`cursor-pointer ${
-                    activeInputs.other ? "text-secondColor" : "text-gray-400"
+                    activeInputs.other ? "text-secondColor" : "text-gray-800"
                   }`}
                   onClick={() =>
                     setActiveInputs((prevState) => ({
@@ -658,7 +664,7 @@ const PackageOneTwo = () => {
                     placeholder="facebook.com"
                     value={facebookLink}
                     onChange={(e) => setFacebookLink(e.target.value)}
-                    className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900"
+                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
               )}
@@ -677,7 +683,7 @@ const PackageOneTwo = () => {
                     placeholder="instgram.com"
                     value={instgramLink}
                     onChange={(e) => setInstgramLink(e.target.value)}
-                    className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900"
+                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
               )}
@@ -696,7 +702,7 @@ const PackageOneTwo = () => {
                     placeholder="Linkedin"
                     value={linkedinLink}
                     onChange={(e) => setLinkedinLink(e.target.value)}
-                    className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900"
+                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
               )}
@@ -715,7 +721,7 @@ const PackageOneTwo = () => {
                     placeholder="youtube.com"
                     value={youtubeLink}
                     onChange={(e) => setYoutubeLink(e.target.value)}
-                    className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900"
+                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
               )}
@@ -734,7 +740,7 @@ const PackageOneTwo = () => {
                     placeholder="01100942108"
                     value={whatsappLink}
                     onChange={(e) => setWhatsappLink(e.target.value)}
-                    className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900"
+                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
               )}
@@ -753,7 +759,7 @@ const PackageOneTwo = () => {
                     placeholder="www.ofxegypt.com"
                     value={portfolioLink}
                     onChange={(e) => setPortfolioLink(e.target.value)}
-                    className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900"
+                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
               )}
@@ -772,7 +778,7 @@ const PackageOneTwo = () => {
                     placeholder="behance.com"
                     value={beLink}
                     onChange={(e) => setBeLink(e.target.value)}
-                    className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900"
+                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
               )}
@@ -791,7 +797,7 @@ const PackageOneTwo = () => {
                     placeholder="ex: drive link"
                     value={otherLink}
                     onChange={(e) => setOtherLink(e.target.value)}
-                    className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900"
+                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
               )}
@@ -824,7 +830,7 @@ const PackageOneTwo = () => {
                           onChange={(e) =>
                             handleInputChange(index, "name", e.target.value)
                           }
-                          className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900"
+                          className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                         />
                       </div>
                       {/* Branch Location */}
@@ -842,7 +848,7 @@ const PackageOneTwo = () => {
                           onChange={(e) =>
                             handleInputChange(index, "location", e.target.value)
                           }
-                          className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900"
+                          className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                         />
                       </div>
                       {/* Branch phones */}
@@ -860,7 +866,7 @@ const PackageOneTwo = () => {
                           onChange={(e) =>
                             handleInputChange(index, "phones", e.target.value)
                           }
-                          className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900"
+                          className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                         />
                       </div>
                     </div>
@@ -966,6 +972,7 @@ const PackageOneTwo = () => {
               youtube={youtubeLink}
               selectedFont={selectedFont}
               branches={branches}
+              menuImage={menuImage}
             />
           </div>
         </div>

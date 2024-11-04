@@ -9,11 +9,11 @@ import Profile from "./user/profile/Profile";
 import Payment from "./user/payment/Payment";
 import { AppContext } from "../context/AppContext";
 
-const UserLayout = () => {
+const UserLayout = ({country}) => {
   const { token } = useContext(AppContext);
   return (
     <Routes>
-      <Route path="" element={<Home />} />
+      <Route path="" element={<Home country={country}/>} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/qr/:id" element={<Profile />} />

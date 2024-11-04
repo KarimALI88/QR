@@ -43,7 +43,7 @@ const Login = () => {
       localStorage.setItem("tn", data.token);
       setToken(data.token)
       toast.success("Logged in successfully");
-      navigate("/");
+      navigate("/admin/my-qrs");
     } catch (error) {
       console.error("error", error);
       toast.error("wrong answers");
@@ -77,6 +77,7 @@ const Login = () => {
             <Input
               label="password"
               placeholder="**********************"
+              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full flex items-center h-[65px] appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"

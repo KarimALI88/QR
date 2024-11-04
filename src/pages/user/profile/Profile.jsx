@@ -16,11 +16,19 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 
 const Profile = () => {
-  const [open, setOpen] = useState(false);
+  const [openBranches, setOpenBranches] = useState([]);
   const { id } = useParams();
   const [profileData, setProfileData] = useState({});
 
-  const toggleOpen = () => setOpen((cur) => !cur);
+  // const toggleOpen = () => setOpen((cur) => !cur);
+
+  const toggleOpen = (index) => {
+    setOpenBranches((prevOpen) => {
+      const newOpen = [...prevOpen];
+      newOpen[index] = !newOpen[index];
+      return newOpen;
+    });
+  };
 
   const getProfile = async () => {
     try {
@@ -33,6 +41,21 @@ const Profile = () => {
       console.log("error in api", error);
     }
   };
+
+  const getIp = async () => {
+    try {
+      const response = await axios.get(
+        `https://backend.ofx-qrcode.com/api/scan_qrcode/${id}`
+      );
+      console.log(response);
+    } catch (error) {
+      console.error("error in api", error);
+    }
+  };
+
+  useEffect(() => {
+    getIp();
+  }, [id]);
 
   useEffect(() => {
     getProfile();
@@ -114,6 +137,7 @@ const Profile = () => {
                 <FaInstagramSquare size={60} className="text-white" />
               </a>
             )}
+
             {profileData?.links?.find((link) => link.type === "behance") && (
               <a
                 href={
@@ -162,16 +186,18 @@ const Profile = () => {
 
           {profileData?.phones && (
             <div className="flex gap-5 items-center justify-center">
-              <FaPhoneAlt size={40} />
               <h3 className="text-3xl font-semibold my-5 text-center">
-                {profileData?.phones?.map((phone, index) => (
-                  <div key={index}>
-                    <a href={`tel:${phone}`} className="text-white">
-                      {phone}
-                    </a>
-                    <br />
-                  </div>
-                ))}
+                <div className="flex gap-10 justify-center items-center flex-wrap">
+                  {profileData?.phones?.map((phone, index) => (
+                    <div key={index} className="flex items-center gap-5">
+                      <FaPhoneAlt size={40} />
+                      <a href={`tel:${phone}`} className="text-white">
+                        {phone}
+                      </a>
+                      <br />
+                    </div>
+                  ))}
+                </div>
               </h3>
             </div>
           )}
@@ -189,37 +215,41 @@ const Profile = () => {
           {profileData?.branches && (
             <div className="my-5 mx-auto">
               <h4 className="text-center text-3xl font-black">Branches</h4>
-              {profileData?.branches?.map((branch, index) => (
-                <div className="mx-auto" key={index}>
-                  <Button
-                    onClick={toggleOpen}
-                    className="w-8/12 py-4 text-xl mt-5 mx-auto block"
-                  >
-                    {branch?.name}
-                  </Button>
-                  <Collapse open={open}>
-                    <Card className="my-4 mx-auto w-8/12 p-4">
-                      <div className="flex flex-wrap gap-5">
-                        <div className="flex gap-2 items-center cursor-pointer">
-                          <FaLocationDot size={30} color="#053B5C" />
-                          <a
-                            href={branch?.location}
-                            className="text-[#053B5C] text-lg font-semibold"
-                          >
-                            Location
-                          </a>
+              <div className="flex justify-center gap-10 items-center flex-wrap">
+                {profileData?.branches?.map((branch, index) => (
+                  <div className="mx-auto" key={index}>
+                    <Button
+                      onClick={() => toggleOpen(index)}
+                      className="w-8/12 py-4 text-xl mt-5 mx-auto block"
+                    >
+                      {branch?.name}
+                    </Button>
+                    <Collapse open={openBranches[index]}>
+                      <Card className="my-4 mx-auto w-8/12 p-4">
+                        <div className="flex flex-wrap gap-5">
+                          <div className="flex gap-2 items-center cursor-pointer">
+                            <FaLocationDot size={30} color="#053B5C" />
+                            <a
+                              href={branch?.location}
+                              className="text-[#053B5C] text-lg font-semibold"
+                            >
+                              Location
+                            </a>
+                          </div>
+                          <div className="flex gap-2 items-center cursor-pointer">
+                            <FaPhoneAlt size={30} color="#053B5C" />
+                            <a href={`tel:${branch?.phones[0]}`}>
+                              <button className="text-[#053B5C] text-lg font-semibold">
+                                {branch?.phones[0]}
+                              </button>
+                            </a>
+                          </div>
                         </div>
-                        <div className="flex gap-2  items-center cursor-pointer">
-                          <FaPhoneAlt size={30} color="#053B5C" />
-                          <button className="text-[#053B5C] text-lg font-semibold">
-                            {branch?.phones[0]}
-                          </button>
-                        </div>
-                      </div>
-                    </Card>
-                  </Collapse>
-                </div>
-              ))}
+                      </Card>
+                    </Collapse>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>
