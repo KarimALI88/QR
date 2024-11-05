@@ -54,7 +54,7 @@ const PackageOneTwo = ({ user }) => {
   const [instgramLink, setInstgramLink] = useState("");
   const [linkedinLink, setLinkedinLink] = useState("");
   const [otherLink, setOtherLink] = useState("");
-  const [youtubeLink, setYoutubeLink] = useState("");
+  const [youtubeLink, setYoutubeLink] = useState(""); 
   const [whatsappLink, setWhatsappLink] = useState("");
   const [beLink, setBeLink] = useState("");
   const [color, setColor] = useState("#ffffff");
@@ -985,6 +985,7 @@ const PackageOneTwo = ({ user }) => {
               selectedFont={selectedFont}
               branches={branches}
               menuImage={menuImage}
+              other={otherLink}
             />
           </div>
         </div>

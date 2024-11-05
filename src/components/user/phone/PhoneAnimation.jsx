@@ -1,11 +1,12 @@
-import { FaFilePdf } from "react-icons/fa6";
+import { FaFilePdf, FaLink } from "react-icons/fa6";
 import {
   FaFacebook,
   FaInstagramSquare,
   FaBehance,
   FaYoutube,
   FaWhatsappSquare,
-  FaLinkedin,
+  FaLinkedin
+  
 } from "react-icons/fa";
 import { Collapse, Button, Card } from "@material-tailwind/react";
 import { FaLocationDot } from "react-icons/fa6";
@@ -30,7 +31,8 @@ const PhoneAnimation = ({
   behance,
   selectedFont,
   branches,
-  menuImage
+  menuImage,
+  other
 }) => {
   return (
     <div className="flex justify-center rounded-3xl items-center h-fit mx-auto max-w-[100%] fixed right-16 top-28">
@@ -100,7 +102,7 @@ const PhoneAnimation = ({
           </p>
           <div
             className={`flex gap-5 items-center px-3 py-5 ${
-              [facebook, whatsapp, instgram, behance, linkedin, youtube].filter(
+              [facebook, whatsapp, instgram, behance, linkedin, youtube,other].filter(
                 Boolean
               ).length === 1
                 ? "justify-center"
@@ -111,6 +113,7 @@ const PhoneAnimation = ({
                     behance,
                     linkedin,
                     youtube,
+                    other
                   ].filter(Boolean).length === 3
                 ? "flex-col"
                 : "flex-wrap justify-center"
@@ -122,6 +125,7 @@ const PhoneAnimation = ({
             {behance && <FaBehance size={40} style={{ color }} />}
             {linkedin && <FaLinkedin size={40} style={{ color }} />}
             {youtube && <FaYoutube size={40} style={{ color }} />}
+            {other && <FaLink size={40} style={{ color }} />}
           </div>
           <h3
             className="text-lg font-semibold mt-3 text-center"

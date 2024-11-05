@@ -8,7 +8,7 @@ import {
   FaLinkedin,
 } from "react-icons/fa";
 import mp3 from "../../../assets/imgs/الاخلاص.mp3";
-import { FaLocationDot } from "react-icons/fa6";
+import { FaLocationDot,FaLink  } from "react-icons/fa6";
 import { FaPhoneAlt } from "react-icons/fa";
 import { Collapse, Button, Card } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
@@ -64,7 +64,7 @@ const Profile = () => {
   return (
     <div
       className="relative flex flex-col items-center justify-start h-full overflow-auto"
-      style={{ color: profileData?.backgraound_color }}
+      style={{ color: profileData?.backgraound_color,fontFamily: profileData?.font }}
     >
       {/* Background with Blur Overlay */}
       <div
@@ -103,18 +103,18 @@ const Profile = () => {
           </div>
         </div>
 
-        <div className="my-16 text-white">
-          <h1 className="text-center text-4xl p-1 font-black uppercase">
+        <div className="my-16 " style={{color: profileData?.background_color}}>
+          <h1 className="text-center text-4xl p-1 font-black uppercase" style={{color: profileData?.background_color}}>
             {profileData?.title}
           </h1>
 
           <div className="flex flex-col items-center my-5 max-w-[80%] mx-auto">
-            <p className="text-center text-3xl text-gray-500 font-medium capitalize">
+            <p className="text-center text-3xl  font-medium capitalize">
               {profileData?.description}
             </p>
           </div>
 
-          <div className="flex gap-5 items-center px-3 py-5 flex-wrap justify-center">
+          <div className="flex gap-5 items-center px-3 py-5 flex-wrap justify-center" style={{color: profileData?.background_color}}>
             {profileData?.links?.find((link) => link.type === "whatsapp") && (
               <a
                 href={
@@ -123,7 +123,7 @@ const Profile = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <FaWhatsappSquare size={60} className="text-white" />
+                <FaWhatsappSquare size={60} className="" />
               </a>
             )}
             {profileData?.links?.find((link) => link.type === "instgram") && (
@@ -134,7 +134,18 @@ const Profile = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <FaInstagramSquare size={60} className="text-white" />
+                <FaInstagramSquare size={60} className="" />
+              </a>
+            )}
+            {profileData?.links?.find((link) => link.type === "other") && (
+              <a
+                href={
+                  profileData.links.find((link) => link.type === "other").url
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaLink size={60} className="" />
               </a>
             )}
 
@@ -146,7 +157,7 @@ const Profile = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <FaBehance size={60} className="text-white" />
+                <FaBehance size={60} className="" />
               </a>
             )}
             {profileData?.links?.find((link) => link.type === "linkedin") && (
@@ -157,7 +168,7 @@ const Profile = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <FaLinkedin size={60} className="text-white" />
+                <FaLinkedin size={60} className="" />
               </a>
             )}
             {profileData?.links?.find((link) => link.type === "youtube") && (
@@ -168,7 +179,7 @@ const Profile = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <FaYoutube size={60} className="text-white" />
+                <FaYoutube size={60} className="" />
               </a>
             )}
             {profileData?.links?.find((link) => link.type === "facebook") && (
@@ -179,7 +190,7 @@ const Profile = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <FaFacebook size={60} className="text-white" />
+                <FaFacebook size={60} className="" />
               </a>
             )}
           </div>
@@ -191,7 +202,7 @@ const Profile = () => {
                   {profileData?.phones?.map((phone, index) => (
                     <div key={index} className="flex items-center gap-5">
                       <FaPhoneAlt size={40} />
-                      <a href={`tel:${phone}`} className="text-white">
+                      <a href={`tel:${phone}`} className="">
                         {phone}
                       </a>
                       <br />
