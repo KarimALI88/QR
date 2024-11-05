@@ -18,7 +18,7 @@ const MainSideBar = () => {
   return (
     <Card className="h-[100vh] rounded-none w-full max-w-[20rem] bg-mainColor text-white p-4 shadow-xl shadow-blue-gray-900/5 fixed left-0 bottom-0 top-0">
       <div className="mb-2 p-4">
-        <Typography variant="small" to="/">
+        <Typography as={Link} variant="small" to="/" className="cursor-pointer">
           <img src={logo} />
         </Typography>
       </div>
