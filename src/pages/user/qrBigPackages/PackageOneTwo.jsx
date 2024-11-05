@@ -18,7 +18,8 @@ import { Spinner } from "@material-tailwind/react";
 import axios from "axios";
 import { Select, Option } from "@material-tailwind/react";
 import { Dialog } from "@material-tailwind/react";
-import { PDFDocument, rgb } from 'pdf-lib';
+import jsPDF from "jspdf";
+
 
 const PackageOneTwo = () => {
   const [image, setImage] = useState("");
@@ -85,6 +86,8 @@ const PackageOneTwo = () => {
     updatedBranches[index][field] = value;
     setBranches(updatedBranches);
   };
+
+  
 
   useEffect(() => {
     const tn = localStorage.getItem("tn");
@@ -273,27 +276,23 @@ const PackageOneTwo = () => {
     }
   };
 
-  async function downloadImageAsPDF(imageSrc) {
-    const pdfDoc = await PDFDocument.create();
-    const page = pdfDoc.addPage();
+  const downloadImageAsPDF = async (imageSrc) => {
+    const pdf = new jsPDF();
+    const img = new Image();
+    img.src = imageSrc;
   
-    const imgBytes = await fetch(imageSrc).then((res) => res.arrayBuffer());
-    const img = await pdfDoc.embedPng(imgBytes);
+    img.onload = () => {
+      // Adjust image dimensions if needed
+      const imgWidth = 180; // Width in the PDF document
+      const imgHeight = (img.height * imgWidth) / img.width; // Maintain aspect ratio
   
-    page.drawImage(img, {
-      x: 50,
-      y: page.getHeight() - 150,
-      width: 150,
-      height: 150,
-    });
+      // Add the image to the PDF
+      pdf.addImage(img, "PNG", 15, 15, imgWidth, imgHeight);
   
-    const pdfBytes = await pdfDoc.save();
-    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'image.pdf';
-    link.click();
-  }
+      // Save the PDF with the desired filename
+      pdf.save("qr-code.pdf");
+    };
+  };
 
   return (
     <div
