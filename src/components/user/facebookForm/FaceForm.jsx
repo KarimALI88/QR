@@ -1,15 +1,15 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { Input, Typography } from "@material-tailwind/react";
 import { Dialog } from "@material-tailwind/react";
 import { Spinner } from "@material-tailwind/react";
 import axios from "axios";
 
-const FaceForm = () => { 
+const FaceForm = ({ user }) => {
   const [link, setLink] = useState("");
   const [token, setToken] = useState("");
   const [image, setImage] = useState("");
   const [openModal, setOpenModal] = useState(false);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const tn = localStorage.getItem("tn");
@@ -19,7 +19,7 @@ const FaceForm = () => {
   const handleOpen = () => setOpenModal(!openModal);
 
   const getQR = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       const response = await axios({
         method: "post",
@@ -36,10 +36,10 @@ const FaceForm = () => {
       // console.log("qr response", response);
       setOpenModal(true);
       setImage(`https://backend.ofx-qrcode.com${response.data.qr_code_url}`);
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
       console.log("error", error);
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -74,13 +74,15 @@ const FaceForm = () => {
       </div>
       {/* ======================================================= */}
       <div className="mt-10">
-        <button
-          onClick={getQR}
-          disabled={link.length === 0}
-          className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
-        >
-          {loading? <Spinner className="mx-auto"/> : "Submit"}
-        </button>
+        {user && user.package_id === 1 && (
+          <button
+            onClick={getQR}
+            disabled={link.length === 0}
+            className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
+          >
+            {loading ? <Spinner className="mx-auto" /> : "Submit"}
+          </button>
+        )}
       </div>
 
       <Dialog
@@ -91,7 +93,6 @@ const FaceForm = () => {
         <img src={image} alt="qr" className="block mx-auto my-10" />
         <button
           onClick={() => downloadImage(image)}
-          
           className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor w-full"
         >
           Download

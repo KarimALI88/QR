@@ -27,7 +27,6 @@ const MainNavbar = () => {
     tn ? setToken(tn) : "";
   }, []);
   const closeMenu = () => setIsMenuOpen(false);
-  
 
   React.useEffect(() => {
     window.addEventListener(
@@ -47,24 +46,6 @@ const MainNavbar = () => {
       >
         Home
       </Typography>
-      {/* <Typography
-        as={Link}
-        to="/products"
-        variant="small"
-        color="blue-gray"
-        className="p-4  text-md text-gray-600 hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
-      >
-        Products
-      </Typography> */}
-      {/* <Typography
-        as={Link}
-        to="/contact-us"
-        variant="small"
-        color="blue-gray"
-        className="p-4 text-md text-gray-600 hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
-      >
-        Contact Us
-      </Typography> */}
     </ul>
   );
 
@@ -83,7 +64,8 @@ const MainNavbar = () => {
             </Typography>
             <div className="hidden lg:block lg:ml-12">{navList}</div>
           </div>
-          {/* Sign in Button */}
+
+          {/* Sign in Button / Profile Menu */}
           {token ? (
             <Menu
               open={isMenuOpen}
@@ -99,16 +81,16 @@ const MainNavbar = () => {
                   <Avatar
                     variant="circular"
                     size="md"
-                    alt="tania andrew"
+                    alt="User Avatar"
                     className="border border-gray-900 p-0.5"
-                    src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
+                    src="https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?t=st=1730811104~exp=1730814704~hmac=26dcf6457601716f625358c7a18d2ee382f6d63c5e4700b68fecefb7df237aed&w=740"
                   />
                 </Button>
               </MenuHandler>
               <MenuList className="p-1">
                 <MenuItem
                   onClick={closeMenu}
-                  className={`flex items-center gap-2 rounded`}
+                  className="flex items-center gap-2 rounded"
                 >
                   <Typography
                     as={Link}
@@ -116,12 +98,12 @@ const MainNavbar = () => {
                     variant="small"
                     className="font-normal flex items-center gap-2 text-lg"
                   >
-                    <FaChartSimple /> dashboard
+                    <FaChartSimple /> Dashboard
                   </Typography>
                 </MenuItem>
                 <MenuItem
                   onClick={closeMenu}
-                  className={`flex items-center gap-2 rounded`}
+                  className="flex items-center gap-2 rounded"
                 >
                   <Typography
                     as={Link}
@@ -145,7 +127,6 @@ const MainNavbar = () => {
               </Button>
             </div>
           )}
-          {/* profile button */}
 
           {/* Hamburger Icon */}
           <IconButton
@@ -186,17 +167,24 @@ const MainNavbar = () => {
             )}
           </IconButton>
         </div>
-        <Collapse open={openNav}>
-          {navList}
-          <div className="flex items-center gap-x-1">
-            <Button
-              fullWidth
-              variant="gradient"
-              size="lg"
-              className="bg-mainColor hover:bg-secondColor text-white font-[600]"
-            >
-              <Link to="/login">Sign in</Link>
-            </Button>
+
+        {/* Mobile Navigation */}
+        <Collapse open={openNav} className="lg:hidden">
+          <div className="flex flex-col gap-4 p-4">
+            {/* Navigation List for Mobile */}
+            <div>{navList}</div>
+
+            {/* Sign-in Button for Mobile */}
+            {!token && (
+              <Button
+                fullWidth
+                variant="gradient"
+                size="lg"
+                className="bg-mainColor hover:bg-secondColor text-white font-[600]"
+              >
+                <Link to="/login">Sign in</Link>
+              </Button>
+            )}
           </div>
         </Collapse>
       </Navbar>

@@ -1,35 +1,45 @@
-import axios from 'axios';
-import React, { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2'
-import { AppContext } from '../../../context/AppContext';
+import axios from "axios";
+import React, { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { AppContext } from "../../../context/AppContext";
 import { toast } from "react-toastify";
 
-const PackageCard = ({ title, price, savings, features, description, packageZero, country, price_dollar }) => {
-  const navigate = useNavigate()
-  const {token} = useContext(AppContext)
+const PackageCard = ({
+  title,
+  price,
+  savings,
+  features,
+  description,
+  packageZero,
+  country,
+  price_dollar,
+  user,
+}) => {
+  const navigate = useNavigate();
+  const { token } = useContext(AppContext);
 
   const createSubscribtion = async () => {
     try {
       const response = await axios({
-        method:"post",
-        url:"https://backend.ofx-qrcode.com/api/subscriptions",
-        data:{
-          package_id: '1',
-          duration: "year"
+        method: "post",
+        url: "https://backend.ofx-qrcode.com/api/subscriptions",
+        data: {
+          package_id: "1",
+          duration: "year",
         },
         headers: {
           "Content-Type": "application/json",
-          Authorization : `Bearer ${token}`
-        }
-      })
-      console.log("subscribe", response)
-      navigate("/generate-qr")
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("subscribe", response);
+      navigate("/generate-qr");
     } catch (error) {
-      console.error("error in subscribe", error)
-      toast.error(error.response.data.message)
+      console.error("error in subscribe", error);
+      toast.error(error.response.data.message);
     }
-  }
+  };
 
   const subscribePackageZero = () => {
     Swal.fire({
@@ -39,33 +49,37 @@ const PackageCard = ({ title, price, savings, features, description, packageZero
       showCancelButton: true,
       confirmButtonColor: "#053B5C",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, Subscribe"
+      confirmButtonText: "Yes, Subscribe",
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire({
           title: "Subscribed!",
           text: "Now Can Generate your QR code",
-          icon: "success"
+          icon: "success",
         });
-        createSubscribtion()
+        createSubscribtion();
       }
     });
-  }
+  };
 
   return (
-    <div className="bg-white shadow-sm rounded-lg overflow-hidden max-w-[300px] mx-auto my-3 border-mainColor border-solid border-2">
-      <div className="px-6 py-8">
+    <div className="bg-white shadow-sm rounded-lg overflow-hidden h-[470px] w-[250px] mx-auto my-3 border-mainColor border-solid border-2 flex flex-col">
+      <div className="px-6 py-8 flex-grow">
         <div className="flex flex-col justify-between gap-4">
-          <h2 className="text-2xl font-bold text-mainColor">{title}</h2>
+          <h2 className="text-2xl font-bold text-mainColor capitalize">
+            {title}
+          </h2>
           <p className="text-xl font-semibold text-gray-400">{description}</p>
-          <p className="text-3xl font-bold text-gray-500">{country == "Egypt" ? price : price_dollar + "$"}</p>
+          <p className="text-3xl font-bold text-gray-500">
+            {country == "Egypt" ? price : price_dollar + "$"}
+          </p>
         </div>
         <p className="text-gray-500 mt-2">
           <span className="text-green-500 font-bold">{savings}</span> SAVE
         </p>
-        <ul className="mt-8 space-y-4">
+        <ul className="mt-8 space-y-4 capitalize">
           {features.map((feature, index) => (
-            <li key={index} className="flex items-center">
+            <li key={index} className="flex items-center text-lg font-semibold">
               <svg
                 className="h-5 w-5 text-secondColor mr-2"
                 viewBox="0 0 20 20"
@@ -81,14 +95,15 @@ const PackageCard = ({ title, price, savings, features, description, packageZero
             </li>
           ))}
         </ul>
-        
       </div>
       <div className="bg-gray-100 px-6 py-4">
-        <button onClick={packageZero ? subscribePackageZero : () => navigate("/payment")} className="w-full bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded">
-          {packageZero ? "Subscribe" : "Buy Now"}
-        </button>
+        <Link
+          to={packageZero ? "/generate-qr" : "qr"}
+          className="w-full min-w-[90%] mx-auto block text-center bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded"
+        >
+          View
+        </Link>
       </div>
-      
     </div>
   );
 };

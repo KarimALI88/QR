@@ -19,9 +19,9 @@ import axios from "axios";
 import { Select, Option } from "@material-tailwind/react";
 import { Dialog } from "@material-tailwind/react";
 import jsPDF from "jspdf";
+import { useNavigate } from "react-router-dom";
 
-
-const PackageOneTwo = () => {
+const PackageOneTwo = ({ user }) => {
   const [image, setImage] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [coverImage, setCoverImage] = useState(null);
@@ -75,6 +75,7 @@ const PackageOneTwo = () => {
     { name: "Almarai", style: "Almarai, sans-serif" },
     { name: "IBM Plex Sans", style: "IBM Plex Sans, sans-serif" },
   ];
+  const navigate = useNavigate();
 
   const handleOpen = () => setOpenModal(!openModal);
   const addBranch = () => {
@@ -87,14 +88,10 @@ const PackageOneTwo = () => {
     setBranches(updatedBranches);
   };
 
-  
-
   useEffect(() => {
     const tn = localStorage.getItem("tn");
     setToken(tn);
   }, []);
-
-  
 
   // Handle drop for cover image
   const onDropCover = useCallback((acceptedFiles) => {
@@ -254,7 +251,7 @@ const PackageOneTwo = () => {
       console.log("form data after send", formData);
 
       const response = await axios({
-        method:"post",
+        method: "post",
         data: formData,
         url: "https://backend.ofx-qrcode.com/api/qrcode/smart",
         headers: {
@@ -280,15 +277,15 @@ const PackageOneTwo = () => {
     const pdf = new jsPDF();
     const img = new Image();
     img.src = imageSrc;
-  
+
     img.onload = () => {
       // Adjust image dimensions if needed
       const imgWidth = 180; // Width in the PDF document
       const imgHeight = (img.height * imgWidth) / img.width; // Maintain aspect ratio
-  
+
       // Add the image to the PDF
       pdf.addImage(img, "PNG", 15, 15, imgWidth, imgHeight);
-  
+
       // Save the PDF with the desired filename
       pdf.save("qr-code.pdf");
     };
@@ -889,16 +886,16 @@ const PackageOneTwo = () => {
 
             {/* menu */}
             <div>
-              <div>
+              {/* <div>
                 <h1 className="text-mainColor text-2xl font-black flex gap-4 items-center flex-wrap my-5">
                   <span className="text-white flex justify-center items-center w-10 h-10 text-center rounded-full bg-mainColor">
                     4
                   </span>{" "}
-                  Menue
+                  Menu
                 </h1>
                 <div>
                   <div className="flex flex-wrap gap-5">
-                    {/* Branch Name */}
+                    {/* menu 
                     <div className="w-[300px]">
                       <Typography
                         variant="small"
@@ -925,21 +922,32 @@ const PackageOneTwo = () => {
                           </p>
                         )}
                       </div>
-                      {/* <Input type="file" onChange={(e) => setMenuImageFile(e.target.files[0])}/> */}
+                      {/* <Input type="file" onChange={(e) => setMenuImageFile(e.target.files[0])}/> 
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
 
             {/* submit */}
             <div className="my-5 w-48">
-              <button
-                onClick={getQr}
-                className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-5 hover:bg-secondColor"
-              >
-                {loading ? <Spinner className="mx-auto" /> : "Submit"}
-              </button>
+              {user && (user.package_id === 2 || user.package_id === 3) && (
+                <button
+                  onClick={getQr}
+                  disabled={!user || !user.package_id || user.package_id === 1}
+                  className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-5 hover:bg-secondColor"
+                >
+                  {loading ? <Spinner className="mx-auto" /> : "Submit"}
+                </button>
+              )}
+              {(!user || !user.package_id || user.package_id === 1) && (
+                <button
+                  onClick={() => navigate("/payment")}
+                  className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-5 hover:bg-secondColor"
+                >
+                  Pay for use it
+                </button>
+              )}
             </div>
 
             <Dialog

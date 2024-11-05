@@ -9,18 +9,18 @@ import Profile from "./user/profile/Profile";
 import Payment from "./user/payment/Payment";
 import { AppContext } from "../context/AppContext";
 
-const UserLayout = ({country}) => {
+const UserLayout = ({country, user}) => {
   const { token } = useContext(AppContext);
   return (
     <Routes>
-      <Route path="" element={<Home country={country}/>} />
+      <Route path="" element={<Home country={country} user={user}/>} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/qr/:id" element={<Profile />} />
       {token ? (
         <>
-          <Route path="/generate-qr" element={<QrForm />} />
-          <Route path="/qr" element={<PackageOneTwo />} />
+          <Route path="/generate-qr" element={<QrForm user={user}/>} />
+          <Route path="/qr" element={<PackageOneTwo user={user}/>} />
           <Route path="/payment" element={<Payment />} />
         </>
       ) : (

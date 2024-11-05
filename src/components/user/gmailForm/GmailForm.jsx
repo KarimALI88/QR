@@ -5,7 +5,7 @@ import { Dialog } from "@material-tailwind/react";
 import { Spinner } from "@material-tailwind/react";
 import axios from "axios";
 
-const GmailForm = () => {
+const GmailForm = ({ user }) => {
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [emailBody, setEmailBody] = useState("");
@@ -115,15 +115,19 @@ const GmailForm = () => {
       </div>
       {/* ======================================================= */}
       <div className="mt-10">
-        <button
-          onClick={getQR}
-          disabled={
-            email.length === 0 || subject.length === 0 || emailBody.length === 0
-          }
-          className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
-        >
-          {loading ? <Spinner className="mx-auto" /> : "Submit"}
-        </button>
+        {user && user.package_id === 1 && (
+          <button
+            onClick={getQR}
+            disabled={
+              email.length === 0 ||
+              subject.length === 0 ||
+              emailBody.length === 0
+            }
+            className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
+          >
+            {loading ? <Spinner className="mx-auto" /> : "Submit"}
+          </button>
+        )}
       </div>
 
       <Dialog

@@ -4,7 +4,7 @@ import { Dialog } from "@material-tailwind/react";
 import { Spinner } from "@material-tailwind/react";
 import axios from "axios";
 
-const WebsiteForm = () => {
+const WebsiteForm = ({ user }) => {
   const [link, setLink] = useState("");
   const [token, setToken] = useState("");
   const [image, setImage] = useState("");
@@ -74,13 +74,15 @@ const WebsiteForm = () => {
       </div>
       {/* ======================================================= */}
       <div className="mt-10">
-        <button
-          onClick={getQR}
-          disabled={link.length === 0}
-          className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
-        >
-          {loading ? <Spinner className="mx-auto" /> : "Submit"}
-        </button>
+        {user && user.package_id === 1 && (
+          <button
+            onClick={getQR}
+            disabled={link.length === 0}
+            className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
+          >
+            {loading ? <Spinner className="mx-auto" /> : "Submit"}
+          </button>
+        )}
       </div>
 
       <Dialog
@@ -91,7 +93,6 @@ const WebsiteForm = () => {
         <img src={image} alt="qr" className="block mx-auto my-10" />
         <button
           onClick={() => downloadImage(image)}
-          
           className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor w-full"
         >
           Download

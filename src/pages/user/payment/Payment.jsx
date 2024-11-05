@@ -5,6 +5,7 @@ import { Input } from "@material-tailwind/react";
 import axios from "axios";
 import { AppContext } from "./../../../context/AppContext";
 import { Spinner } from "@material-tailwind/react";
+import { useNavigate } from "react-router-dom";
 
 const Payment = () => {
   const [activeSection, setActiveSection] = useState("vodafone");
@@ -15,8 +16,30 @@ const Payment = () => {
   const [message, setMessage] = useState("");
   const [success, setSuccess] = useState(false);
   const { token } = useContext(AppContext);
+  const navigate = useNavigate()
 
   const handleOpen = () => setOpenModal(!openModal);
+
+  const createSubscribtion = async () => {
+    try {
+      const response = await axios({
+        method: "post",
+        url: "https://backend.ofx-qrcode.com/api/subscriptions",
+        data: {
+          package_id: packageNumber,
+          duration: "year",
+        },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("subscribe", response);
+    } catch (error) {
+      console.error("error in subscribe", error);
+      toast.error(error.response.data.message);
+    }
+  };
 
   const activeVcash = async () => {
     setLoading(true);
@@ -33,10 +56,12 @@ const Payment = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+      createSubscribtion()
       console.log("activation resp", response);
       setLoading(false);
       setMessage("successfully");
       setSuccess(true);
+      navigate("/qr")
     } catch (error) {
       console.error("error in api", error);
       setLoading(false);

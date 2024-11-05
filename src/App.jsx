@@ -10,6 +10,7 @@ import { AppContext } from "./context/AppContext";
 function App() {
   const [ip, setIp] = useState('');
   const [country, setCountry] = useState('');
+  const [user, setUser] = useState({})
   const {token} = useContext(AppContext)
 
   const getUserLocation = async () => {
@@ -45,6 +46,28 @@ function App() {
   }
   
 
+  const getUserData = async () => {
+    try {
+      const response = await axios({
+        method:"get",
+        url:"https://backend.ofx-qrcode.com/api/subscriptions/user",
+        headers: {
+          "Content-Type":"application/json",
+          Authorization: `Bearer ${token}`
+        }
+      })
+      console.log("user data", response)
+      setUser(response.data[0])
+      // console.log("user ", user)
+    } catch (error) {
+      console.error("error in user data", error)
+    }
+  }
+
+  useEffect(()=>{
+    token && getUserData()
+  },[token])
+
   useEffect(() => {
     getUserLocation();
   }, []);
@@ -57,7 +80,7 @@ function App() {
     <>
       <ToastContainer />
       <Routes>
-        <Route path="/*" element={<UserLayout country={country}/>} />
+        <Route path="/*" element={<UserLayout country={country} user={user}/>} />
         <Route path="/admin/*" element={<AdminLayout />} />
       </Routes>
     </>

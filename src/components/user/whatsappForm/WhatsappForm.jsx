@@ -3,14 +3,16 @@ import { Input, Typography } from "@material-tailwind/react";
 import axios from "axios";
 import { Dialog } from "@material-tailwind/react";
 import { Spinner } from "@material-tailwind/react";
+import { useNavigate } from "react-router-dom";
 
-const WhatsappForm = () => {
+const WhatsappForm = ({ user }) => {
   const [number, setNumber] = useState("");
   const [text, setText] = useState("");
   const [token, setToken] = useState("");
   const [image, setImage] = useState("");
   const [openModal, setOpenModal] = useState(false);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
 
   useEffect(() => {
     const tn = localStorage.getItem("tn");
@@ -20,7 +22,7 @@ const WhatsappForm = () => {
   const handleOpen = () => setOpenModal(!openModal);
 
   const getQR = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       const response = await axios({
         method: "post",
@@ -37,10 +39,10 @@ const WhatsappForm = () => {
       // console.log("qr response", response);
       setOpenModal(true);
       setImage(`https://backend.ofx-qrcode.com${response.data.qr_code_url}`);
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
       console.log("error", error);
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -94,13 +96,16 @@ const WhatsappForm = () => {
       </div>
       {/* ======================================================= */}
       <div className="mt-10">
-        <button
-          onClick={getQR}
-          disabled={number.length === 0 && text.length === 0}
-          className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
-        >
-          {loading? <Spinner className="mx-auto"/> : "Submit"}
-        </button>
+        {user && user.package_id === 1 && (
+          <button
+            onClick={getQR}
+            disabled={number.length === 0 && text.length === 0}
+            className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
+          >
+            {loading ? <Spinner className="mx-auto" /> : "Submit"}
+          </button>
+        )}
+        
       </div>
 
       <Dialog
@@ -111,7 +116,6 @@ const WhatsappForm = () => {
         <img src={image} alt="qr" className="block mx-auto my-10" />
         <button
           onClick={() => downloadImage(image)}
-          
           className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor w-full"
         >
           Download
