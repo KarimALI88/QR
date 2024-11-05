@@ -18,6 +18,7 @@ import { Spinner } from "@material-tailwind/react";
 import axios from "axios";
 import { Select, Option } from "@material-tailwind/react";
 import { Dialog } from "@material-tailwind/react";
+import jsPDF from "jspdf";
 
 const PackageOneTwo = () => {
   const [image, setImage] = useState("");
@@ -90,8 +91,7 @@ const PackageOneTwo = () => {
     setToken(tn);
   }, []);
 
-  // console.log("cover image", coverImageFile);
-  // console.log("logo image", logoImageFile);
+  
 
   // Handle drop for cover image
   const onDropCover = useCallback((acceptedFiles) => {
@@ -196,118 +196,94 @@ const PackageOneTwo = () => {
     setLoading(true);
     try {
       const formData = new FormData();
-      {
-        coverImageFile && formData.append("cover", coverImageFile);
-      }
-      {
-        logoImageFile && formData.append("logo", logoImageFile);
-      }
-      {
-        mp3File && formData.append("mp3[]", mp3File);
-      }
-      {
-        pdfFile && formData.append("pdfs[]", pdfFile);
-      }
-      {
-        name && formData.append("title", name);
-      }
-      {
-        description && formData.append("description", description);
-      }
+      console.log("form data before send", formData);
+      coverImageFile && formData.append("cover", coverImageFile);
+      logoImageFile && formData.append("logo", logoImageFile);
+      mp3File && formData.append("mp3[]", mp3File);
+      pdfFile && formData.append("pdfs[]", pdfFile);
+      name && formData.append("title", name);
+      description && formData.append("description", description);
       formData.append("color", color);
       formData.append("font", selectedFont);
       formData.append("package_id", "2");
 
       // Append phones individually
       formData.append("phones[]", "01061476538");
-      formData.append("phones[]", "01061479563");
+      // formData.append("phones[]", "01061479563");
 
       // links
-      {
-        facebookLink.length > 0 &&
-          formData.append("links[0][url]", facebookLink);
-        formData.append("links[0][type]", "facebook");
-      }
 
-      {
-        instgramLink.length > 0 &&
-          formData.append("links[1][url]", instgramLink);
-        formData.append("links[1][type]", "instgram");
-      }
+      facebookLink.length > 0 && formData.append("links[0][url]", facebookLink);
+      formData.append("links[0][type]", "facebook");
 
-      {
-        youtubeLink.length > 0 && formData.append("links[2][url]", youtubeLink);
-        formData.append("links[2][type]", "youtube");
-      }
+      instgramLink.length > 0 && formData.append("links[1][url]", instgramLink);
+      formData.append("links[1][type]", "instgram");
 
-      {
-        beLink.length > 0 && formData.append("links[3][url]", beLink);
-        formData.append("links[3][type]", "behance");
-      }
+      youtubeLink.length > 0 && formData.append("links[2][url]", youtubeLink);
+      formData.append("links[2][type]", "youtube");
 
-      {
-        otherLink.length > 0 && formData.append("links[4][url]", otherLink);
-        formData.append("links[4][type]", "other");
-      }
+      beLink.length > 0 && formData.append("links[3][url]", beLink);
+      formData.append("links[3][type]", "behance");
 
-      {
-        portfolioLink.length > 0 &&
-          formData.append("links[5][url]", portfolioLink);
-        formData.append("links[5][type]", "portfolio");
-      }
+      otherLink.length > 0 && formData.append("links[4][url]", otherLink);
+      formData.append("links[4][type]", "other");
 
-      {
-        whatsappLink.length > 0 &&
-          formData.append("links[6][url]", `https://wa.me/${whatsappLink}`);
-        formData.append("links[6][type]", "whatsapp");
-      }
+      portfolioLink.length > 0 &&
+        formData.append("links[5][url]", portfolioLink);
+      formData.append("links[5][type]", "portfolio");
 
-      {
-        linkedinLink.length > 0 &&
-          formData.append("links[7][url]", linkedinLink);
-        formData.append("links[7][type]", "linkedin");
-      }
+      whatsappLink.length > 0 &&
+        formData.append("links[6][url]", `https://wa.me/${whatsappLink}`);
+      formData.append("links[6][type]", "whatsapp");
+
+      linkedinLink.length > 0 && formData.append("links[7][url]", linkedinLink);
+      formData.append("links[7][type]", "linkedin");
 
       // Append each branch's details
-      {
-        branches.length >= 1 &&
-          branches.forEach((branch, index) => {
-            formData.append(`branches[${index}][name]`, branch.name);
-            formData.append(`branches[${index}][location]`, branch.location);
-            formData.append(`branches[${index}][phones][0]`, branch.phones);
-          });
-      }
 
-      const response = await axios.post(
-        "https://backend.ofx-qrcode.com/api/qrcode/smart",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      branches.length >= 1 &&
+        branches.forEach((branch, index) => {
+          formData.append(`branches[${index}][name]`, branch.name);
+          formData.append(`branches[${index}][location]`, branch.location);
+          formData.append(`branches[${index}][phones][0]`, branch.phones);
+        });
 
+      console.log("form data after send", formData);
+
+      const response = await axios({
+        method:"post",
+        data: formData,
+        url: "https://backend.ofx-qrcode.com/api/qrcode/smart",
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("request finished");
       console.log("response qr", response);
       setLoading(false);
       setOpenModal(true);
       setImage(
         `https://backend.ofx-qrcode.com/storage/${response.data.qr_code}`
       );
+      return response;
     } catch (error) {
       console.log("error", error);
       setLoading(false);
     }
   };
 
-  const downloadImage = (imageSrc) => {
-    const link = document.createElement("a");
-    link.href = imageSrc;
-    link.download = "qr-code.png"; // Set the default filename here
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const downloadImageAsPDF = (imageSrc) => {
+    const pdf = new jsPDF();
+  
+    // Load the image
+    const img = new Image();
+    img.src = imageSrc;
+    img.onload = () => {
+      // Add the image to the PDF (position, width, and height can be adjusted)
+      pdf.addImage(img, "PNG", 10, 10, 180, 160); // Adjust width and height as needed
+      pdf.save("qr-code.pdf"); // Download the PDF
+    };
   };
 
   return (
@@ -379,6 +355,7 @@ const PackageOneTwo = () => {
                     <p>Drag & drop an image here, or click to select one</p>
                   )}
                 </div>
+                {/* <Input type="file" onChange={(e) => setCoverImageFile(e.target.files[0])}/> */}
               </div>
 
               {/* logo image */}
@@ -405,6 +382,7 @@ const PackageOneTwo = () => {
                     <p>Drag & drop an image here, or click to select one</p>
                   )}
                 </div>
+                {/* <Input type="file" onChange={(e) => setLogoImageFile(e.target.files[0])}/> */}
               </div>
 
               {/* company name */}
@@ -503,6 +481,7 @@ const PackageOneTwo = () => {
                     <p>Drag & drop an MP3 here, or click to select one</p>
                   )}
                 </div>
+                {/* <Input type="file" onChange={(e) => setMp3File(e.target.files[0])}/> */}
               </div>
 
               {/* PDF */}
@@ -525,6 +504,7 @@ const PackageOneTwo = () => {
                     <p>Drag & drop an PDF here, or click to select one</p>
                   )}
                 </div>
+                {/* <Input type="file" onChange={(e) => setPdfFile(e.target.files[0])}/> */}
               </div>
 
               {/* font */}
@@ -937,6 +917,7 @@ const PackageOneTwo = () => {
                           </p>
                         )}
                       </div>
+                      {/* <Input type="file" onChange={(e) => setMenuImageFile(e.target.files[0])}/> */}
                     </div>
                   </div>
                 </div>
@@ -960,7 +941,7 @@ const PackageOneTwo = () => {
             >
               <img src={image} alt="qr" className="block mx-auto my-10" />
               <button
-                onClick={() => downloadImage(image)}
+                onClick={() => downloadImageAsPDF(image)}
                 className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor w-full"
               >
                 Download
