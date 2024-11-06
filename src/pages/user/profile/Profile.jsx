@@ -6,10 +6,10 @@ import {
   FaYoutube,
   FaWhatsappSquare,
   FaLinkedin,
-  FaSnapchatSquare
+  FaSnapchatSquare,
 } from "react-icons/fa";
 import mp3 from "../../../assets/imgs/الاخلاص.mp3";
-import { FaLocationDot,FaLink  } from "react-icons/fa6";
+import { FaLocationDot, FaLink } from "react-icons/fa6";
 import { FaPhoneAlt } from "react-icons/fa";
 import { Collapse, Button, Card } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
@@ -66,7 +66,10 @@ const Profile = () => {
   return (
     <div
       className="relative flex flex-col items-center justify-start h-full overflow-auto"
-      style={{ color: profileData?.backgraound_color,fontFamily: profileData?.font }}
+      style={{
+        color: profileData?.backgraound_color,
+        fontFamily: profileData?.font,
+      }}
     >
       {/* Background with Blur Overlay */}
       <div
@@ -105,8 +108,14 @@ const Profile = () => {
           </div>
         </div>
 
-        <div className="my-16 " style={{color: profileData?.background_color}}>
-          <h1 className="text-center text-4xl p-1 font-black uppercase" style={{color: profileData?.background_color}}>
+        <div
+          className="my-16 "
+          style={{ color: profileData?.background_color }}
+        >
+          <h1
+            className="text-center text-4xl p-1 font-black uppercase"
+            style={{ color: profileData?.background_color }}
+          >
             {profileData?.title}
           </h1>
 
@@ -116,8 +125,10 @@ const Profile = () => {
             </p>
           </div>
 
-          <div className="flex gap-5 items-center px-3 py-5 flex-wrap justify-center" style={{color: profileData?.background_color}}>
-            
+          <div
+            className="flex gap-5 items-center px-3 py-5 flex-wrap justify-center"
+            style={{ color: profileData?.background_color }}
+          >
             {profileData?.links?.find((link) => link.type === "whatsapp") && (
               <a
                 href={
@@ -225,7 +236,6 @@ const Profile = () => {
                 <FaSnapchatSquare size={60} className="" />
               </a>
             )}
-            
           </div>
 
           {profileData?.phones && (
@@ -246,63 +256,75 @@ const Profile = () => {
             </div>
           )}
 
-          {profileData?.pdfs &&
-            profileData?.pdfs.map((pdf, index) => (
-              <div
-                key={index}
-                className="flex gap-5 items-center px-2 my-5 justify-center"
-              >
-                <FaFilePdf size={60} />
+          <div className="flex flex-wrap justify-center items-center">
+            {profileData?.pdfs &&
+              profileData?.pdfs.map((pdf, index) => (
+                <div
+                  key={index}
+                  className="flex gap-5 items-center px-2 my-5 justify-center"
+                >
+                  <div>
+                    <FaFilePdf size={60} />
+                    {index === 1 && <p className="text-lg font-semibold">menu</p>}
+                  </div>
+                  
+                </div>
+              ))}
+          </div>
+
+          {profileData?.records &&
+            profileData?.records?.map((record, index) => (
+              <div className="mx-auto my-10">
+                <audio
+                  className="mx-auto block"
+                  key={index}
+                  src={`https://backend.ofx-qrcode.com/storage/${record.mp3_path}`}
+                  controls
+                />
               </div>
             ))}
 
-          {profileData?.records && profileData?.records?.map((record, index) => (
-            <div className="mx-auto my-10">
-              <audio className="mx-auto block" key={index} src={`https://backend.ofx-qrcode.com/storage/${record.mp3_path}`} controls/>
-            </div>
-          ))}
-
-          {profileData?.branches && (
-            <div className="my-5 mx-auto">
-              <h4 className="text-center text-3xl font-black">Branches</h4>
-              <div className="flex justify-center gap-10 items-center flex-wrap">
-                {profileData?.branches?.map((branch, index) => (
-                  <div className="mx-auto" key={index}>
-                    <Button
-                      onClick={() => toggleOpen(index)}
-                      className="min-w-[200px] max-w-[250px] py-4 text-xl mt-5 mx-auto block h-fit"
-                    >
-                      {branch?.name}
-                    </Button>
-                    <Collapse open={openBranches[index]}>
-                      <Card className="my-4 mx-auto w-8/12 p-4">
-                        <div className="flex flex-wrap gap-5">
-                          <div className="flex gap-2 items-center cursor-pointer">
-                            <FaLocationDot size={30} color="#053B5C" />
-                            <a
-                              href={branch?.location}
-                              className="text-[#053B5C] text-lg font-semibold"
-                            >
-                              Location
-                            </a>
+          {profileData?.branches &&
+            profileData?.branches?.some((branch) => branch.name.length > 0) && (
+              <div className="my-5 mx-auto">
+                <h4 className="text-center text-3xl font-black">Branches</h4>
+                <div className="flex justify-center gap-10 items-center flex-wrap">
+                  {profileData?.branches?.map((branch, index) => (
+                    <div className="mx-auto" key={index}>
+                      <Button
+                        onClick={() => toggleOpen(index)}
+                        className="min-w-[200px] max-w-[250px] py-4 text-xl mt-5 mx-auto block h-fit"
+                      >
+                        {branch?.name}
+                      </Button>
+                      <Collapse open={openBranches[index]}>
+                        <Card className="my-4 mx-auto w-8/12 p-4">
+                          <div className="flex flex-wrap gap-5">
+                            <div className="flex gap-2 items-center cursor-pointer">
+                              <FaLocationDot size={30} color="#053B5C" />
+                              <a
+                                href={branch?.location}
+                                className="text-[#053B5C] text-lg font-semibold"
+                              >
+                                Location
+                              </a>
+                            </div>
+                            <div className="flex gap-2 items-center cursor-pointer">
+                              <FaPhoneAlt size={30} color="#053B5C" />
+                              <a href={`tel:${branch?.phones[0]}`}>
+                                <button className="text-[#053B5C] text-lg font-semibold">
+                                  {branch?.phones[0]}
+                                </button>
+                              </a>
+                            </div>
                           </div>
-                          <div className="flex gap-2 items-center cursor-pointer">
-                            <FaPhoneAlt size={30} color="#053B5C" />
-                            <a href={`tel:${branch?.phones[0]}`}>
-                              <button className="text-[#053B5C] text-lg font-semibold">
-                                {branch?.phones[0]}
-                              </button>
-                            </a>
-                          </div>
-                        </div>
-                      </Card>
-                    </Collapse>
-                  </div>
-                ))}
+                        </Card>
+                      </Collapse>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
-
+            )}
         </div>
       </div>
     </div>
