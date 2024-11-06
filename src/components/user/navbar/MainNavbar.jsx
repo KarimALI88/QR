@@ -7,7 +7,7 @@ import {
   IconButton,
 } from "@material-tailwind/react";
 import { FaChartSimple, FaPowerOff } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../../../assets/imgs/QR-LOGO2.png";
 import {
   Menu,
@@ -21,7 +21,8 @@ const MainNavbar = () => {
   const [openNav, setOpenNav] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [token, setToken] = useState("");
-
+  const navigate = useNavigate()
+  
   useEffect(() => {
     const tn = localStorage.tn;
     tn ? setToken(tn) : "";
@@ -34,6 +35,12 @@ const MainNavbar = () => {
       () => window.innerWidth >= 960 && setOpenNav(false)
     );
   }, []);
+
+  const logout = () => {
+    localStorage.removeItem("tn")
+    navigate("/login")
+    window.location.reload();
+  }
 
   const navList = (
     <ul className="mt-2 mb-4 flex flex-col gap-2 lg:pl-12 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
@@ -102,7 +109,7 @@ const MainNavbar = () => {
                   </Typography>
                 </MenuItem>
                 <MenuItem
-                  onClick={closeMenu}
+                  onClick={logout}
                   className="flex items-center gap-2 rounded"
                 >
                   <Typography
@@ -119,12 +126,14 @@ const MainNavbar = () => {
             </Menu>
           ) : (
             <div className="ml-auto hidden lg:block">
-              <Button
-                size="lg"
-                className="rounded-none bg-mainColor hover:bg-secondColor text-white font-[600]"
-              >
-                <Link to="/login">Sign in</Link>
-              </Button>
+              <Link to="/login">
+                <Button
+                  size="lg"
+                  className="rounded-none bg-mainColor hover:bg-secondColor text-white font-[600]"
+                >
+                  Sign in
+                </Button>
+              </Link>
             </div>
           )}
 

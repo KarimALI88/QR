@@ -28,7 +28,7 @@ import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import axios from "axios";
 
-const QrForm = ({ user }) => {
+const QrForm = ({ user, refresh, setRefresh }) => {
   const [feature, setFeature] = useState("whatsapp");
   const { token } = useContext(AppContext);
 
@@ -39,7 +39,7 @@ const QrForm = ({ user }) => {
         url: "https://backend.ofx-qrcode.com/api/subscriptions",
         data: {
           package_id: "1",
-          duration: "year",
+          duration: "year", 
         },
         headers: {
           "Content-Type": "application/json",
@@ -47,6 +47,7 @@ const QrForm = ({ user }) => {
         },
       });
       console.log("subscribe", response);
+      setRefresh(prevState => !prevState)
     } catch (error) {
       console.error("error in subscribe", error);
       toast.error(error.response.data.message);
@@ -73,6 +74,7 @@ const QrForm = ({ user }) => {
       }
     });
   };
+
   // console.log("feature", feature);
   return (
     <div>

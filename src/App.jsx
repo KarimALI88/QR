@@ -11,6 +11,7 @@ function App() {
   const [ip, setIp] = useState('');
   const [country, setCountry] = useState('');
   const [user, setUser] = useState({})
+  const [refresh, setRefresh] = useState(false)
   const {token} = useContext(AppContext)
 
   const getUserLocation = async () => {
@@ -66,7 +67,7 @@ function App() {
 
   useEffect(()=>{
     token && getUserData()
-  },[token])
+  },[token, refresh])
 
   useEffect(() => {
     getUserLocation();
@@ -80,8 +81,8 @@ function App() {
     <>
       <ToastContainer />
       <Routes>
-        <Route path="/*" element={<UserLayout country={country} user={user}/>} />
-        <Route path="/admin/*" element={<AdminLayout />} />
+        <Route path="/*" element={<UserLayout country={country} user={user} refresh={refresh} setRefresh={setRefresh}/>} />
+        {token && <Route path="/admin/*" element={<AdminLayout />} />}
       </Routes>
     </>
   );

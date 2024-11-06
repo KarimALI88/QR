@@ -270,7 +270,7 @@ const Profile = () => {
                   <div className="mx-auto" key={index}>
                     <Button
                       onClick={() => toggleOpen(index)}
-                      className="min-w-8/12 py-4 text-xl mt-5 mx-auto block"
+                      className="min-w-[200px] max-w-[250px] py-4 text-xl mt-5 mx-auto block h-fit"
                     >
                       {branch?.name}
                     </Button>

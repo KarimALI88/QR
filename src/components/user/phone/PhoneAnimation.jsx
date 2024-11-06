@@ -14,6 +14,7 @@ import { FaPhoneAlt } from "react-icons/fa";
 import altImage from "../../../assets/imgs/loginImage.jpg";
 import altLogo from "../../../assets/imgs/QR-LOGO2.png";
 import { RiTwitterXFill } from "react-icons/ri";
+
 const PhoneAnimation = ({
   image,
   logo,
@@ -38,7 +39,7 @@ const PhoneAnimation = ({
   other
 }) => {
   return (
-    <div className="flex justify-center rounded-3xl items-center h-fit mx-auto max-w-[100%] fixed right-16 top-28">
+    <div className="flex justify-center rounded-3xl items-center h-fit mx-auto max-w-[100%] md:fixed md:right-16 md:top-28">
       <div
         className="w-80 h-[500px] bg-white rounded-3xl shadow-lg border-8 border-black relative "
         style={{ fontFamily: selectedFont }}

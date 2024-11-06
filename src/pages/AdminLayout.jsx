@@ -5,6 +5,7 @@ import QrStatistics from "./admin/dashboard/stats/QrStatistics";
 import MyQrs from "./admin/dashboard/myqrCodes/MyQrs";
 
 const AdminLayout = () => {
+  
   return (
     <div className="flex gap-96">
       <div>

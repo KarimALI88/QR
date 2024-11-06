@@ -18,16 +18,35 @@ import { AppContext } from "./../../../../context/AppContext";
 import { Spinner } from "@material-tailwind/react";
 
 const MyQrs = () => {
-  const TABLE_HEAD = ["QR", "Devices", "Scan", "Status"];
+  const TABLE_HEAD = [
+    "QR",
+    "Devices",
+    "Scan",
+    "Status",
+    "Scan Location",
+    "Actions",
+  ];
   const [tableRows, setTableRows] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const { token } = useContext(AppContext);
 
-  // useEffect(() => {
-  //   const tn = localStorage?.tn;
-  //   tn ? setToken(tn) : "";
-  // }, []);
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const downloadImage = (imageSrc) => {
+    const link = document.createElement("a");
+    link.href = imageSrc;
+    link.target = "_blank";
+    link.download = "qr-code.png"; // Set the default filename here
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   const getQrData = async () => {
+    setLoading(true);
     try {
       const response = await axios({
         method: "get",
@@ -38,21 +57,31 @@ const MyQrs = () => {
         },
       });
       console.log("response", response);
+      setLoading(false);
       setTableRows(response.data.qr_codes);
     } catch (error) {
       console.error("error in api", error);
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    {
-      token && getQrData();
-    }
+    token && getQrData();
   }, [token]);
+
+  // Filter restaurants based on the search query
+  const filteredQrs = tableRows.filter(
+    (row) =>
+      row.qr_code?.profile?.title
+        ?.toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+      row.qr_code?.link?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <>
-      {tableRows.length > 0 ? (
+      {loading && <Spinner className="w-8 h-8" />}
+      {
         <Card className="h-full w-[100%]">
           <CardHeader floated={false} shadow={false} className="rounded-none">
             <div className="mb-4 flex flex-col justify-between gap-8 md:flex-row md:items-center">
@@ -68,12 +97,14 @@ const MyQrs = () => {
                 <div className="w-full md:w-72">
                   <Input
                     label="Search"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
                     icon={<FaSearch className="h-5 w-5" />}
                   />
                 </div>
-                <Button className="flex items-center gap-3" size="sm">
+                {/* <Button className="flex items-center gap-3" size="sm">
                   <FaDownload className="h-4 w-4" /> Download
-                </Button>
+                </Button> */}
               </div>
             </div>
           </CardHeader>
@@ -98,126 +129,125 @@ const MyQrs = () => {
                 </tr>
               </thead>
               <tbody>
-                {tableRows.map((row, index) => {
-                  const isLast = index === tableRows.length - 1;
-                  const classes = isLast
-                    ? "p-4"
-                    : "p-4 border-b border-blue-gray-50";
+                {filteredQrs
+                  .slice()
+                  .reverse()
+                  .map((row, index) => {
+                    const isLast = index === tableRows.length - 1;
+                    const classes = isLast
+                      ? "p-4"
+                      : "p-4 border-b border-blue-gray-50";
 
-                  return (
-                    <tr key={index}>
-                      <td className={classes}>
-                        <div className="flex items-center gap-3">
-                          <img
-                            src={`https://backend.ofx-qrcode.com/storage/${row?.qr_code?.qrcode}`}
-                            alt={"qr code"}
-                            className="w-[70px] h-[70px]"
-                          />
-                          <h1 className="text-xl font-semibold">
-                            {row?.qr_code?.profile?.title
-                              ? row?.qr_code?.profile?.title
-                              : "No Title"}
-                          </h1>
-                        </div>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal w-max"
-                        >
-                          <Chip
-                            size="sm"
-                            variant="ghost"
-                            value={row?.device_count}
-                          />
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal w-max"
-                        >
-                          <Chip
-                            size="sm"
-                            variant="ghost"
-                            value={row?.qr_code?.scan_count}
-                          />
-                        </Typography>
-                      </td>
+                    return (
+                      <tr key={index}>
+                        <td className={classes}>
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={`https://backend.ofx-qrcode.com/storage/${row?.qr_code?.qrcode}`}
+                              alt={"qr code"}
+                              className="w-[70px] h-[70px]"
+                            />
+                            <h1 className="text-lg font-medium">
+                              {row?.qr_code?.profile?.title
+                                ? row?.qr_code?.profile?.title
+                                : row?.qr_code?.link}
+                            </h1>
+                          </div>
+                        </td>
+                        <td className={classes}>
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal w-max"
+                          >
+                            <Chip
+                              size="sm"
+                              variant="ghost"
+                              value={row?.device_count}
+                            />
+                          </Typography>
+                        </td>
+                        <td className={classes}>
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal w-max"
+                          >
+                            <Chip
+                              size="sm"
+                              variant="ghost"
+                              value={row?.qr_code?.scan_count}
+                            />
+                          </Typography>
+                        </td>
 
-                      <td className={classes}>
-                        <div className="w-max">
-                          <Chip
-                            size="sm"
-                            variant="ghost"
-                            value={
-                              row?.qr_code?.is_active === 1
-                                ? "active"
-                                : "stopped"
-                            }
-                            color={
-                              row?.qr_code?.is_active === 1
-                                ? "green"
-                                : row.is_active === "stopped"
-                                ? "red"
-                                : ""
-                            }
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
+                        <td className={classes}>
+                          <div className="w-max">
+                            <Chip
+                              size="sm"
+                              variant="ghost"
+                              value={
+                                row?.qr_code?.is_active === 1
+                                  ? "active"
+                                  : "stopped"
+                              }
+                              color={
+                                row?.qr_code?.is_active === 1
+                                  ? "green"
+                                  : row.is_active === "stopped"
+                                  ? "red"
+                                  : ""
+                              }
+                            />
+                          </div>
+                        </td>
+
+                        <td className={classes}>
+                          <div className="w-full flex gap-5 flex-col">
+                            {row?.qr_code?.user_location?.map((loc, index) => (
+                              <div key={index}>
+                                <p className="max-w-40 break-words">
+                                  {loc.location}
+                                </p>
+                                <hr />
+                              </div>
+                            ))}
+                          </div>
+                        </td>
+
+                        <td className={classes}>
+                          <div className="w-max">
+                            <Button
+                              className="flex items-center gap-3"
+                              size="sm"
+                              onClick={() =>
+                                downloadImage(
+                                  `https://backend.ofx-qrcode.com/storage/${row?.qr_code?.qrcode}`
+                                )
+                              }
+                            >
+                              <FaDownload className="h-4 w-4" /> Download
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                {filteredQrs.length === 0 && (
+                  <h3 className="text-lg font-semibold text-black text-center my-10 mx-auto flex justify-center items-center">
+                    No QRs Yet
+                  </h3>
+                )}
               </tbody>
             </table>
           </CardBody>
-          <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
-            <Button variant="outlined" size="sm">
-              Previous
-            </Button>
-            <div className="flex items-center gap-2">
-              <IconButton variant="outlined" size="sm">
-                1
-              </IconButton>
-              <IconButton variant="text" size="sm">
-                2
-              </IconButton>
-              <IconButton variant="text" size="sm">
-                3
-              </IconButton>
-              <IconButton variant="text" size="sm">
-                ...
-              </IconButton>
-              <IconButton variant="text" size="sm">
-                8
-              </IconButton>
-              <IconButton variant="text" size="sm">
-                9
-              </IconButton>
-              <IconButton variant="text" size="sm">
-                10
-              </IconButton>
-            </div>
-            <Button variant="outlined" size="sm">
-              Next
-            </Button>
-          </CardFooter>
         </Card>
-      ) : (
-        <div className="mx-auto my-32">
-          <Spinner className="text-center text-2xl font-black mx-96 w-48 h-9 "/>
-        </div>
-      )}
+      }
     </>
   );
 };
 
 export default MyQrs;
-
-
-
 
 // import React, { useContext, useEffect, useState } from "react";
 // import {

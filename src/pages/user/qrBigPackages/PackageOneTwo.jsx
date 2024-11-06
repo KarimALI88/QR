@@ -85,7 +85,7 @@ const PackageOneTwo = ({ user }) => {
   const navigate = useNavigate();
 
   const handleOpen = () => setOpenModal(!openModal);
-  const addBranch = () => {
+  const addBranch = () => { 
     setBranches([...branches, { name: "", location: "", phones: "" }]);
   };
 
@@ -322,8 +322,34 @@ const PackageOneTwo = ({ user }) => {
     >
       <MainNavbar />
       <div className="p-10 h-fit ">
-        <div className="flex flex-col md:flex-row h-screen space-y-5 md:space-y-0 md:space-x-5 flex-wrap">
-          <div className="flex-1 my-10">
+        <div className="flex flex-col sm:flex-col md:flex-row space-y-5 sm:space-y-0 sm:space-x-5">
+          <div className="flex-1 shadow-none sm:w-[300px] md:[200px] order-1 sm:order-2">
+            <PhoneAnimation
+              image={coverImage}
+              logo={logoImage}
+              name={name}
+              description={description}
+              color={color}
+              phone1={phone1}
+              phone2={phone2}
+              mp3={mp3}
+              pdf={pdf}
+              facebook={facebookLink}
+              instgram={instgramLink}
+              behance={beLink}
+              linkedin={linkedinLink}
+              whatsapp={whatsappLink}
+              youtube={youtubeLink}
+              twitter={twitterLink}
+              snapchat={snapchatLink}
+              selectedFont={selectedFont}
+              branches={branches}
+              menuImage={menuImage}
+              other={otherLink}
+            />
+          </div>
+          {/* ======================================== */}
+          <div className="flex-1 my-10 order-2 sm:order-1">
             <h1 className="text-mainColor text-2xl font-black flex gap-4 items-center flex-wrap">
               <span className="text-white flex justify-center items-center w-10 h-10 text-center rounded-full bg-mainColor">
                 1
@@ -1049,31 +1075,7 @@ const PackageOneTwo = ({ user }) => {
             </Dialog>
           </div>
           {/* ======================================== */}
-          <div className="flex-1 shadow-none w-[200px]">
-            <PhoneAnimation
-              image={coverImage}
-              logo={logoImage}
-              name={name}
-              description={description}
-              color={color}
-              phone1={phone1}
-              phone2={phone2}
-              mp3={mp3}
-              pdf={pdf}
-              facebook={facebookLink}
-              instgram={instgramLink}
-              behance={beLink}
-              linkedin={linkedinLink}
-              whatsapp={whatsappLink}
-              youtube={youtubeLink}
-              twitter={twitterLink}
-              snapchat={snapchatLink}
-              selectedFont={selectedFont}
-              branches={branches}
-              menuImage={menuImage}
-              other={otherLink}
-            />
-          </div>
+          
         </div>
       </div>
     </div>
