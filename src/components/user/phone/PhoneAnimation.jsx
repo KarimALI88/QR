@@ -5,14 +5,15 @@ import {
   FaBehance,
   FaYoutube,
   FaWhatsappSquare,
-  FaLinkedin
-  
+  FaLinkedin,
+  FaSnapchatSquare
 } from "react-icons/fa";
 import { Collapse, Button, Card } from "@material-tailwind/react";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaPhoneAlt } from "react-icons/fa";
 import altImage from "../../../assets/imgs/loginImage.jpg";
 import altLogo from "../../../assets/imgs/QR-LOGO2.png";
+import { RiTwitterXFill } from "react-icons/ri";
 const PhoneAnimation = ({
   image,
   logo,
@@ -32,6 +33,8 @@ const PhoneAnimation = ({
   selectedFont,
   branches,
   menuImage,
+  snapchat,
+  twitter,
   other
 }) => {
   return (
@@ -113,7 +116,9 @@ const PhoneAnimation = ({
                     behance,
                     linkedin,
                     youtube,
-                    other
+                    other,
+                    snapchat,
+                    twitter
                   ].filter(Boolean).length === 3
                 ? "flex-col"
                 : "flex-wrap justify-center"
@@ -126,6 +131,9 @@ const PhoneAnimation = ({
             {linkedin && <FaLinkedin size={40} style={{ color }} />}
             {youtube && <FaYoutube size={40} style={{ color }} />}
             {other && <FaLink size={40} style={{ color }} />}
+            {snapchat && <FaSnapchatSquare size={40} style={{ color }} />}
+            {twitter && <RiTwitterXFill size={40} style={{ color }} />}
+
           </div>
           <h3
             className="text-lg font-semibold mt-3 text-center"

@@ -20,6 +20,8 @@ import { Select, Option } from "@material-tailwind/react";
 import { Dialog } from "@material-tailwind/react";
 import jsPDF from "jspdf";
 import { useNavigate } from "react-router-dom";
+import { RiTwitterXFill } from "react-icons/ri";
+import { FaSnapchatSquare } from "react-icons/fa";
 
 const PackageOneTwo = ({ user }) => {
   const [image, setImage] = useState("");
@@ -46,6 +48,9 @@ const PackageOneTwo = ({ user }) => {
     be: false,
     whatsapp: false,
     portfolio: false,
+    tiktok:false,
+    snapchat:false,
+    twitter:false,
     other: false,
   });
   const [token, setToken] = useState("");
@@ -53,6 +58,8 @@ const PackageOneTwo = ({ user }) => {
   const [portfolioLink, setPortfolioLink] = useState("");
   const [instgramLink, setInstgramLink] = useState("");
   const [linkedinLink, setLinkedinLink] = useState("");
+  const [snapchatLink, setSnapchatLink] = useState("");
+  const [twitterLink, setTwitterLink] = useState("");
   const [otherLink, setOtherLink] = useState("");
   const [youtubeLink, setYoutubeLink] = useState(""); 
   const [whatsappLink, setWhatsappLink] = useState("");
@@ -179,7 +186,9 @@ const PackageOneTwo = ({ user }) => {
   const { getRootProps: getRootPropsImage, getInputProps: getInputPropsImage } =
     useDropzone({
       onDrop: onDropCenterImage,
-      accept: "image/*",
+      accept: {
+        "application/pdf": [".pdf"], // Accepts PDF files
+      },
     });
 
   const { getRootProps: getRootPropsPDF, getInputProps: getInputPropsPDF } =
@@ -201,6 +210,7 @@ const PackageOneTwo = ({ user }) => {
       logoImageFile && formData.append("logo", logoImageFile);
       mp3File && formData.append("mp3[]", mp3File);
       pdfFile && formData.append("pdfs[]", pdfFile);
+      menuImageFile && formData.append("pdfs[]", menuImageFile);
       name && formData.append("title", name);
       description && formData.append("description", description);
       formData.append("color", color);
@@ -208,36 +218,41 @@ const PackageOneTwo = ({ user }) => {
       formData.append("package_id", "2");
 
       // Append phones individually
-      formData.append("phones[]", "01061476538");
-      // formData.append("phones[]", "01061479563");
+      formData.append("phones[]", phone1);
+      formData.append("phones[]", phone2);
 
       // links
+      facebookLink.length > 0 && (formData.append("links[0][url]", facebookLink) &&
+      formData.append("links[0][type]", "facebook"))
 
-      facebookLink.length > 0 && formData.append("links[0][url]", facebookLink);
-      formData.append("links[0][type]", "facebook");
+      instgramLink.length > 0 && (formData.append("links[1][url]", instgramLink) &&
+      formData.append("links[1][type]", "instgram"))
 
-      instgramLink.length > 0 && formData.append("links[1][url]", instgramLink);
-      formData.append("links[1][type]", "instgram");
+      youtubeLink.length > 0 && (formData.append("links[2][url]", youtubeLink) &&
+      formData.append("links[2][type]", "youtube"))
 
-      youtubeLink.length > 0 && formData.append("links[2][url]", youtubeLink);
-      formData.append("links[2][type]", "youtube");
+      beLink.length > 0 && (formData.append("links[3][url]", beLink) &&
+      formData.append("links[3][type]", "behance"))
 
-      beLink.length > 0 && formData.append("links[3][url]", beLink);
-      formData.append("links[3][type]", "behance");
-
-      otherLink.length > 0 && formData.append("links[4][url]", otherLink);
-      formData.append("links[4][type]", "other");
+      otherLink.length > 0 && (formData.append("links[4][url]", otherLink) &&
+      formData.append("links[4][type]", "other"))
 
       portfolioLink.length > 0 &&
-        formData.append("links[5][url]", portfolioLink);
-      formData.append("links[5][type]", "portfolio");
+        (formData.append("links[5][url]", portfolioLink) &&
+      formData.append("links[5][type]", "portfolio"))
 
-      whatsappLink.length > 0 &&
-        formData.append("links[6][url]", `https://wa.me/${whatsappLink}`);
-      formData.append("links[6][type]", "whatsapp");
+      whatsappLink.length > 0 && 
+        (formData.append("links[6][url]", `https://wa.me/${whatsappLink}`) &&
+      formData.append("links[6][type]", "whatsapp"))
 
-      linkedinLink.length > 0 && formData.append("links[7][url]", linkedinLink);
-      formData.append("links[7][type]", "linkedin");
+      linkedinLink.length > 0 && (formData.append("links[7][url]", linkedinLink) &&
+      formData.append("links[7][type]", "linkedin"))
+
+      snapchatLink.length > 0 && (formData.append("links[8][url]", snapchatLink) &&
+      formData.append("links[8][type]", "snapchat"))
+
+      twitterLink.length > 0 && (formData.append("links[9][url]", twitterLink) &&
+      formData.append("links[9][type]", "twitter"))
 
       // Append each branch's details
 
@@ -537,6 +552,7 @@ const PackageOneTwo = ({ user }) => {
               </div>
             </div>
 
+            {/* social media icons */}
             <div>
               <h1 className="text-mainColor text-2xl font-black flex gap-4 items-center flex-wrap my-10">
                 <span className="text-white flex justify-center items-center w-10 h-10 text-center rounded-full bg-mainColor">
@@ -633,6 +649,36 @@ const PackageOneTwo = ({ user }) => {
                   }
                 />
 
+                <FaSnapchatSquare 
+                  size={40}
+                  className={`cursor-pointer ${
+                    activeInputs.snapchat
+                      ? "text-secondColor"
+                      : "text-gray-800"
+                  }`}
+                  onClick={() =>
+                    setActiveInputs((prevState) => ({
+                      ...prevState,
+                      snapchat: !prevState.snapchat,
+                    }))
+                  }
+                />
+
+                <RiTwitterXFill 
+                  size={40}
+                  className={`cursor-pointer ${
+                    activeInputs.twitter
+                      ? "text-secondColor"
+                      : "text-gray-800"
+                  }`}
+                  onClick={() =>
+                    setActiveInputs((prevState) => ({
+                      ...prevState,
+                      twitter: !prevState.twitter,
+                    }))
+                  }
+                />
+
                 <FaPlus
                   size={40}
                   className={`cursor-pointer ${
@@ -688,25 +734,6 @@ const PackageOneTwo = ({ user }) => {
                 </div>
               )}
 
-              {/* linkedin */}
-              {activeInputs.linkedin && (
-                <div className="w-[300px]">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="mb-1 mt-5 font-semibold text-lg"
-                  >
-                    Linkedin
-                  </Typography>
-                  <Input
-                    placeholder="Linkedin"
-                    value={linkedinLink}
-                    onChange={(e) => setLinkedinLink(e.target.value)}
-                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
-                  />
-                </div>
-              )}
-
               {/* youtube */}
               {activeInputs.youtube && (
                 <div className="w-[300px]  ">
@@ -745,20 +772,20 @@ const PackageOneTwo = ({ user }) => {
                 </div>
               )}
 
-              {/* portfolio */}
-              {activeInputs.portfolio && (
-                <div className="w-[300px]  ">
+              {/* linkedin */}
+              {activeInputs.linkedin && (
+                <div className="w-[300px]">
                   <Typography
                     variant="small"
                     color="blue-gray"
                     className="mb-1 mt-5 font-semibold text-lg"
                   >
-                    portfolio Link
+                    Linkedin
                   </Typography>
                   <Input
-                    placeholder="www.ofxegypt.com"
-                    value={portfolioLink}
-                    onChange={(e) => setPortfolioLink(e.target.value)}
+                    placeholder="Linkedin"
+                    value={linkedinLink}
+                    onChange={(e) => setLinkedinLink(e.target.value)}
                     className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
@@ -778,6 +805,63 @@ const PackageOneTwo = ({ user }) => {
                     placeholder="behance.com"
                     value={beLink}
                     onChange={(e) => setBeLink(e.target.value)}
+                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
+                  />
+                </div>
+              )}
+
+              {/* portfolio */}
+              {activeInputs.portfolio && (
+                <div className="w-[300px]  ">
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="mb-1 mt-5 font-semibold text-lg"
+                  >
+                    portfolio Link
+                  </Typography>
+                  <Input
+                    placeholder="www.ofxegypt.com"
+                    value={portfolioLink}
+                    onChange={(e) => setPortfolioLink(e.target.value)}
+                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
+                  />
+                </div>
+              )}
+
+              {/* snapchat */}
+              {activeInputs.snapchat && (
+                <div className="w-[300px]  ">
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="mb-1 mt-5 font-semibold text-lg"
+                  >
+                    Snapchat Link
+                  </Typography>
+                  <Input
+                    placeholder="snapchat.com"
+                    value={snapchatLink}
+                    onChange={(e) => setSnapchatLink(e.target.value)}
+                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
+                  />
+                </div>
+              )}
+
+              {/* twitter */}
+              {activeInputs.twitter && (
+                <div className="w-[300px]  ">
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="mb-1 mt-5 font-semibold text-lg"
+                  >
+                    {`X(twitter)`} Link
+                  </Typography>
+                  <Input
+                    placeholder="x.com"
+                    value={twitterLink}
+                    onChange={(e) => setTwitterLink(e.target.value)}
                     className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
@@ -886,7 +970,7 @@ const PackageOneTwo = ({ user }) => {
 
             {/* menu */}
             <div>
-              {/* <div>
+               <div>
                 <h1 className="text-mainColor text-2xl font-black flex gap-4 items-center flex-wrap my-5">
                   <span className="text-white flex justify-center items-center w-10 h-10 text-center rounded-full bg-mainColor">
                     4
@@ -895,7 +979,7 @@ const PackageOneTwo = ({ user }) => {
                 </h1>
                 <div>
                   <div className="flex flex-wrap gap-5">
-                    {/* menu 
+                    {/* menu */}
                     <div className="w-[300px]">
                       <Typography
                         variant="small"
@@ -917,16 +1001,16 @@ const PackageOneTwo = ({ user }) => {
                           />
                         ) : (
                           <p>
-                            Drag & drop an image or pdf here, or click to select
+                            Drag & drop pdf here, or click to select
                             one
                           </p>
                         )}
                       </div>
-                      {/* <Input type="file" onChange={(e) => setMenuImageFile(e.target.files[0])}/> 
+                      {/* <Input type="file" onChange={(e) => setMenuImageFile(e.target.files[0])}/> */}
                     </div>
                   </div>
                 </div>
-              </div> */}
+              </div> 
             </div>
 
             {/* submit */}
@@ -982,6 +1066,8 @@ const PackageOneTwo = ({ user }) => {
               linkedin={linkedinLink}
               whatsapp={whatsappLink}
               youtube={youtubeLink}
+              twitter={twitterLink}
+              snapchat={snapchatLink}
               selectedFont={selectedFont}
               branches={branches}
               menuImage={menuImage}

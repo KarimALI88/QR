@@ -6,6 +6,7 @@ import {
   FaYoutube,
   FaWhatsappSquare,
   FaLinkedin,
+  FaSnapchatSquare
 } from "react-icons/fa";
 import mp3 from "../../../assets/imgs/الاخلاص.mp3";
 import { FaLocationDot,FaLink  } from "react-icons/fa6";
@@ -14,6 +15,7 @@ import { Collapse, Button, Card } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { RiTwitterXFill } from "react-icons/ri";
 
 const Profile = () => {
   const [openBranches, setOpenBranches] = useState([]);
@@ -115,6 +117,7 @@ const Profile = () => {
           </div>
 
           <div className="flex gap-5 items-center px-3 py-5 flex-wrap justify-center" style={{color: profileData?.background_color}}>
+            
             {profileData?.links?.find((link) => link.type === "whatsapp") && (
               <a
                 href={
@@ -126,6 +129,7 @@ const Profile = () => {
                 <FaWhatsappSquare size={60} className="" />
               </a>
             )}
+
             {profileData?.links?.find((link) => link.type === "instgram") && (
               <a
                 href={
@@ -137,6 +141,7 @@ const Profile = () => {
                 <FaInstagramSquare size={60} className="" />
               </a>
             )}
+
             {profileData?.links?.find((link) => link.type === "other") && (
               <a
                 href={
@@ -160,6 +165,7 @@ const Profile = () => {
                 <FaBehance size={60} className="" />
               </a>
             )}
+
             {profileData?.links?.find((link) => link.type === "linkedin") && (
               <a
                 href={
@@ -171,6 +177,7 @@ const Profile = () => {
                 <FaLinkedin size={60} className="" />
               </a>
             )}
+
             {profileData?.links?.find((link) => link.type === "youtube") && (
               <a
                 href={
@@ -182,6 +189,7 @@ const Profile = () => {
                 <FaYoutube size={60} className="" />
               </a>
             )}
+
             {profileData?.links?.find((link) => link.type === "facebook") && (
               <a
                 href={
@@ -193,6 +201,31 @@ const Profile = () => {
                 <FaFacebook size={60} className="" />
               </a>
             )}
+
+            {profileData?.links?.find((link) => link.type === "twitter") && (
+              <a
+                href={
+                  profileData.links.find((link) => link.type === "twitter").url
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <RiTwitterXFill size={60} className="" />
+              </a>
+            )}
+
+            {profileData?.links?.find((link) => link.type === "snapchat") && (
+              <a
+                href={
+                  profileData.links.find((link) => link.type === "snapchat").url
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaSnapchatSquare size={60} className="" />
+              </a>
+            )}
+            
           </div>
 
           {profileData?.phones && (
@@ -269,6 +302,7 @@ const Profile = () => {
               </div>
             </div>
           )}
+
         </div>
       </div>
     </div>

@@ -21,6 +21,15 @@ module.exports = withMT({
       backgroundImage: {
         'custom-gradient': 'linear-gradient(to right, #053B5C, #2B6CB0)',
       },
+      keyframes: {
+        slideLeftRight: {
+          '0%, 100%': { transform: 'translateX(0)' },
+          '50%': { transform: 'translateX(-50px)' }, // Adjust the -50px value as desired
+        },
+      },
+      animation: {
+        slideLeftRight: 'slideLeftRight 3s ease-in-out infinite',
+      },
     },
   },
   plugins: [],
