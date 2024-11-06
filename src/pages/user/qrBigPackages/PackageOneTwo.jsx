@@ -48,9 +48,9 @@ const PackageOneTwo = ({ user }) => {
     be: false,
     whatsapp: false,
     portfolio: false,
-    tiktok:false,
-    snapchat:false,
-    twitter:false,
+    tiktok: false,
+    snapchat: false,
+    twitter: false,
     other: false,
   });
   const [token, setToken] = useState("");
@@ -61,7 +61,7 @@ const PackageOneTwo = ({ user }) => {
   const [snapchatLink, setSnapchatLink] = useState("");
   const [twitterLink, setTwitterLink] = useState("");
   const [otherLink, setOtherLink] = useState("");
-  const [youtubeLink, setYoutubeLink] = useState(""); 
+  const [youtubeLink, setYoutubeLink] = useState("");
   const [whatsappLink, setWhatsappLink] = useState("");
   const [beLink, setBeLink] = useState("");
   const [color, setColor] = useState("#ffffff");
@@ -85,7 +85,7 @@ const PackageOneTwo = ({ user }) => {
   const navigate = useNavigate();
 
   const handleOpen = () => setOpenModal(!openModal);
-  const addBranch = () => { 
+  const addBranch = () => {
     setBranches([...branches, { name: "", location: "", phones: "" }]);
   };
 
@@ -222,46 +222,63 @@ const PackageOneTwo = ({ user }) => {
       formData.append("phones[]", phone2);
 
       // links
-      facebookLink.length > 0 && (formData.append("links[0][url]", facebookLink) &&
-      formData.append("links[0][type]", "facebook"))
+      facebookLink.length > 0 &&
+        formData.append("links[0][url]", facebookLink) &&
+        formData.append("links[0][type]", "facebook");
 
-      instgramLink.length > 0 && (formData.append("links[1][url]", instgramLink) &&
-      formData.append("links[1][type]", "instgram"))
+      instgramLink.length > 0 &&
+        formData.append("links[1][url]", instgramLink) &&
+        formData.append("links[1][type]", "instgram");
 
-      youtubeLink.length > 0 && (formData.append("links[2][url]", youtubeLink) &&
-      formData.append("links[2][type]", "youtube"))
+      youtubeLink.length > 0 &&
+        formData.append("links[2][url]", youtubeLink) &&
+        formData.append("links[2][type]", "youtube");
 
-      beLink.length > 0 && (formData.append("links[3][url]", beLink) &&
-      formData.append("links[3][type]", "behance"))
+      beLink.length > 0 &&
+        formData.append("links[3][url]", beLink) &&
+        formData.append("links[3][type]", "behance");
 
-      otherLink.length > 0 && (formData.append("links[4][url]", otherLink) &&
-      formData.append("links[4][type]", "other"))
+      otherLink.length > 0 &&
+        formData.append("links[4][url]", otherLink) &&
+        formData.append("links[4][type]", "other");
 
       portfolioLink.length > 0 &&
-        (formData.append("links[5][url]", portfolioLink) &&
-      formData.append("links[5][type]", "portfolio"))
+        formData.append("links[5][url]", portfolioLink) &&
+        formData.append("links[5][type]", "portfolio");
 
-      whatsappLink.length > 0 && 
-        (formData.append("links[6][url]", `https://wa.me/${whatsappLink}`) &&
-      formData.append("links[6][type]", "whatsapp"))
+      whatsappLink.length > 0 &&
+        formData.append("links[6][url]", `https://wa.me/${whatsappLink}`) &&
+        formData.append("links[6][type]", "whatsapp");
 
-      linkedinLink.length > 0 && (formData.append("links[7][url]", linkedinLink) &&
-      formData.append("links[7][type]", "linkedin"))
+      linkedinLink.length > 0 &&
+        formData.append("links[7][url]", linkedinLink) &&
+        formData.append("links[7][type]", "linkedin");
 
-      snapchatLink.length > 0 && (formData.append("links[8][url]", snapchatLink) &&
-      formData.append("links[8][type]", "snapchat"))
+      snapchatLink.length > 0 &&
+        formData.append("links[8][url]", snapchatLink) &&
+        formData.append("links[8][type]", "snapchat");
 
-      twitterLink.length > 0 && (formData.append("links[9][url]", twitterLink) &&
-      formData.append("links[9][type]", "twitter"))
+      twitterLink.length > 0 &&
+        formData.append("links[9][url]", twitterLink) &&
+        formData.append("links[9][type]", "twitter");
 
       // Append each branch's details
 
-      branches.length >= 1 &&
+      if (branches.length >= 1) {
         branches.forEach((branch, index) => {
-          formData.append(`branches[${index}][name]`, branch.name);
-          formData.append(`branches[${index}][location]`, branch.location);
-          formData.append(`branches[${index}][phones][0]`, branch.phones);
+          if (
+            branch.name &&
+            branch.location &&
+            Array.isArray(branch.phones) &&
+            branch.phones.length > 0 &&
+            branch.phones[0]
+          ) {
+            formData.append(`branches[${index}][name]`, branch.name);
+            formData.append(`branches[${index}][location]`, branch.location);
+            formData.append(`branches[${index}][phones][0]`, branch.phones[0]);
+          }
         });
+      }
 
       console.log("form data after send", formData);
 
@@ -675,12 +692,10 @@ const PackageOneTwo = ({ user }) => {
                   }
                 />
 
-                <FaSnapchatSquare 
+                <FaSnapchatSquare
                   size={40}
                   className={`cursor-pointer ${
-                    activeInputs.snapchat
-                      ? "text-secondColor"
-                      : "text-gray-800"
+                    activeInputs.snapchat ? "text-secondColor" : "text-gray-800"
                   }`}
                   onClick={() =>
                     setActiveInputs((prevState) => ({
@@ -690,12 +705,10 @@ const PackageOneTwo = ({ user }) => {
                   }
                 />
 
-                <RiTwitterXFill 
+                <RiTwitterXFill
                   size={40}
                   className={`cursor-pointer ${
-                    activeInputs.twitter
-                      ? "text-secondColor"
-                      : "text-gray-800"
+                    activeInputs.twitter ? "text-secondColor" : "text-gray-800"
                   }`}
                   onClick={() =>
                     setActiveInputs((prevState) => ({
@@ -996,7 +1009,7 @@ const PackageOneTwo = ({ user }) => {
 
             {/* menu */}
             <div>
-               <div>
+              <div>
                 <h1 className="text-mainColor text-2xl font-black flex gap-4 items-center flex-wrap my-5">
                   <span className="text-white flex justify-center items-center w-10 h-10 text-center rounded-full bg-mainColor">
                     4
@@ -1020,23 +1033,16 @@ const PackageOneTwo = ({ user }) => {
                       >
                         <input {...getInputPropsImage()} />
                         {menuImage ? (
-                          <img
-                            src={menuImage}
-                            alt="Cover Preview"
-                            className="w-[100px] h-[100px] mt-4 rounded-lg"
-                          />
+                          <p>uploaded</p>
                         ) : (
-                          <p>
-                            Drag & drop pdf here, or click to select
-                            one
-                          </p>
+                          <p>Drag & drop pdf here, or click to select one</p>
                         )}
                       </div>
                       {/* <Input type="file" onChange={(e) => setMenuImageFile(e.target.files[0])}/> */}
                     </div>
                   </div>
                 </div>
-              </div> 
+              </div>
             </div>
 
             {/* submit */}
@@ -1075,7 +1081,6 @@ const PackageOneTwo = ({ user }) => {
             </Dialog>
           </div>
           {/* ======================================== */}
-          
         </div>
       </div>
     </div>
