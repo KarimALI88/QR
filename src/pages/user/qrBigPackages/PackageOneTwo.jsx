@@ -86,7 +86,7 @@ const PackageOneTwo = ({ user }) => {
     { name: "IBM Plex Sans", style: "IBM Plex Sans, sans-serif" },
   ];
   const navigate = useNavigate();
-  const [downloadImage, setDownloadImage] = useState("")
+  const [downloadImage, setDownloadImage] = useState("");
 
   const handleOpen = () => setOpenModal(!openModal);
   const addBranch = () => {
@@ -223,52 +223,62 @@ const PackageOneTwo = ({ user }) => {
       description && formData.append("description", description);
       formData.append("color", color);
       formData.append("font", selectedFont);
-      formData.append("package_id", "2");
+      formData.append("package_id", "3");
 
       // Append phones individually
-      formData.append("phones[]", phone1);
-      formData.append("phones[]", phone2);
+      phone1 && formData.append("phones[]", phone1);
+      phone2 && formData.append("phones[]", phone2);
 
       // links
-      facebookLink.length > 0 &&
-        formData.append("links[0][url]", facebookLink) &&
+      if (facebookLink.length > 0) {
+        formData.append("links[0][url]", facebookLink);
         formData.append("links[0][type]", "facebook");
+      }
 
-      instgramLink.length > 0 &&
-        formData.append("links[1][url]", instgramLink) &&
+      if (instgramLink.length > 0) {
+        formData.append("links[1][url]", instgramLink);
         formData.append("links[1][type]", "instgram");
+      }
 
-      youtubeLink.length > 0 &&
-        formData.append("links[2][url]", youtubeLink) &&
+      if (youtubeLink.length > 0) {
+        formData.append("links[2][url]", youtubeLink);
         formData.append("links[2][type]", "youtube");
+      }
 
-      beLink.length > 0 &&
-        formData.append("links[3][url]", beLink) &&
+      if (beLink.length > 0) {
+        formData.append("links[3][url]", beLink);
         formData.append("links[3][type]", "behance");
+      }
 
-      otherLink.length > 0 &&
-        formData.append("links[4][url]", otherLink) &&
+      if (otherLink.length > 0) {
+        formData.append("links[4][url]", otherLink);
         formData.append("links[4][type]", "other");
+      }
 
-      portfolioLink.length > 0 &&
-        formData.append("links[5][url]", portfolioLink) &&
-        formData.append("links[5][type]", "portfolio");
+      if (portfolioLink.length > 0) {
+        formData.append("links[5][url]", portfolioLink)
+          formData.append("links[5][type]", "portfolio");
+      }
 
-      whatsappLink.length > 0 &&
-        formData.append("links[6][url]", `https://wa.me/${whatsappLink}`) &&
+      if(whatsappLink.length > 0){
+        formData.append("links[6][url]", `https://wa.me/${whatsappLink}`)
         formData.append("links[6][type]", "whatsapp");
+      }
 
-      linkedinLink.length > 0 &&
-        formData.append("links[7][url]", linkedinLink) &&
-        formData.append("links[7][type]", "linkedin");
+      if(linkedinLink.length > 0 ){
+        formData.append("links[7][url]", linkedinLink)
+        formData.append("links[7][type]", "linkedin")
+      }
 
-      snapchatLink.length > 0 &&
-        formData.append("links[8][url]", snapchatLink) &&
-        formData.append("links[8][type]", "snapchat");
+      if(snapchatLink.length > 0){
+        formData.append("links[8][url]", snapchatLink) 
+        formData.append("links[8][type]", "snapchat")
+      }
 
-      twitterLink.length > 0 &&
-        formData.append("links[9][url]", twitterLink) &&
+      if(twitterLink.length > 0){
+        formData.append("links[9][url]", twitterLink)
         formData.append("links[9][type]", "twitter");
+      }
 
       // Append each branch's details
 
@@ -305,7 +315,7 @@ const PackageOneTwo = ({ user }) => {
       setImage(
         `https://backend.ofx-qrcode.com/storage/${response.data.qr_code}`
       );
-      setDownloadImage(response.data.qr_code.split('/')[1])
+      setDownloadImage(response.data.qr_code.split("/")[1]);
       return response;
     } catch (error) {
       console.log("error", error);

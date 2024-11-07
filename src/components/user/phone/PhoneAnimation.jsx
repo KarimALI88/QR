@@ -165,7 +165,7 @@ const PhoneAnimation = ({
           </div>
 
           {/* pdf */}
-          <div className="flex justify-center items-center flex-wrap gap-3">
+          <div className="flex justify-center items-center flex-wrap gap-3 my-3">
             {/* pdf */}
             {pdf && (
               <div className="flex flex-col">
