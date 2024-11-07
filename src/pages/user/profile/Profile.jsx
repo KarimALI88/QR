@@ -8,7 +8,6 @@ import {
   FaLinkedin,
   FaSnapchatSquare,
 } from "react-icons/fa";
-import mp3 from "../../../assets/imgs/الاخلاص.mp3";
 import { FaLocationDot, FaLink } from "react-icons/fa6";
 import { FaPhoneAlt } from "react-icons/fa";
 import { Collapse, Button, Card } from "@material-tailwind/react";
@@ -38,7 +37,7 @@ const Profile = () => {
         `${import.meta.env.VITE_API_LINK}/profile/qrcode/${id}`
       );
       setProfileData(response.data);
-      console.log(response.data);
+      console.log("profile",response.data);
     } catch (error) {
       console.log("error in api", error);
     }
@@ -264,8 +263,8 @@ const Profile = () => {
                   className="flex gap-5 items-center px-2 my-5 justify-center"
                 >
                   <div>
-                    <FaFilePdf size={60} />
-                    {index === 1 && <p className="text-lg font-semibold">menu</p>}
+                    <a href={`https://backend.ofx-qrcode.com/storage/${pdf.pdf_path}`}><FaFilePdf size={60} /></a>
+                    <p className="text-lg font-semibold">{pdf.type}</p>
                   </div>
                   
                 </div>

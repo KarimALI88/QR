@@ -1,20 +1,21 @@
 import React, { useState, useEffect, useContext } from "react";
-// import logo from "../../../assets/imgs/QR-LOGO2.PNG";
+import logo from "../../../assets/imgs/QR-LOGO2.PNG";
 import { Input } from "@material-tailwind/react";
 import { BiLogoGmail } from "react-icons/bi";
 import { MdKey } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Spinner } from "@material-tailwind/react";
-import { AppContext } from './../../../context/AppContext';
-import loginImage from '../../../assets/imgs/loginImage.jpg'
-
+import { AppContext } from "./../../../context/AppContext";
+import loginImage from "../../../assets/imgs/loginImage.jpg";
+import { IoMdClose } from "react-icons/io";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState("");
-  const {setToken} = useContext(AppContext)
+  const [view, setView] = useState(false);
+  const { setToken } = useContext(AppContext);
   const navigate = useNavigate();
 
   const userLogin = async () => {
@@ -41,7 +42,7 @@ const Login = () => {
       // console.log("logged in", data);
       setLoading(false);
       localStorage.setItem("tn", data.token);
-      setToken(data.token)
+      setToken(data.token);
       toast.success("Logged in successfully");
       navigate("/");
     } catch (error) {
@@ -53,8 +54,16 @@ const Login = () => {
 
   return (
     <div className="flex flex-col md:flex-row">
-      <div className="flex-1  p-4 min-h-[100%] flex-col">
-        {/* <img src={logo} alt="OFX QR CODE" className="w-52 lg:w-72" /> */}
+      <div className="flex-1 p-4 min-h-[100%] flex-col">
+        <div className="flex justify-between items-center">
+          <img src={logo} alt="OFX QR CODE" className="w-52 lg:w-72" />
+          <IoMdClose
+            className="cursor-pointer"
+            size={35}
+            color="black"
+            onClick={() => navigate("/")}
+          />
+        </div>
         <div className="text-center my-20 mx-auto">
           <h3 className="text-mainColor font-semibold text-3xl">
             Welcome to OFX Login
@@ -67,7 +76,7 @@ const Login = () => {
               placeholder="e.g., your-email@gmail.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full flex items-center h-[65px] appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
+              className="w-full block h-14 appearance-none rounded-lg border border-gray-300 py-10 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
               icon={<BiLogoGmail size={25} />}
             />
           </div>
@@ -76,12 +85,17 @@ const Login = () => {
           <div className="w-[80%] md:w-[70%] lg:w-[60%] mx-auto mb-5">
             <Input
               label="password"
-              placeholder="**********************"
-              type="password"
+              placeholder="****************"
+              type={view ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full flex items-center h-[65px] appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
-              icon={<MdKey size={25} />}
+              className="w-full block h-14 appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
+              icon={
+                <MdKey
+                  size={25}
+                  onClick={() => setView((prevState) => !prevState)}
+                />
+              }
             />
           </div>
 
@@ -104,7 +118,9 @@ const Login = () => {
           </div>
         </div>
       </div>
-      <div className="flex-1 h-[100vh]">
+
+      {/* Display image only on medium (md) and larger screens */}
+      <div className="flex-1 h-[100vh] hidden md:block">
         <img
           src={loginImage}
           alt="login img"

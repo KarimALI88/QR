@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect, useContext } from "react";
 import MainNavbar from "../../../components/user/navbar/MainNavbar";
 import { Input, Typography } from "@material-tailwind/react";
 import PhoneAnimation from "../../../components/user/phone/PhoneAnimation";
@@ -22,6 +22,7 @@ import jsPDF from "jspdf";
 import { useNavigate } from "react-router-dom";
 import { RiTwitterXFill } from "react-icons/ri";
 import { FaSnapchatSquare } from "react-icons/fa";
+import { AppContext } from "../../../context/AppContext";
 
 const PackageOneTwo = ({ user }) => {
   const [image, setImage] = useState("");
@@ -35,6 +36,7 @@ const PackageOneTwo = ({ user }) => {
   const [menuImage, setMenuImage] = useState(null);
   const [menuImageFile, setMenuImageFile] = useState(null);
   const [pdf, setPDF] = useState(null);
+  const [pdfName, setPdfName] = useState("");
   const [pdfFile, setPdfFile] = useState(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -54,6 +56,7 @@ const PackageOneTwo = ({ user }) => {
     other: false,
   });
   const [token, setToken] = useState("");
+  const { packageId } = useContext(AppContext);
   const [facebookLink, setFacebookLink] = useState("");
   const [portfolioLink, setPortfolioLink] = useState("");
   const [instgramLink, setInstgramLink] = useState("");
@@ -83,6 +86,7 @@ const PackageOneTwo = ({ user }) => {
     { name: "IBM Plex Sans", style: "IBM Plex Sans, sans-serif" },
   ];
   const navigate = useNavigate();
+  const [downloadImage, setDownloadImage] = useState("")
 
   const handleOpen = () => setOpenModal(!openModal);
   const addBranch = () => {
@@ -94,6 +98,8 @@ const PackageOneTwo = ({ user }) => {
     updatedBranches[index][field] = value;
     setBranches(updatedBranches);
   };
+
+  // console.log("package",packageId)
 
   useEffect(() => {
     const tn = localStorage.getItem("tn");
@@ -210,7 +216,9 @@ const PackageOneTwo = ({ user }) => {
       logoImageFile && formData.append("logo", logoImageFile);
       mp3File && formData.append("mp3[]", mp3File);
       pdfFile && formData.append("pdfs[]", pdfFile);
+      pdfName && formData.append("type[]", pdfName);
       menuImageFile && formData.append("pdfs[]", menuImageFile);
+      menuImageFile && formData.append("type[]", "menue");
       name && formData.append("title", name);
       description && formData.append("description", description);
       formData.append("color", color);
@@ -269,13 +277,12 @@ const PackageOneTwo = ({ user }) => {
           if (
             branch.name &&
             branch.location &&
-            Array.isArray(branch.phones) &&
             branch.phones.length > 0 &&
             branch.phones[0]
           ) {
             formData.append(`branches[${index}][name]`, branch.name);
             formData.append(`branches[${index}][location]`, branch.location);
-            formData.append(`branches[${index}][phones][0]`, branch.phones[0]);
+            formData.append(`branches[${index}][phones][0]`, branch.phones);
           }
         });
       }
@@ -298,6 +305,7 @@ const PackageOneTwo = ({ user }) => {
       setImage(
         `https://backend.ofx-qrcode.com/storage/${response.data.qr_code}`
       );
+      setDownloadImage(response.data.qr_code.split('/')[1])
       return response;
     } catch (error) {
       console.log("error", error);
@@ -322,6 +330,8 @@ const PackageOneTwo = ({ user }) => {
       pdf.save("qr-code.pdf");
     };
   };
+
+  console.log("user", user);
 
   return (
     <div
@@ -363,6 +373,7 @@ const PackageOneTwo = ({ user }) => {
               branches={branches}
               menuImage={menuImage}
               other={otherLink}
+              pdfName={pdfName}
             />
           </div>
           {/* ======================================== */}
@@ -521,54 +532,78 @@ const PackageOneTwo = ({ user }) => {
               </div>
 
               {/* MP3 */}
-              <div className="w-[300px]  ">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="mb-1 mt-10 font-semibold text-lg"
-                >
-                  MP3
-                </Typography>
-                <div
-                  {...getRootPropsMP3()}
-                  className="border border-dashed border-gray-400 p-4 rounded-lg text-center"
-                >
-                  <input {...getInputPropsMP3()} />
-                  {mp3 ? (
-                    <audio
-                      controls
-                      src={mp3}
-                      className="w-full h-[100px] mt-4 rounded-lg"
-                    />
-                  ) : (
-                    <p>Drag & drop an MP3 here, or click to select one</p>
-                  )}
+              {user.package_id == 3 && (
+                <div className="w-[300px]  ">
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="mb-1 mt-10 font-semibold text-lg"
+                  >
+                    MP3
+                  </Typography>
+                  <div
+                    {...getRootPropsMP3()}
+                    className="border border-dashed border-gray-400 p-4 rounded-lg text-center"
+                  >
+                    <input {...getInputPropsMP3()} />
+                    {mp3 ? (
+                      <audio
+                        controls
+                        src={mp3}
+                        className="w-full h-[100px] mt-4 rounded-lg"
+                      />
+                    ) : (
+                      <p>Drag & drop an MP3 here, or click to select one</p>
+                    )}
+                  </div>
+                  {/* <Input type="file" onChange={(e) => setMp3File(e.target.files[0])}/> */}
                 </div>
-                {/* <Input type="file" onChange={(e) => setMp3File(e.target.files[0])}/> */}
-              </div>
+              )}
 
               {/* PDF */}
-              <div className="w-[300px]">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="mb-1 mt-10 font-semibold text-lg"
-                >
-                  PDF
-                </Typography>
-                <div
-                  {...getRootPropsPDF()}
-                  className="border border-dashed border-gray-400 p-4 rounded-lg text-center"
-                >
-                  <input {...getInputPropsPDF()} />
-                  {pdf ? (
-                    <p>uploaded</p>
-                  ) : (
-                    <p>Drag & drop an PDF here, or click to select one</p>
-                  )}
+              {user.package_id === 3 && (
+                <div className="w-[300px]">
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="mb-1 mt-10 font-semibold text-lg"
+                  >
+                    PDF
+                  </Typography>
+                  <div
+                    {...getRootPropsPDF()}
+                    className="border border-dashed border-gray-400 p-4 rounded-lg text-center"
+                  >
+                    <input {...getInputPropsPDF()} />
+                    {pdf ? (
+                      <p>uploaded</p>
+                    ) : (
+                      <p>Drag & drop an PDF here, or click to select one</p>
+                    )}
+                  </div>
+                  {/* <Input type="file" onChange={(e) => setPdfFile(e.target.files[0])}/> */}
                 </div>
-                {/* <Input type="file" onChange={(e) => setPdfFile(e.target.files[0])}/> */}
-              </div>
+              )}
+
+              {/* PDF Name */}
+              {user.package_id == 3 && (
+                <div className="w-[300px]">
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="mb-1 mt-10 font-semibold text-lg"
+                  >
+                    PDF Name
+                  </Typography>
+                  <Input
+                    maxLength={16}
+                    placeholder="portfolio"
+                    value={pdfName}
+                    onChange={(e) => setPdfName(e.target.value)}
+                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
+                  />
+                </div>
+              )}
 
               {/* font */}
               <div className="w-[300px]">
@@ -926,14 +961,54 @@ const PackageOneTwo = ({ user }) => {
               )}
             </div>
 
+            {/* menu */}
+            {user.package_id === 3 && (
+              <div>
+                <div>
+                  <h1 className="text-mainColor text-2xl font-black flex gap-4 items-center flex-wrap my-5">
+                    <span className="text-white mt-5 flex justify-center items-center w-10 h-10 text-center rounded-full bg-mainColor">
+                      3
+                    </span>{" "}
+                    <span className="mt-5">Menu</span>
+                  </h1>
+                  <div>
+                    <div className="flex flex-wrap gap-5">
+                      {/* menu */}
+                      <div className="w-[300px]">
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="mb-1 mt-5 font-semibold text-lg"
+                        >
+                          Menu Image
+                        </Typography>
+                        <div
+                          {...getRootPropsImage()}
+                          className="border border-dashed border-gray-400 p-4 rounded-lg text-center"
+                        >
+                          <input {...getInputPropsImage()} />
+                          {menuImage ? (
+                            <p>uploaded</p>
+                          ) : (
+                            <p>Drag & drop pdf here, or click to select one</p>
+                          )}
+                        </div>
+                        {/* <Input type="file" onChange={(e) => setMenuImageFile(e.target.files[0])}/> */}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* branches */}
             <div>
               <div>
-                <h1 className="text-mainColor text-2xl font-black flex gap-4 items-center flex-wrap my-10">
-                  <span className="text-white flex justify-center items-center w-10 h-10 text-center rounded-full bg-mainColor">
-                    3
+                <h1 className="text-mainColor text-2xl font-black flex gap-4 items-center flex-wrap my-5">
+                  <span className="text-white flex justify-center items-center w-10 h-10 text-center rounded-full bg-mainColor mt-5">
+                    {user.package_id === 3 ? "4" : "3"}
                   </span>{" "}
-                  Branches
+                  <span className="mt-5">Branches</span>
                 </h1>
                 <div>
                   {branches.map((branch, index) => (
@@ -961,7 +1036,7 @@ const PackageOneTwo = ({ user }) => {
                         <Typography
                           variant="small"
                           color="blue-gray"
-                          className="mb-1 mt-10 font-semibold text-lg"
+                          className="mb-1 mt-5 font-semibold text-lg"
                         >
                           Branch Location
                         </Typography>
@@ -979,7 +1054,7 @@ const PackageOneTwo = ({ user }) => {
                         <Typography
                           variant="small"
                           color="blue-gray"
-                          className="mb-1 mt-10 font-semibold text-lg"
+                          className="mb-1 mt-5 font-semibold text-lg"
                         >
                           Branch Number
                         </Typography>
@@ -1002,44 +1077,6 @@ const PackageOneTwo = ({ user }) => {
                     >
                       Add Branch +
                     </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* menu */}
-            <div>
-              <div>
-                <h1 className="text-mainColor text-2xl font-black flex gap-4 items-center flex-wrap my-5">
-                  <span className="text-white flex justify-center items-center w-10 h-10 text-center rounded-full bg-mainColor">
-                    4
-                  </span>{" "}
-                  Menu
-                </h1>
-                <div>
-                  <div className="flex flex-wrap gap-5">
-                    {/* menu */}
-                    <div className="w-[300px]">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="mb-1 mt-5 font-semibold text-lg"
-                      >
-                        Menu Image
-                      </Typography>
-                      <div
-                        {...getRootPropsImage()}
-                        className="border border-dashed border-gray-400 p-4 rounded-lg text-center"
-                      >
-                        <input {...getInputPropsImage()} />
-                        {menuImage ? (
-                          <p>uploaded</p>
-                        ) : (
-                          <p>Drag & drop pdf here, or click to select one</p>
-                        )}
-                      </div>
-                      {/* <Input type="file" onChange={(e) => setMenuImageFile(e.target.files[0])}/> */}
-                    </div>
                   </div>
                 </div>
               </div>
@@ -1072,12 +1109,13 @@ const PackageOneTwo = ({ user }) => {
               className="p-10 text-center"
             >
               <img src={image} alt="qr" className="block mx-auto my-10" />
-              <button
-                onClick={() => downloadImageAsPDF(image)}
+              <a
+                // onClick={() => downloadImageAsPDF(image)}
+                href={`https://backend.ofx-qrcode.com/download-qrcode/${downloadImage}`}
                 className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor w-full"
               >
                 Download
-              </button>
+              </a>
             </Dialog>
           </div>
           {/* ======================================== */}

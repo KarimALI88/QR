@@ -6,7 +6,7 @@ import {
   FaYoutube,
   FaWhatsappSquare,
   FaLinkedin,
-  FaSnapchatSquare
+  FaSnapchatSquare,
 } from "react-icons/fa";
 import { Collapse, Button, Card } from "@material-tailwind/react";
 import { FaLocationDot } from "react-icons/fa6";
@@ -36,7 +36,8 @@ const PhoneAnimation = ({
   menuImage,
   snapchat,
   twitter,
-  other
+  other,
+  pdfName,
 }) => {
   return (
     <div className="flex justify-center rounded-3xl items-center h-fit mx-auto max-w-[100%] md:fixed md:right-16 md:top-28">
@@ -70,8 +71,8 @@ const PhoneAnimation = ({
           className="relative z-10 w-full h-full flex flex-col items-center justify-start overflow-auto"
           style={{ color }}
         >
+          {/* Cover Image */}
           <div className="w-full h-[200px] relative mb-14">
-            {/* Cover Image */}
             <img
               src={image ? image : altImage}
               alt="Cover"
@@ -92,23 +93,32 @@ const PhoneAnimation = ({
           </div>
 
           {/* Other Sections */}
+          {/* name */}
           <h1
             className="text-center p-1 text-xl font-bold uppercase"
             style={{ color }}
           >
             {name || "OFX"}
           </h1>
+          {/* description */}
           <p
             className="mx-auto p-1 text-center text-lg font-medium capitalize"
             style={{ color }}
           >
             {description || "marketing agency"}
           </p>
+          {/* social media icons */}
           <div
             className={`flex gap-5 items-center px-3 py-5 ${
-              [facebook, whatsapp, instgram, behance, linkedin, youtube,other].filter(
-                Boolean
-              ).length === 1
+              [
+                facebook,
+                whatsapp,
+                instgram,
+                behance,
+                linkedin,
+                youtube,
+                other,
+              ].filter(Boolean).length === 1
                 ? "justify-center"
                 : [
                     facebook,
@@ -119,7 +129,7 @@ const PhoneAnimation = ({
                     youtube,
                     other,
                     snapchat,
-                    twitter
+                    twitter,
                   ].filter(Boolean).length === 3
                 ? "flex-col"
                 : "flex-wrap justify-center"
@@ -134,25 +144,44 @@ const PhoneAnimation = ({
             {other && <FaLink size={40} style={{ color }} />}
             {snapchat && <FaSnapchatSquare size={40} style={{ color }} />}
             {twitter && <RiTwitterXFill size={40} style={{ color }} />}
-
           </div>
+          {/* phone 1 */}
           <h3
             className="text-lg font-semibold mt-3 text-center"
             style={{ color }}
           >
             {phone1 ? phone1 : "01061472185"}
           </h3>
+          {/* phone 2 */}
           <h3
             className="text-lg font-semibold my-2 text-center"
             style={{ color }}
           >
             {phone2 ? phone2 : "01100942108"}
           </h3>
+          {/* mp3 */}
           <div className="flex gap-5 items-center px-2 justify-center">
             {mp3 && <audio controls src={mp3} className="w-[200px]" />}
-            {pdf && <FaFilePdf size={40} style={{ color }} />}
           </div>
 
+          {/* pdf */}
+          <div className="flex justify-center items-center flex-wrap gap-3">
+            {/* pdf */}
+            {pdf && (
+              <div className="flex flex-col">
+                <FaFilePdf size={40} style={{ color }} />
+                <h5 className="text-lg font-medium my-3">{pdfName}</h5>
+              </div>
+            )}
+            {/* menu */}
+            {menuImage && (
+              <div className="flex flex-col">
+                <FaFilePdf size={40} style={{ color }} />
+                <h5 className="text-lg font-medium my-3">Menu</h5>
+              </div>
+            )}
+          </div>
+          {/* branches */}
           {branches.map((branch, index) => (
             <div key={index}>
               <Button
@@ -190,11 +219,6 @@ const PhoneAnimation = ({
               </Collapse>
             </div>
           ))}
-
-          {/* menu */}
-          <div className="w-3/4 my-5">
-            <img src={menuImage ? menuImage : altImage} alt="menu" className="w-full h-full" />
-          </div>
         </div>
       </div>
     </div>

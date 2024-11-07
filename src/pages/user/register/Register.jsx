@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-// import logo from "./../../../assets/imgs/QR-LOGO2.png";
+import logo from "./../../../assets/imgs/QR-LOGO2.png";
 import { Input } from "@material-tailwind/react";
 import { BiLogoGmail } from "react-icons/bi";
 import { MdKey } from "react-icons/md";
 import { IoPhonePortrait } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { IoMdClose } from "react-icons/io";
+
 // ${import.meta.env.VITE_LINK_API}
 import { toast } from "react-toastify";
 import { Spinner } from "@material-tailwind/react";
@@ -15,7 +17,10 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
+  const [view, setView] = useState(false)
   const navigate = useNavigate();
+
+  console.log(view)
 
   const userRegister = async () => {
     setLoading(true);
@@ -57,18 +62,24 @@ const Register = () => {
     }
   };
 
+
+
   return (
     <div className="flex flex-col md:flex-row">
-      <div className="flex-1 h-[100vh]">
+      <div className="flex-1 h-[100vh] hidden md:block">
         <img
           src="https://img.freepik.com/free-vector/qr-code-concept-illustration_114360-5853.jpg?t=st=1729773958~exp=1729777558~hmac=955d814eb03a45c1edf8d06e91fb100430faa59a2001a16bd473ba1b7d5a30f3&w=740"
           alt="login img"
           className="h-[100vh] object-cover object-right"
         />
+        
       </div>
       {/* ------------------------------------------------------------------- */}
       <div className="flex-1  p-4 h-[100%] flex-col">
-        {/* <img src={logo} alt="OFX QR CODE" className="w-52 lg:w-72" /> */}
+        <div className="flex justify-between items-center">
+          <img src={logo} alt="OFX QR CODE" className="w-52 lg:w-72" />
+          <IoMdClose className="cursor-pointer" size={35} color="black" onClick={() => navigate("/")}/>
+        </div>
         <div className="text-center my-20 mx-auto">
           <h3 className="text-mainColor font-semibold text-3xl">
             Welcome to OFX Signup
@@ -81,7 +92,7 @@ const Register = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="e.g., your-email@gmail.com"
-              className="w-full flex items-center h-[65px]  appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
+              className="w-full block h-14  appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
               icon={<BiLogoGmail size={25} />}
             />
           </div>
@@ -93,7 +104,7 @@ const Register = () => {
               placeholder="01061472185"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full flex items-center h-[65px] appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
+              className="w-full block h-14 appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
               icon={<IoPhonePortrait size={25} />}
             />
           </div>
@@ -104,9 +115,10 @@ const Register = () => {
               label="password"
               placeholder="**********************"
               value={password}
+              type={view ? "text" : "password"}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full flex items-center h-[65px] appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
-              icon={<MdKey size={25} />}
+              className="w-full block h-14 appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
+              icon={<MdKey size={25} onClick={() => setView(prevState => !prevState)}/>}
             />
           </div>
 

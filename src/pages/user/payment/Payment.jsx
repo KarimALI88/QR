@@ -6,6 +6,7 @@ import axios from "axios";
 import { AppContext } from "./../../../context/AppContext";
 import { Spinner } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
+import { Select, Option } from "@material-tailwind/react";
 
 const Payment = () => {
   const [activeSection, setActiveSection] = useState("vodafone");
@@ -16,6 +17,11 @@ const Payment = () => {
   const [message, setMessage] = useState("");
   const [success, setSuccess] = useState(false);
   const { token } = useContext(AppContext);
+  const packages = [
+    {package_id: "1", package_name: "free"},
+    {package_id: "2", package_name: "middle"},
+    {package_id: "3", package_name: "advanced"},
+  ]
   const navigate = useNavigate()
 
   const handleOpen = () => setOpenModal(!openModal);
@@ -155,7 +161,7 @@ const Payment = () => {
                   {message}
                 </h4>
               )}
-              <Input
+              {/* <Input 
                 placeholder="package number"
                 value={packageNumber}
                 onChange={(e) => setPackageNumber(e.target.value)}
@@ -163,7 +169,20 @@ const Payment = () => {
                 labelProps={{
                   className: "before:content-none after:content-none",
                 }}
-              />
+              /> */}
+              <Select
+                  id="font-select"
+                  label="Select Package"
+                  onChange={(val) => setPackageNumber(val)}
+                  value={packageNumber}
+                  className="h-[60px]"
+                >
+                  {packages.map((pack) => (
+                    <Option key={pack.package_id} value={pack.package_id} className="capitalize text-black text-lg font-semibold">
+                      {pack.package_name}
+                    </Option>
+                  ))}
+                </Select>
             </div>
             <div>
               <Input

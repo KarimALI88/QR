@@ -27,10 +27,12 @@ import { AppContext } from "../../../context/AppContext";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const QrForm = ({ user, refresh, setRefresh }) => {
   const [feature, setFeature] = useState("whatsapp");
   const { token } = useContext(AppContext);
+  const navigate = useNavigate()
 
   const createSubscribtion = async () => {
     try {
@@ -55,7 +57,7 @@ const QrForm = ({ user, refresh, setRefresh }) => {
   };
 
   const subscribePackageZero = () => {
-    Swal.fire({
+    {token ? Swal.fire({
       title: "Are you sure to subscribe on this package?",
       text: "You will be subscribed in this package",
       icon: "warning",
@@ -72,7 +74,7 @@ const QrForm = ({ user, refresh, setRefresh }) => {
         });
         createSubscribtion();
       }
-    });
+    }) : navigate("/login")}
   };
 
   // console.log("feature", feature);

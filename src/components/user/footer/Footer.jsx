@@ -9,7 +9,7 @@ const currentYear = new Date().getFullYear();
 const Footer = () => {
   return (
     <footer className="relative w-full bg-mainColor py-10">
-      <div className="mx-auto w-full max-w-7xl px-8">
+      <div className="mx-auto w-full max-w-7xl px-8 ">
         <div className="grid grid-cols-1 justify-between gap-4 md:grid-cols-2">
           <Typography variant="h5" className="mb-6">
             <img src={logo} alt="logo" className="w-52 lg:w-72" />

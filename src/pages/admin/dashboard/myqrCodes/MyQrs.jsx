@@ -35,15 +35,30 @@ const MyQrs = () => {
     setSearchQuery(e.target.value);
   };
 
-  const downloadImage = (imageSrc) => {
-    const link = document.createElement("a");
-    link.href = imageSrc;
-    link.target = "_blank";
-    link.download = "qr-code.png"; // Set the default filename here
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+  // const downloadImage = (imageSrc) => {
+  //   const link = document.createElement("a");
+  //   link.href = imageSrc;
+  //   link.target = "_blank";
+  //   link.download = "qr-code.png"; // Set the default filename here
+  //   document.body.appendChild(link);
+  //   link.click();
+  //   document.body.removeChild(link);
+  // };
+
+  const downloadImage = async (imgName) => {
+    try {
+      const response = await axios({
+        method: "get",
+        url: `https://backend.ofx-qrcode.com/download-qrcode/671fa4219f292.png`,
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      console.log("download image", response)
+    } catch (error) {
+      console.error("error", error)
+    }
+  }
 
   const getQrData = async () => {
     setLoading(true);
@@ -217,17 +232,19 @@ const MyQrs = () => {
 
                         <td className={classes}>
                           <div className="w-max">
-                            <Button
+                            {/* <Button
                               className="flex items-center gap-3"
                               size="sm"
                               onClick={() =>
                                 downloadImage(
-                                  `https://backend.ofx-qrcode.com/storage/${row?.qr_code?.qrcode}`
+                                  // `${row?.qr_code?.qrcode?.slice("/")}`
+                                  row?.qr_code?.qrcode?.split('/')[1]
                                 )
                               }
                             >
                               <FaDownload className="h-4 w-4" /> Download
-                            </Button>
+                            </Button> */}
+                            <a className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-5 hover:bg-secondColor" href={`https://backend.ofx-qrcode.com/download-qrcode/${row?.qr_code?.qrcode?.split('/')[1]}`}>download</a>
                           </div>
                         </td>
                       </tr>

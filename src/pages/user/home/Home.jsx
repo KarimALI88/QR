@@ -76,6 +76,7 @@ const Home = ({ country, user }) => {
             {packages.map((pack, index) => (
               <PackageCard
                 key={index}
+                index={index}
                 title={pack?.name}
                 description={pack?.description}
                 price={pack?.price_EGP + "EGP"}

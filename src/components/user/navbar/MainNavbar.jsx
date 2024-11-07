@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Navbar,
   Collapse,
@@ -17,16 +17,20 @@ import {
   Avatar,
   Card,
 } from "@material-tailwind/react";
+import axios from "axios";
+import { AppContext } from "../../../context/AppContext";
 const MainNavbar = () => {
   const [openNav, setOpenNav] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const [token, setToken] = useState("");
+  const {token, setToken} = useContext(AppContext)
+
   const navigate = useNavigate()
   
-  useEffect(() => {
-    const tn = localStorage.tn;
-    tn ? setToken(tn) : "";
-  }, []);
+  // useEffect(() => {
+  //   const tn = localStorage.tn;
+  //   tn ? setToken(tn) : "";
+  // }, []);
+  
   const closeMenu = () => setIsMenuOpen(false);
 
   React.useEffect(() => {
@@ -36,10 +40,27 @@ const MainNavbar = () => {
     );
   }, []);
 
-  const logout = () => {
+  const logoutApi = async () => {
+    try {
+      const response = await axios({
+        method: "get",
+        url: "https://backend.ofx-qrcode.com/api/logout",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("response", response);
+    } catch (error) {
+      console.error("error in logout", error);
+    }
+  };
+
+  const logout = async () => {
+    await logoutApi()
     localStorage.removeItem("tn")
     navigate("/login")
-    window.location.reload();
+    // window.location.reload();
   }
 
   const navList = (

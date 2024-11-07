@@ -18,12 +18,11 @@ const UserLayout = ({ country, user, refresh, setRefresh }) => {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/qr/:id" element={<Profile />} />
-
+      <Route path="/generate-qr" element={<QrForm user={user} refresh={refresh} setRefresh={setRefresh} />} />
+      <Route path="/qr" element={<PackageOneTwo user={user} />} />
       {/* Protected Routes */}
       {token ? (
         <>
-          <Route path="/generate-qr" element={<QrForm user={user} refresh={refresh} setRefresh={setRefresh} />} />
-          <Route path="/qr" element={<PackageOneTwo user={user} />} />
           <Route path="/payment" element={<Payment />} />
         </>
       ) : (

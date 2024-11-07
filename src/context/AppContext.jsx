@@ -4,6 +4,7 @@ export const AppContext = createContext();
 
 const ContextProvider = (props) => {
   const [token, setToken] = useState("");
+  const [packageId, setPackageId] = useState("");
 
   useEffect(() => {
     const tn = localStorage.getItem("tn");
@@ -11,7 +12,7 @@ const ContextProvider = (props) => {
   }, []);
 
   return (
-    <AppContext.Provider value={{ token, setToken }}>
+    <AppContext.Provider value={{ token, setToken, packageId, setPackageId }}>
       {props.children}
     </AppContext.Provider>
   );
