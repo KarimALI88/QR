@@ -323,24 +323,6 @@ const PackageOneTwo = ({ user }) => {
     }
   };
 
-  const downloadImageAsPDF = async (imageSrc) => {
-    const pdf = new jsPDF();
-    const img = new Image();
-    img.src = imageSrc;
-
-    img.onload = () => {
-      // Adjust image dimensions if needed
-      const imgWidth = 180; // Width in the PDF document
-      const imgHeight = (img.height * imgWidth) / img.width; // Maintain aspect ratio
-
-      // Add the image to the PDF
-      pdf.addImage(img, "PNG", 15, 15, imgWidth, imgHeight);
-
-      // Save the PDF with the desired filename
-      pdf.save("qr-code.pdf");
-    };
-  };
-
   console.log("user", user);
 
   return (
