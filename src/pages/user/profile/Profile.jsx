@@ -256,7 +256,7 @@ const Profile = () => {
             </div>
           )}
 
-          <div className="flex flex-wrap justify-center items-center">
+          <div className="flex flex-wrap justify-center items-start">
             {profileData?.pdfs &&
               profileData?.pdfs.map((pdf, index) => (
                 <div
