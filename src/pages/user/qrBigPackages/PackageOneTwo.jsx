@@ -107,15 +107,16 @@ const PackageOneTwo = ({ user }) => {
   }, []);
 
   // Handle drop for cover image
-  const onDropCover = useCallback((acceptedFiles) => {
+  const onDropCover = useCallback(async (acceptedFiles) => {
     const file = acceptedFiles[0];
-    setCoverImageFile(file);
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setCoverImage(reader.result);
-    };
     if (file) {
-      reader.readAsDataURL(file);
+      const webpFile = await convertToWebp(file);
+      setCoverImageFile(webpFile);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCoverImage(reader.result);
+      };
+      reader.readAsDataURL(webpFile);
     }
   }, []);
 
@@ -133,15 +134,16 @@ const PackageOneTwo = ({ user }) => {
   }, []);
 
   // Handle drop for logo image
-  const onDropLogo = useCallback((acceptedFiles) => {
+  const onDropLogo = useCallback(async (acceptedFiles) => {
     const file = acceptedFiles[0];
-    setLogoImageFile(file);
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setLogoImage(reader.result);
-    };
     if (file) {
-      reader.readAsDataURL(file);
+      const webpFile = await convertToWebp(file);
+      setLogoImageFile(webpFile);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setLogoImage(reader.result);
+      };
+      reader.readAsDataURL(webpFile);
     }
   }, []);
 
@@ -206,6 +208,34 @@ const PackageOneTwo = ({ user }) => {
     });
 
   // console.log("pdf", pdfFile);
+  // convert to web
+  const convertToWebp = (file) => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const img = new Image();
+        img.src = reader.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+          canvas.toBlob(
+            (blob) => {
+              const webpFile = new File([blob], file.name.replace(/\.\w+$/, '.webp'), {
+                type: 'image/webp',
+              });
+              resolve(webpFile);
+            },
+            'image/webp',
+            0.8 // Quality (0.0 - 1.0)
+          );
+        };
+      };
+    });
+  };
 
   const getQr = async () => {
     setLoading(true);
@@ -264,7 +294,7 @@ const PackageOneTwo = ({ user }) => {
         });
       }
   
-      console.log("FormData before sending:", formData);
+      // console.log("FormData before sending:", formData);
   
       // Make the fetch request
       const response = await fetch(
@@ -279,9 +309,9 @@ const PackageOneTwo = ({ user }) => {
       );
   
       // Check if the response is ok
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status} ${response.statusText}`);
-      }
+      // if (!response.ok) {
+      //   throw new Error(`Error: ${response.status} ${response.statusText}`);
+      // }
   
       const data = await response.json();
       console.log("Response data:", data);
@@ -300,7 +330,7 @@ const PackageOneTwo = ({ user }) => {
   };
   
 
-  console.log("user", user);
+  // console.log("user", user);
 
   return (
     <div
