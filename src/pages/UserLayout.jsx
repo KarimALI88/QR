@@ -12,7 +12,7 @@ import { AppContext } from "../context/AppContext";
 const UserLayout = ({ country, user, refresh, setRefresh }) => {
   const { token } = useContext(AppContext);
 
-  return (
+  return ( 
     <Routes>
       <Route path="" element={<Home country={country} user={user} />} />
       <Route path="/login" element={<Login />} />

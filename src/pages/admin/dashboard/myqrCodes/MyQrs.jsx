@@ -51,14 +51,14 @@ const MyQrs = () => {
         method: "get",
         url: `https://backend.ofx-qrcode.com/download-qrcode/671fa4219f292.png`,
         headers: {
-          "Content-Type": "application/json"
-        }
-      })
-      console.log("download image", response)
+          "Content-Type": "application/json",
+        },
+      });
+      console.log("download image", response);
     } catch (error) {
-      console.error("error", error)
+      console.error("error", error);
     }
-  }
+  };
 
   const getQrData = async () => {
     setLoading(true);
@@ -92,6 +92,31 @@ const MyQrs = () => {
         .includes(searchQuery.toLowerCase()) ||
       row.qr_code?.link?.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  // count sae countries and cities
+  const groupLocations = (locations) => {
+    const grouped = {};
+
+    locations.forEach((loc) => {
+      const country = loc.country;
+      const city = loc.city;
+
+      // Initialize country and city counts if not already present
+      if (!grouped[country]) {
+        grouped[country] = { total: 0, cities: {} };
+      }
+
+      if (!grouped[country].cities[city]) {
+        grouped[country].cities[city] = 0;
+      }
+
+      // Increment counts
+      grouped[country].total += 1;
+      grouped[country].cities[city] += 1;
+    });
+
+    return grouped;
+  };
 
   return (
     <>
@@ -165,7 +190,7 @@ const MyQrs = () => {
                             <h1 className="text-lg font-medium">
                               {row?.qr_code?.profile?.title
                                 ? row?.qr_code?.profile?.title
-                                : row?.qr_code?.link.slice(0,20)}
+                                : row?.qr_code?.link.slice(0, 20)}
                             </h1>
                           </div>
                         </td>
@@ -219,14 +244,26 @@ const MyQrs = () => {
 
                         <td className={classes}>
                           <div className="w-full flex gap-5 flex-col">
-                            {row?.qr_code?.user_location?.map((loc, index) => (
-                              <div key={index}>
-                                <p className="max-w-40 break-words">
-                                  {loc.location}
-                                </p>
-                                <hr />
-                              </div>
-                            ))}
+                            {Object.entries(groupLocations(row?.locations)).map(
+                              ([country, cities], index) => (
+                                <div key={index}>
+                                  <p className="max-w-40 break-words">
+                                    {country} ({cities.total})
+                                  </p>
+                                  {Object.entries(cities.cities).map(
+                                    ([city, count], idx) => (
+                                      <p
+                                        key={idx}
+                                        className="max-w-40 break-words"
+                                      >
+                                        {city} ({count})
+                                      </p>
+                                    )
+                                  )}
+                                  <hr />
+                                </div>
+                              )
+                            )}
                           </div>
                         </td>
 
@@ -244,7 +281,14 @@ const MyQrs = () => {
                             >
                               <FaDownload className="h-4 w-4" /> Download
                             </Button> */}
-                            <a className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-5 hover:bg-secondColor" href={`https://backend.ofx-qrcode.com/download-qrcode/${row?.qr_code?.qrcode?.split('/')[1]}`}>download</a>
+                            <a
+                              className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-5 hover:bg-secondColor"
+                              href={`https://backend.ofx-qrcode.com/download-qrcode/${
+                                row?.qr_code?.qrcode?.split("/")[1]
+                              }`}
+                            >
+                              download
+                            </a>
                           </div>
                         </td>
                       </tr>

@@ -44,7 +44,7 @@ const Login = () => {
       localStorage.setItem("tn", data.token);
       setToken(data.token);
       toast.success("Logged in successfully");
-      navigate("/");
+      navigate("/admin/my-qrs");
     } catch (error) {
       console.error("error", error);
       toast.error("wrong answers");

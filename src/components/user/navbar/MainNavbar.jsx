@@ -74,6 +74,24 @@ const MainNavbar = () => {
       >
         Home
       </Typography>
+      <Typography
+        as={Link}
+        to="/payment"
+        variant="small"
+        color="blue-gray"
+        className="p-4 text-md text-gray-600 hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
+      >
+        Payment
+      </Typography>
+      <Typography
+        as={Link}
+        to="/Contact"
+        variant="small"
+        color="blue-gray"
+        className="p-4 text-md text-gray-600 hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
+      >
+        Contact
+      </Typography>
     </ul>
   );
 

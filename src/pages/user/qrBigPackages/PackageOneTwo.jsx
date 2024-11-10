@@ -239,7 +239,78 @@ const PackageOneTwo = ({ user }) => {
 
   const getQr = async () => {
     setLoading(true);
+  
     try {
+      // Basic required fields validation
+      if (!name || !description || !coverImageFile || !logoImageFile || !phone1) {
+        alert("Please fill in all required fields: Name, Description, Cover Image, Logo Image, and Phone 1.");
+        setLoading(false);
+        return;
+      }
+  
+      // Validate phone numbers (only digits allowed)
+      const phoneRegex = /^\d+$/;
+      if (!phoneRegex.test(phone1) || (phone2 && !phoneRegex.test(phone2))) {
+        alert("Phone numbers must contain only digits.");
+        setLoading(false);
+        return;
+      }
+  
+      // Validate PDF files (limit size and count)
+      const maxPdfSize = 5 * 1024 * 1024; // 5 MB
+      const pdfFiles = [pdfFile, menuImageFile].filter(Boolean);
+      if (pdfFiles.length > 5) {
+        alert("You can upload a maximum of 5 PDF files.");
+        setLoading(false);
+        return;
+      }
+      for (const file of pdfFiles) {
+        if (file.size > maxPdfSize) {
+          alert(`PDF file size should not exceed 5 MB.`);
+          setLoading(false);
+          return;
+        }
+      }
+  
+      // Validate MP3 file duration (max 1 minute)
+      if (mp3File) {
+        const audio = new Audio(URL.createObjectURL(mp3File));
+        await new Promise((resolve) => {
+          audio.onloadedmetadata = () => {
+            if (audio.duration > 60) {
+              alert("MP3 file duration should not exceed 1 minute.");
+              setLoading(false);
+              resolve(false);
+            } else {
+              resolve(true);
+            }
+          };
+        });
+      }
+  
+      // Validate social links
+      const urlRegex = /^(https?:\/\/)(www\.)?[\w-]+(\.[\w-]+)+/;
+      const linkValidations = [
+        { url: facebookLink, base: "https://www.facebook.com" },
+        { url: instgramLink, base: "https://www.instagram.com" },
+        { url: youtubeLink, base: "https://www.youtube.com" },
+        { url: beLink, base: "https://www.behance.net" },
+        { url: otherLink, base: "" }, // Custom link, no specific base URL
+        { url: portfolioLink, base: "" },
+        { url: whatsappLink && `https://wa.me/${whatsappLink}`, base: "https://wa.me" },
+        { url: linkedinLink, base: "https://www.linkedin.com" },
+        { url: snapchatLink, base: "https://www.snapchat.com" },
+        { url: twitterLink, base: "https://www.twitter.com" },
+      ];
+  
+      for (const { url, base } of linkValidations) {
+        if (url && (!urlRegex.test(url) || (base && !url.startsWith(base)))) {
+          alert(`Invalid URL: Please ensure the link starts with ${base}`);
+          setLoading(false);
+          return;
+        }
+      }
+  
       const formData = new FormData();
   
       // Append files
@@ -252,14 +323,14 @@ const PackageOneTwo = ({ user }) => {
       menuImageFile && formData.append("type[]", "menue");
   
       // Append basic information
-      name && formData.append("title", name);
-      description && formData.append("description", description);
+      formData.append("title", name);
+      formData.append("description", description);
       formData.append("color", color);
       formData.append("font", selectedFont);
       formData.append("package_id", "3");
   
       // Append phone numbers
-      phone1 && formData.append("phones[]", phone1);
+      formData.append("phones[]", phone1);
       phone2 && formData.append("phones[]", phone2);
   
       // Append social links
@@ -284,39 +355,25 @@ const PackageOneTwo = ({ user }) => {
       });
   
       // Append branch details
-      if (branches.length >= 1) {
-        branches.forEach((branch, index) => {
-          if (branch.name && branch.location && branch.phones.length > 0) {
-            formData.append(`branches[${index}][name]`, branch.name);
-            formData.append(`branches[${index}][location]`, branch.location);
-            formData.append(`branches[${index}][phones][0]`, branch.phones);
-          }
-        });
-      }
-  
-      // console.log("FormData before sending:", formData);
-  
-      // Make the fetch request
-      const response = await fetch(
-        "https://backend.ofx-qrcode.com/api/qrcode/smart",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
+      branches.forEach((branch, index) => {
+        if (branch.name && branch.location && branch.phones.length > 0) {
+          formData.append(`branches[${index}][name]`, branch.name);
+          formData.append(`branches[${index}][location]`, branch.location);
+          formData.append(`branches[${index}][phones][0]`, branch.phones);
         }
-      );
+      });
   
-      // Check if the response is ok
-      // if (!response.ok) {
-      //   throw new Error(`Error: ${response.status} ${response.statusText}`);
-      // }
+      const response = await fetch("https://backend.ofx-qrcode.com/api/qrcode/smart", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
   
       const data = await response.json();
       console.log("Response data:", data);
   
-      // Update the state with the QR code image
       setLoading(false);
       setOpenModal(true);
       setImage(`https://backend.ofx-qrcode.com/storage/${data.qr_code}`);
@@ -330,21 +387,114 @@ const PackageOneTwo = ({ user }) => {
   };
   
 
+  // const getQr = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const formData = new FormData();
+  
+  //     // Append files
+  //     coverImageFile && formData.append("cover", coverImageFile);
+  //     logoImageFile && formData.append("logo", logoImageFile);
+  //     mp3File && formData.append("mp3[]", mp3File);
+  //     pdfFile && formData.append("pdfs[]", pdfFile);
+  //     pdfName && formData.append("type[]", pdfName);
+  //     menuImageFile && formData.append("pdfs[]", menuImageFile);
+  //     menuImageFile && formData.append("type[]", "menue");
+  
+  //     // Append basic information
+  //     name && formData.append("title", name);
+  //     description && formData.append("description", description);
+  //     formData.append("color", color);
+  //     formData.append("font", selectedFont);
+  //     formData.append("package_id", "3");
+  
+  //     // Append phone numbers
+  //     phone1 && formData.append("phones[]", phone1);
+  //     phone2 && formData.append("phones[]", phone2);
+  
+  //     // Append social links
+  //     const links = [
+  //       { url: facebookLink, type: "facebook" },
+  //       { url: instgramLink, type: "instgram" },
+  //       { url: youtubeLink, type: "youtube" },
+  //       { url: beLink, type: "behance" },
+  //       { url: otherLink, type: "other" },
+  //       { url: portfolioLink, type: "portfolio" },
+  //       { url: `https://wa.me/${whatsappLink}`, type: "whatsapp" },
+  //       { url: linkedinLink, type: "linkedin" },
+  //       { url: snapchatLink, type: "snapchat" },
+  //       { url: twitterLink, type: "twitter" },
+  //     ];
+  
+  //     links.forEach((link, index) => {
+  //       if (link.url && link.url.length > 0) {
+  //         formData.append(`links[${index}][url]`, link.url);
+  //         formData.append(`links[${index}][type]`, link.type);
+  //       }
+  //     });
+  
+  //     // Append branch details
+  //     if (branches.length >= 1) {
+  //       branches.forEach((branch, index) => {
+  //         if (branch.name && branch.location && branch.phones.length > 0) {
+  //           formData.append(`branches[${index}][name]`, branch.name);
+  //           formData.append(`branches[${index}][location]`, branch.location);
+  //           formData.append(`branches[${index}][phones][0]`, branch.phones);
+  //         }
+  //       });
+  //     }
+  
+  //     // console.log("FormData before sending:", formData);
+  
+  //     // Make the fetch request
+  //     const response = await fetch(
+  //       "https://backend.ofx-qrcode.com/api/qrcode/smart",
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //         body: formData,
+  //       }
+  //     );
+  
+  //     // Check if the response is ok
+  //     // if (!response.ok) {
+  //     //   throw new Error(`Error: ${response.status} ${response.statusText}`);
+  //     // }
+  
+  //     const data = await response.json();
+  //     console.log("Response data:", data);
+  
+  //     // Update the state with the QR code image
+  //     setLoading(false);
+  //     setOpenModal(true);
+  //     setImage(`https://backend.ofx-qrcode.com/storage/${data.qr_code}`);
+  //     setDownloadImage(data.qr_code.split("/")[1]);
+  
+  //     return data;
+  //   } catch (error) {
+  //     console.error("Error during request:", error);
+  //     setLoading(false);
+  //   }
+  // };
+  
+
   // console.log("user", user);
 
   return (
     <div
-      style={{
-        background:
-          "linear-gradient(152deg, rgba(255,255,255,0.9) 0%, rgba(5,59,92,0.8) 100%)",
-        backgroundAttachment: "fixed",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        position: "fixed",
-        width: "100%",
-        height: "100vh",
-        overflowY: "auto", // Allows content to scroll within the fixed background
-      }}
+      // style={{
+      //   background:
+      //     "linear-gradient(152deg, rgba(255,255,255,0.9) 0%, rgba(5,59,92,0.8) 100%)",
+      //   backgroundAttachment: "fixed",
+      //   backgroundSize: "cover",
+      //   backgroundRepeat: "no-repeat",
+      //   position: "fixed",
+      //   width: "100%",
+      //   height: "100vh",
+      //   overflowY: "auto", // Allows content to scroll within the fixed background
+      // }}
     >
       <MainNavbar />
       <div className="p-10 h-fit ">
@@ -979,7 +1129,7 @@ const PackageOneTwo = ({ user }) => {
                           color="blue-gray"
                           className="mb-1 mt-5 font-semibold text-lg"
                         >
-                          Menu Image
+                          Menu 
                         </Typography>
                         <div
                           {...getRootPropsImage()}
