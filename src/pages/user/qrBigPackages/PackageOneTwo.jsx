@@ -211,7 +211,8 @@ const PackageOneTwo = ({ user }) => {
     setLoading(true);
     try {
       const formData = new FormData();
-      console.log("form data before send", formData);
+  
+      // Append files
       coverImageFile && formData.append("cover", coverImageFile);
       logoImageFile && formData.append("logo", logoImageFile);
       mp3File && formData.append("mp3[]", mp3File);
@@ -219,109 +220,85 @@ const PackageOneTwo = ({ user }) => {
       pdfName && formData.append("type[]", pdfName);
       menuImageFile && formData.append("pdfs[]", menuImageFile);
       menuImageFile && formData.append("type[]", "menue");
+  
+      // Append basic information
       name && formData.append("title", name);
       description && formData.append("description", description);
       formData.append("color", color);
       formData.append("font", selectedFont);
       formData.append("package_id", "3");
-
-      // Append phones individually
+  
+      // Append phone numbers
       phone1 && formData.append("phones[]", phone1);
       phone2 && formData.append("phones[]", phone2);
-
-      // links
-      if (facebookLink.length > 0) {
-        formData.append("links[0][url]", facebookLink);
-        formData.append("links[0][type]", "facebook");
-      }
-
-      if (instgramLink.length > 0) {
-        formData.append("links[1][url]", instgramLink);
-        formData.append("links[1][type]", "instgram");
-      }
-
-      if (youtubeLink.length > 0) {
-        formData.append("links[2][url]", youtubeLink);
-        formData.append("links[2][type]", "youtube");
-      }
-
-      if (beLink.length > 0) {
-        formData.append("links[3][url]", beLink);
-        formData.append("links[3][type]", "behance");
-      }
-
-      if (otherLink.length > 0) {
-        formData.append("links[4][url]", otherLink);
-        formData.append("links[4][type]", "other");
-      }
-
-      if (portfolioLink.length > 0) {
-        formData.append("links[5][url]", portfolioLink)
-          formData.append("links[5][type]", "portfolio");
-      }
-
-      if(whatsappLink.length > 0){
-        formData.append("links[6][url]", `https://wa.me/${whatsappLink}`)
-        formData.append("links[6][type]", "whatsapp");
-      }
-
-      if(linkedinLink.length > 0 ){
-        formData.append("links[7][url]", linkedinLink)
-        formData.append("links[7][type]", "linkedin")
-      }
-
-      if(snapchatLink.length > 0){
-        formData.append("links[8][url]", snapchatLink) 
-        formData.append("links[8][type]", "snapchat")
-      }
-
-      if(twitterLink.length > 0){
-        formData.append("links[9][url]", twitterLink)
-        formData.append("links[9][type]", "twitter");
-      }
-
-      // Append each branch's details
-
+  
+      // Append social links
+      const links = [
+        { url: facebookLink, type: "facebook" },
+        { url: instgramLink, type: "instgram" },
+        { url: youtubeLink, type: "youtube" },
+        { url: beLink, type: "behance" },
+        { url: otherLink, type: "other" },
+        { url: portfolioLink, type: "portfolio" },
+        { url: `https://wa.me/${whatsappLink}`, type: "whatsapp" },
+        { url: linkedinLink, type: "linkedin" },
+        { url: snapchatLink, type: "snapchat" },
+        { url: twitterLink, type: "twitter" },
+      ];
+  
+      links.forEach((link, index) => {
+        if (link.url && link.url.length > 0) {
+          formData.append(`links[${index}][url]`, link.url);
+          formData.append(`links[${index}][type]`, link.type);
+        }
+      });
+  
+      // Append branch details
       if (branches.length >= 1) {
         branches.forEach((branch, index) => {
-          if (
-            branch.name &&
-            branch.location &&
-            branch.phones.length > 0 &&
-            branch.phones[0]
-          ) {
+          if (branch.name && branch.location && branch.phones.length > 0) {
             formData.append(`branches[${index}][name]`, branch.name);
             formData.append(`branches[${index}][location]`, branch.location);
             formData.append(`branches[${index}][phones][0]`, branch.phones);
           }
         });
       }
-
-      console.log("form data after send", formData);
-
-      const response = await axios({
-        method: "post",
-        data: formData,
-        url: "https://backend.ofx-qrcode.com/api/qrcode/smart",
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log("request finished");
-      console.log("response qr", response);
+  
+      console.log("FormData before sending:", formData);
+  
+      // Make the fetch request
+      const response = await fetch(
+        "https://backend.ofx-qrcode.com/api/qrcode/smart",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        }
+      );
+  
+      // Check if the response is ok
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+  
+      const data = await response.json();
+      console.log("Response data:", data);
+  
+      // Update the state with the QR code image
       setLoading(false);
       setOpenModal(true);
-      setImage(
-        `https://backend.ofx-qrcode.com/storage/${response.data.qr_code}`
-      );
-      setDownloadImage(response.data.qr_code.split("/")[1]);
-      return response;
+      setImage(`https://backend.ofx-qrcode.com/storage/${data.qr_code}`);
+      setDownloadImage(data.qr_code.split("/")[1]);
+  
+      return data;
     } catch (error) {
-      console.log("error", error);
+      console.error("Error during request:", error);
       setLoading(false);
     }
   };
+  
 
   console.log("user", user);
 
@@ -524,7 +501,7 @@ const PackageOneTwo = ({ user }) => {
               </div>
 
               {/* MP3 */}
-              {user.package_id == 3 && (
+              {user?.pivot?.package_id == 3 && (
                 <div className="w-[300px]  ">
                   <Typography
                     variant="small"
@@ -553,7 +530,7 @@ const PackageOneTwo = ({ user }) => {
               )}
 
               {/* PDF */}
-              {user.package_id === 3 && (
+              {user?.pivot?.package_id === 3 && (
                 <div className="w-[300px]">
                   <Typography
                     variant="small"
@@ -578,7 +555,7 @@ const PackageOneTwo = ({ user }) => {
               )}
 
               {/* PDF Name */}
-              {user.package_id == 3 && (
+              {user?.pivot?.package_id == 3 && (
                 <div className="w-[300px]">
                   <Typography
                     variant="small"
@@ -954,7 +931,7 @@ const PackageOneTwo = ({ user }) => {
             </div>
 
             {/* menu */}
-            {user.package_id === 3 && (
+            {user?.pivot?.package_id === 3 && (
               <div>
                 <div>
                   <h1 className="text-mainColor text-2xl font-black flex gap-4 items-center flex-wrap my-5">
@@ -998,7 +975,7 @@ const PackageOneTwo = ({ user }) => {
               <div>
                 <h1 className="text-mainColor text-2xl font-black flex gap-4 items-center flex-wrap my-5">
                   <span className="text-white flex justify-center items-center w-10 h-10 text-center rounded-full bg-mainColor mt-5">
-                    {user.package_id === 3 ? "4" : "3"}
+                    {user?.pivot?.package_id === 3 ? "4" : "3"}
                   </span>{" "}
                   <span className="mt-5">Branches</span>
                 </h1>
@@ -1076,16 +1053,16 @@ const PackageOneTwo = ({ user }) => {
 
             {/* submit */}
             <div className="my-5 w-48">
-              {user && (user.package_id === 2 || user.package_id === 3) && (
+              {user && (user?.pivot?.package_id === 2 || user?.pivot?.package_id === 3) && (
                 <button
                   onClick={getQr}
-                  disabled={!user || !user.package_id || user.package_id === 1}
+                  disabled={!user || !user?.pivot?.package_id || user?.pivot?.package_id === 1}
                   className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-5 hover:bg-secondColor"
                 >
                   {loading ? <Spinner className="mx-auto" /> : "Submit"}
                 </button>
               )}
-              {(!user || !user.package_id || user.package_id === 1) && (
+              {(!user || !user?.pivot?.package_id || user?.pivot?.package_id === 1) && (
                 <button
                   onClick={() => navigate("/payment")}
                   className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-5 hover:bg-secondColor"
