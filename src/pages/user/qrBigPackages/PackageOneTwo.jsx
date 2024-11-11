@@ -250,29 +250,23 @@ const PackageOneTwo = ({ user, refresh }) => {
 
   const getQr = async () => {
     setLoading(true);
-
+  
     try {
       const validationErrors = [];
-
+  
       // Basic required fields validation
-      if (
-        !name ||
-        !description ||
-        !coverImageFile ||
-        !logoImageFile ||
-        !phone1
-      ) {
+      if (!name || !description || !coverImageFile || !logoImageFile || !phone1) {
         validationErrors.push(
           "Please fill in all required fields: Name, Description, Cover Image, Logo Image, and Phone 1."
         );
       }
-
+  
       // Validate phone numbers (only digits allowed)
       const phoneRegex = /^\d+$/;
       if (!phoneRegex.test(phone1) || (phone2 && !phoneRegex.test(phone2))) {
         validationErrors.push("Phone numbers must contain only digits.");
       }
-
+  
       // Validate PDF files (limit size and count)
       const maxPdfSize = 5 * 1024 * 1024; // 5 MB
       const pdfFiles = [pdfFile, menuImageFile].filter(Boolean);
@@ -284,7 +278,7 @@ const PackageOneTwo = ({ user, refresh }) => {
           validationErrors.push("PDF file size should not exceed 5 MB.");
         }
       }
-
+  
       // Validate MP3 file duration (max 1 minute)
       if (mp3File) {
         const audio = new Audio(URL.createObjectURL(mp3File));
@@ -294,12 +288,10 @@ const PackageOneTwo = ({ user, refresh }) => {
           };
         });
         if (!isMp3Valid) {
-          validationErrors.push(
-            "MP3 file duration should not exceed 1 minute."
-          );
+          validationErrors.push("MP3 file duration should not exceed 1 minute.");
         }
       }
-
+  
       // Validate social links
       const urlRegex = /^(https?:\/\/)(www\.)?[\w-]+(\.[\w-]+)+/;
       const linkValidations = [
@@ -317,7 +309,7 @@ const PackageOneTwo = ({ user, refresh }) => {
         { url: snapchatLink, base: "https://www.snapchat.com" },
         { url: twitterLink, base: "https://www.twitter.com" },
       ];
-
+  
       for (const { url, base } of linkValidations) {
         if (url && (!urlRegex.test(url) || (base && !url.startsWith(base)))) {
           validationErrors.push(
@@ -325,17 +317,17 @@ const PackageOneTwo = ({ user, refresh }) => {
           );
         }
       }
-
+  
       // If there are validation errors, show them and return early
       if (validationErrors.length > 0) {
         alert(validationErrors.join("\n"));
         setLoading(false);
         return;
       }
-
+  
       // Proceed with request if all validations pass
       const formData = new FormData();
-
+  
       // Append files
       coverImageFile && formData.append("cover", coverImageFile);
       logoImageFile && formData.append("logo", logoImageFile);
@@ -344,18 +336,18 @@ const PackageOneTwo = ({ user, refresh }) => {
       pdfName && formData.append("type[]", pdfName);
       menuImageFile && formData.append("pdfs[]", menuImageFile);
       menuImageFile && formData.append("type[]", "menue");
-
+  
       // Append basic information
       formData.append("title", name);
       formData.append("description", description);
       formData.append("color", color);
       formData.append("font", selectedFont);
       formData.append("package_id", "3");
-
+  
       // Append phone numbers
       formData.append("phones[]", phone1);
       phone2 && formData.append("phones[]", phone2);
-
+  
       // Append social links
       const links = [
         { url: facebookLink, type: "facebook" },
@@ -364,20 +356,28 @@ const PackageOneTwo = ({ user, refresh }) => {
         { url: beLink, type: "behance" },
         { url: otherLink, type: "other" },
         { url: portfolioLink, type: "portfolio" },
-        { url: `https://wa.me/${whatsappLink}`, type: "whatsapp" },
+        { url: `https://wa.me/2${whatsappLink}`, type: "whatsapp" },
         { url: linkedinLink, type: "linkedin" },
         { url: snapchatLink, type: "snapchat" },
         { url: twitterLink, type: "twitter" },
       ];
-
+  
       links.forEach((link, index) => {
         if (link.url && link.url.length > 0) {
           formData.append(`links[${index}][url]`, link.url);
           formData.append(`links[${index}][type]`, link.type);
         }
       });
-
-      // Make the request
+  
+      // Append branch details only if branch name has length
+      branches.forEach((branch, index) => {
+        if (branch.name && branch.name.trim().length > 0) {
+          formData.append(`branches[${index}][name]`, branch.name);
+          formData.append(`branches[${index}][location]`, branch.location || "");
+          formData.append(`branches[${index}][phones][0]`, branch.phones || "");
+        }
+      });
+  
       const response = await fetch(
         "https://backend.ofx-qrcode.com/api/qrcode/smart",
         {
@@ -388,21 +388,24 @@ const PackageOneTwo = ({ user, refresh }) => {
           body: formData,
         }
       );
-
+  
       const data = await response.json();
       console.log("Response data:", data);
-
+  
       setOpenModal(true);
       setImage(`https://backend.ofx-qrcode.com/storage/${data.qr_code}`);
       setDownloadImage(data.qr_code.split("/")[1]);
       setLoading(false);
-
+  
       return data;
     } catch (error) {
       console.error("Error during request:", error);
       setLoading(false);
     }
   };
+  
+  
+  
 
   // const getQr = async () => {
   //   setLoading(true);
