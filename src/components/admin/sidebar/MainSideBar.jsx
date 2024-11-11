@@ -16,7 +16,9 @@ import logo from "../../../assets/imgs/QR-LOGO1.png";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AppContext } from "./../../../context/AppContext";
-const MainSideBar = () => {
+
+
+const MainSideBar = ({setRefresh}) => {
   const navigate = useNavigate();
   const { token, setToken } = useContext(AppContext);
 
@@ -54,12 +56,44 @@ const MainSideBar = () => {
       <List>
         <ListItem
           className="text-white text-xl my-3 flex gap-2"
-          onClick={() => navigate("/qr")}
+          onClick={() => {
+            localStorage.removeItem("lg")
+            navigate("/qr")
+            setRefresh(prevState => !prevState)
+          }}
         >
           <ListItemPrefix>
             <FaPlus className="h-5 w-5" />
           </ListItemPrefix>
-          <p>New QR</p>
+          <p>Smart QR</p>
+        </ListItem>
+
+        <ListItem
+          className="text-white text-xl my-3 flex gap-2"
+          onClick={() => {
+            navigate("/generate-qr")
+            // localStorage.setItem("lg", "a1")
+            setRefresh(prevState => !prevState)
+          }}
+        >
+          <ListItemPrefix>
+            <FaPlus className="h-5 w-5" />
+          </ListItemPrefix>
+          <p>Free QR</p>
+        </ListItem>
+
+        <ListItem
+          className="text-white text-xl my-3 flex gap-2"
+          // onClick={() => {
+          //   navigate("/generate-qr")
+          //   // localStorage.setItem("lg", "a1")
+          //   setRefresh(prevState => !prevState)
+          // }}
+        >
+          <ListItemPrefix>
+            <FaPlus className="h-5 w-5" />
+          </ListItemPrefix>
+          <p>Renew</p>
         </ListItem>
 
         <ListItem className="text-white text-xl my-3" onClick={logout}>

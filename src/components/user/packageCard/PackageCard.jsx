@@ -112,10 +112,10 @@ const PackageCard = ({
         </ul>
       </div>
       <div className="bg-gray-100 px-6 py-4">
-        <Link
+        {!user?.pivot?.package_id ? <Link
           to={packageZero ? "/generate-qr" : "qr"}
           onClick={() => {
-            setPackageId(`${index+1}`)
+            setPackageId(`${index+1}`) 
             index === 0 && localStorage.setItem("lg" ,"a1")
             index === 1 && localStorage.setItem("lg" ,"b2")
             index === 2 && localStorage.setItem("lg" ,"c3")
@@ -124,7 +124,12 @@ const PackageCard = ({
           className="w-full min-w-[90%] mx-auto block text-center bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded"
         >
           View
-        </Link>
+        </Link>: <Link
+          to={"/admin/my-qrs"}
+          className="w-full min-w-[90%] mx-auto block text-center bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded"
+        >
+          View
+        </Link>}
       </div>
     </div>
   );

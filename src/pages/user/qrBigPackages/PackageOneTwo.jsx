@@ -23,8 +23,9 @@ import { useNavigate } from "react-router-dom";
 import { RiTwitterXFill } from "react-icons/ri";
 import { FaSnapchatSquare } from "react-icons/fa";
 import { AppContext } from "../../../context/AppContext";
+import { IoIosCloseCircle } from "react-icons/io";
 
-const PackageOneTwo = ({ user }) => {
+const PackageOneTwo = ({ user, refresh }) => {
   const [image, setImage] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [coverImage, setCoverImage] = useState(null);
@@ -56,7 +57,8 @@ const PackageOneTwo = ({ user }) => {
     other: false,
   });
   const [token, setToken] = useState("");
-  const { packageId } = useContext(AppContext);
+  // const { packageId } = useContext(AppContext);
+  const [packageCheck, setPackageCheck] = useState("c3");
   const [facebookLink, setFacebookLink] = useState("");
   const [portfolioLink, setPortfolioLink] = useState("");
   const [instgramLink, setInstgramLink] = useState("");
@@ -92,6 +94,11 @@ const PackageOneTwo = ({ user }) => {
   const addBranch = () => {
     setBranches([...branches, { name: "", location: "", phones: "" }]);
   };
+
+  useEffect(() => {
+    const subscribe = localStorage.lg;
+    setPackageCheck(subscribe);
+  }, [refresh]);
 
   const handleInputChange = (index, field, value) => {
     const updatedBranches = [...branches];
@@ -217,19 +224,23 @@ const PackageOneTwo = ({ user }) => {
         const img = new Image();
         img.src = reader.result;
         img.onload = () => {
-          const canvas = document.createElement('canvas');
+          const canvas = document.createElement("canvas");
           canvas.width = img.width;
           canvas.height = img.height;
-          const ctx = canvas.getContext('2d');
+          const ctx = canvas.getContext("2d");
           ctx.drawImage(img, 0, 0);
           canvas.toBlob(
             (blob) => {
-              const webpFile = new File([blob], file.name.replace(/\.\w+$/, '.webp'), {
-                type: 'image/webp',
-              });
+              const webpFile = new File(
+                [blob],
+                file.name.replace(/\.\w+$/, ".webp"),
+                {
+                  type: "image/webp",
+                }
+              );
               resolve(webpFile);
             },
-            'image/webp',
+            "image/webp",
             0.8 // Quality (0.0 - 1.0)
           );
         };
@@ -239,55 +250,56 @@ const PackageOneTwo = ({ user }) => {
 
   const getQr = async () => {
     setLoading(true);
-  
+
     try {
+      const validationErrors = [];
+
       // Basic required fields validation
-      if (!name || !description || !coverImageFile || !logoImageFile || !phone1) {
-        alert("Please fill in all required fields: Name, Description, Cover Image, Logo Image, and Phone 1.");
-        setLoading(false);
-        return;
+      if (
+        !name ||
+        !description ||
+        !coverImageFile ||
+        !logoImageFile ||
+        !phone1
+      ) {
+        validationErrors.push(
+          "Please fill in all required fields: Name, Description, Cover Image, Logo Image, and Phone 1."
+        );
       }
-  
+
       // Validate phone numbers (only digits allowed)
       const phoneRegex = /^\d+$/;
       if (!phoneRegex.test(phone1) || (phone2 && !phoneRegex.test(phone2))) {
-        alert("Phone numbers must contain only digits.");
-        setLoading(false);
-        return;
+        validationErrors.push("Phone numbers must contain only digits.");
       }
-  
+
       // Validate PDF files (limit size and count)
       const maxPdfSize = 5 * 1024 * 1024; // 5 MB
       const pdfFiles = [pdfFile, menuImageFile].filter(Boolean);
       if (pdfFiles.length > 5) {
-        alert("You can upload a maximum of 5 PDF files.");
-        setLoading(false);
-        return;
+        validationErrors.push("You can upload a maximum of 5 PDF files.");
       }
       for (const file of pdfFiles) {
         if (file.size > maxPdfSize) {
-          alert(`PDF file size should not exceed 5 MB.`);
-          setLoading(false);
-          return;
+          validationErrors.push("PDF file size should not exceed 5 MB.");
         }
       }
-  
+
       // Validate MP3 file duration (max 1 minute)
       if (mp3File) {
         const audio = new Audio(URL.createObjectURL(mp3File));
-        await new Promise((resolve) => {
+        const isMp3Valid = await new Promise((resolve) => {
           audio.onloadedmetadata = () => {
-            if (audio.duration > 60) {
-              alert("MP3 file duration should not exceed 1 minute.");
-              setLoading(false);
-              resolve(false);
-            } else {
-              resolve(true);
-            }
+            resolve(audio.duration <= 60);
           };
         });
+        if (!isMp3Valid) {
+          validationErrors.push(
+            "MP3 file duration should not exceed 1 minute."
+          );
+        }
       }
-  
+
       // Validate social links
       const urlRegex = /^(https?:\/\/)(www\.)?[\w-]+(\.[\w-]+)+/;
       const linkValidations = [
@@ -295,24 +307,35 @@ const PackageOneTwo = ({ user }) => {
         { url: instgramLink, base: "https://www.instagram.com" },
         { url: youtubeLink, base: "https://www.youtube.com" },
         { url: beLink, base: "https://www.behance.net" },
-        { url: otherLink, base: "" }, // Custom link, no specific base URL
+        { url: otherLink, base: "" },
         { url: portfolioLink, base: "" },
-        { url: whatsappLink && `https://wa.me/${whatsappLink}`, base: "https://wa.me" },
+        {
+          url: whatsappLink && `https://wa.me/${whatsappLink}`,
+          base: "https://wa.me",
+        },
         { url: linkedinLink, base: "https://www.linkedin.com" },
         { url: snapchatLink, base: "https://www.snapchat.com" },
         { url: twitterLink, base: "https://www.twitter.com" },
       ];
-  
+
       for (const { url, base } of linkValidations) {
         if (url && (!urlRegex.test(url) || (base && !url.startsWith(base)))) {
-          alert(`Invalid URL: Please ensure the link starts with ${base}`);
-          setLoading(false);
-          return;
+          validationErrors.push(
+            `Invalid URL: Please ensure the link starts with ${base}`
+          );
         }
       }
-  
+
+      // If there are validation errors, show them and return early
+      if (validationErrors.length > 0) {
+        alert(validationErrors.join("\n"));
+        setLoading(false);
+        return;
+      }
+
+      // Proceed with request if all validations pass
       const formData = new FormData();
-  
+
       // Append files
       coverImageFile && formData.append("cover", coverImageFile);
       logoImageFile && formData.append("logo", logoImageFile);
@@ -321,18 +344,18 @@ const PackageOneTwo = ({ user }) => {
       pdfName && formData.append("type[]", pdfName);
       menuImageFile && formData.append("pdfs[]", menuImageFile);
       menuImageFile && formData.append("type[]", "menue");
-  
+
       // Append basic information
       formData.append("title", name);
       formData.append("description", description);
       formData.append("color", color);
       formData.append("font", selectedFont);
       formData.append("package_id", "3");
-  
+
       // Append phone numbers
       formData.append("phones[]", phone1);
       phone2 && formData.append("phones[]", phone2);
-  
+
       // Append social links
       const links = [
         { url: facebookLink, type: "facebook" },
@@ -346,52 +369,46 @@ const PackageOneTwo = ({ user }) => {
         { url: snapchatLink, type: "snapchat" },
         { url: twitterLink, type: "twitter" },
       ];
-  
+
       links.forEach((link, index) => {
         if (link.url && link.url.length > 0) {
           formData.append(`links[${index}][url]`, link.url);
           formData.append(`links[${index}][type]`, link.type);
         }
       });
-  
-      // Append branch details
-      branches.forEach((branch, index) => {
-        if (branch.name && branch.location && branch.phones.length > 0) {
-          formData.append(`branches[${index}][name]`, branch.name);
-          formData.append(`branches[${index}][location]`, branch.location);
-          formData.append(`branches[${index}][phones][0]`, branch.phones);
+
+      // Make the request
+      const response = await fetch(
+        "https://backend.ofx-qrcode.com/api/qrcode/smart",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
         }
-      });
-  
-      const response = await fetch("https://backend.ofx-qrcode.com/api/qrcode/smart", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
-  
+      );
+
       const data = await response.json();
       console.log("Response data:", data);
-  
-      setLoading(false);
+
       setOpenModal(true);
       setImage(`https://backend.ofx-qrcode.com/storage/${data.qr_code}`);
       setDownloadImage(data.qr_code.split("/")[1]);
-  
+      setLoading(false);
+
       return data;
     } catch (error) {
       console.error("Error during request:", error);
       setLoading(false);
     }
   };
-  
 
   // const getQr = async () => {
   //   setLoading(true);
   //   try {
   //     const formData = new FormData();
-  
+
   //     // Append files
   //     coverImageFile && formData.append("cover", coverImageFile);
   //     logoImageFile && formData.append("logo", logoImageFile);
@@ -400,18 +417,18 @@ const PackageOneTwo = ({ user }) => {
   //     pdfName && formData.append("type[]", pdfName);
   //     menuImageFile && formData.append("pdfs[]", menuImageFile);
   //     menuImageFile && formData.append("type[]", "menue");
-  
+
   //     // Append basic information
   //     name && formData.append("title", name);
   //     description && formData.append("description", description);
   //     formData.append("color", color);
   //     formData.append("font", selectedFont);
   //     formData.append("package_id", "3");
-  
+
   //     // Append phone numbers
   //     phone1 && formData.append("phones[]", phone1);
   //     phone2 && formData.append("phones[]", phone2);
-  
+
   //     // Append social links
   //     const links = [
   //       { url: facebookLink, type: "facebook" },
@@ -425,14 +442,14 @@ const PackageOneTwo = ({ user }) => {
   //       { url: snapchatLink, type: "snapchat" },
   //       { url: twitterLink, type: "twitter" },
   //     ];
-  
+
   //     links.forEach((link, index) => {
   //       if (link.url && link.url.length > 0) {
   //         formData.append(`links[${index}][url]`, link.url);
   //         formData.append(`links[${index}][type]`, link.type);
   //       }
   //     });
-  
+
   //     // Append branch details
   //     if (branches.length >= 1) {
   //       branches.forEach((branch, index) => {
@@ -443,9 +460,9 @@ const PackageOneTwo = ({ user }) => {
   //         }
   //       });
   //     }
-  
+
   //     // console.log("FormData before sending:", formData);
-  
+
   //     // Make the fetch request
   //     const response = await fetch(
   //       "https://backend.ofx-qrcode.com/api/qrcode/smart",
@@ -457,44 +474,43 @@ const PackageOneTwo = ({ user }) => {
   //         body: formData,
   //       }
   //     );
-  
+
   //     // Check if the response is ok
   //     // if (!response.ok) {
   //     //   throw new Error(`Error: ${response.status} ${response.statusText}`);
   //     // }
-  
+
   //     const data = await response.json();
   //     console.log("Response data:", data);
-  
+
   //     // Update the state with the QR code image
   //     setLoading(false);
   //     setOpenModal(true);
   //     setImage(`https://backend.ofx-qrcode.com/storage/${data.qr_code}`);
   //     setDownloadImage(data.qr_code.split("/")[1]);
-  
+
   //     return data;
   //   } catch (error) {
   //     console.error("Error during request:", error);
   //     setLoading(false);
   //   }
   // };
-  
 
   // console.log("user", user);
 
   return (
     <div
-      // style={{
-      //   background:
-      //     "linear-gradient(152deg, rgba(255,255,255,0.9) 0%, rgba(5,59,92,0.8) 100%)",
-      //   backgroundAttachment: "fixed",
-      //   backgroundSize: "cover",
-      //   backgroundRepeat: "no-repeat",
-      //   position: "fixed",
-      //   width: "100%",
-      //   height: "100vh",
-      //   overflowY: "auto", // Allows content to scroll within the fixed background
-      // }}
+    // style={{
+    //   background:
+    //     "linear-gradient(152deg, rgba(255,255,255,0.9) 0%, rgba(5,59,92,0.8) 100%)",
+    //   backgroundAttachment: "fixed",
+    //   backgroundSize: "cover",
+    //   backgroundRepeat: "no-repeat",
+    //   position: "fixed",
+    //   width: "100%",
+    //   height: "100vh",
+    //   overflowY: "auto", // Allows content to scroll within the fixed background
+    // }}
     >
       <MainNavbar />
       <div className="p-10 h-fit ">
@@ -554,6 +570,7 @@ const PackageOneTwo = ({ user }) => {
                   className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-black placeholder:opacity-100 focus:!border-t-gray-900"
                 />
               </div>
+
               {/* cover background */}
               <div className="w-[300px]">
                 <Typography
@@ -622,7 +639,7 @@ const PackageOneTwo = ({ user }) => {
                   placeholder="OFX"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
+                  className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                 />
               </div>
 
@@ -640,7 +657,7 @@ const PackageOneTwo = ({ user }) => {
                   placeholder="OFX marketing agency"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
+                  className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                 />
               </div>
 
@@ -658,7 +675,7 @@ const PackageOneTwo = ({ user }) => {
                   placeholder="01061472185"
                   value={phone1}
                   onChange={(e) => setPhone1(e.target.value)}
-                  className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
+                  className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                 />
               </div>
 
@@ -676,12 +693,12 @@ const PackageOneTwo = ({ user }) => {
                   placeholder="01100942108"
                   value={phone2}
                   onChange={(e) => setPhone2(e.target.value)}
-                  className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
+                  className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                 />
               </div>
 
               {/* MP3 */}
-              {user?.pivot?.package_id == 3 && (
+              {(user?.pivot?.package_id == 3 || packageCheck === "c3") && (
                 <div className="w-[300px]  ">
                   <Typography
                     variant="small"
@@ -696,11 +713,20 @@ const PackageOneTwo = ({ user }) => {
                   >
                     <input {...getInputPropsMP3()} />
                     {mp3 ? (
-                      <audio
-                        controls
-                        src={mp3}
-                        className="w-full h-[100px] mt-4 rounded-lg"
-                      />
+                      <div className="flex justify-between items-start">
+                        <audio
+                          controls
+                          src={mp3}
+                          className="w-full h-[100px] mt-4 rounded-lg"
+                        />
+                        <IoIosCloseCircle
+                          size={30}
+                          onClick={() => {
+                            setMp3(null);
+                            setMp3File(null);
+                          }}
+                        />
+                      </div>
                     ) : (
                       <p>Drag & drop an MP3 here, or click to select one</p>
                     )}
@@ -710,7 +736,7 @@ const PackageOneTwo = ({ user }) => {
               )}
 
               {/* PDF */}
-              {user?.pivot?.package_id === 3 && (
+              {(user?.pivot?.package_id == 3 || packageCheck === "c3") && (
                 <div className="w-[300px]">
                   <Typography
                     variant="small"
@@ -725,7 +751,16 @@ const PackageOneTwo = ({ user }) => {
                   >
                     <input {...getInputPropsPDF()} />
                     {pdf ? (
-                      <p>uploaded</p>
+                      <div className="flex justify-between items-center">
+                        <p>uploaded</p>
+                        <IoIosCloseCircle
+                          size={30}
+                          onClick={() => {
+                            setPDF(null);
+                            setPdfFile(null);
+                          }}
+                        />
+                      </div>
                     ) : (
                       <p>Drag & drop an PDF here, or click to select one</p>
                     )}
@@ -735,7 +770,7 @@ const PackageOneTwo = ({ user }) => {
               )}
 
               {/* PDF Name */}
-              {user?.pivot?.package_id == 3 && (
+              {(user?.pivot?.package_id == 3 || packageCheck === "c3") && (
                 <div className="w-[300px]">
                   <Typography
                     variant="small"
@@ -749,7 +784,7 @@ const PackageOneTwo = ({ user }) => {
                     placeholder="portfolio"
                     value={pdfName}
                     onChange={(e) => setPdfName(e.target.value)}
-                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
+                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
               )}
@@ -933,7 +968,7 @@ const PackageOneTwo = ({ user }) => {
                     placeholder="facebook.com"
                     value={facebookLink}
                     onChange={(e) => setFacebookLink(e.target.value)}
-                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
+                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
               )}
@@ -952,7 +987,7 @@ const PackageOneTwo = ({ user }) => {
                     placeholder="instgram.com"
                     value={instgramLink}
                     onChange={(e) => setInstgramLink(e.target.value)}
-                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
+                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
               )}
@@ -971,7 +1006,7 @@ const PackageOneTwo = ({ user }) => {
                     placeholder="youtube.com"
                     value={youtubeLink}
                     onChange={(e) => setYoutubeLink(e.target.value)}
-                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
+                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
               )}
@@ -990,7 +1025,7 @@ const PackageOneTwo = ({ user }) => {
                     placeholder="01100942108"
                     value={whatsappLink}
                     onChange={(e) => setWhatsappLink(e.target.value)}
-                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
+                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
               )}
@@ -1009,7 +1044,7 @@ const PackageOneTwo = ({ user }) => {
                     placeholder="Linkedin"
                     value={linkedinLink}
                     onChange={(e) => setLinkedinLink(e.target.value)}
-                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
+                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
               )}
@@ -1028,7 +1063,7 @@ const PackageOneTwo = ({ user }) => {
                     placeholder="behance.com"
                     value={beLink}
                     onChange={(e) => setBeLink(e.target.value)}
-                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
+                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
               )}
@@ -1047,7 +1082,7 @@ const PackageOneTwo = ({ user }) => {
                     placeholder="www.ofxegypt.com"
                     value={portfolioLink}
                     onChange={(e) => setPortfolioLink(e.target.value)}
-                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
+                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
               )}
@@ -1066,7 +1101,7 @@ const PackageOneTwo = ({ user }) => {
                     placeholder="snapchat.com"
                     value={snapchatLink}
                     onChange={(e) => setSnapchatLink(e.target.value)}
-                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
+                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
               )}
@@ -1085,7 +1120,7 @@ const PackageOneTwo = ({ user }) => {
                     placeholder="x.com"
                     value={twitterLink}
                     onChange={(e) => setTwitterLink(e.target.value)}
-                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
+                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
               )}
@@ -1104,14 +1139,14 @@ const PackageOneTwo = ({ user }) => {
                     placeholder="ex: drive link"
                     value={otherLink}
                     onChange={(e) => setOtherLink(e.target.value)}
-                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
+                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
               )}
             </div>
 
             {/* menu */}
-            {user?.pivot?.package_id === 3 && (
+            {(user?.pivot?.package_id == 3 || packageCheck === "c3") && (
               <div>
                 <div>
                   <h1 className="text-mainColor text-2xl font-black flex gap-4 items-center flex-wrap my-5">
@@ -1129,7 +1164,7 @@ const PackageOneTwo = ({ user }) => {
                           color="blue-gray"
                           className="mb-1 mt-5 font-semibold text-lg"
                         >
-                          Menu 
+                          Menu
                         </Typography>
                         <div
                           {...getRootPropsImage()}
@@ -1137,7 +1172,16 @@ const PackageOneTwo = ({ user }) => {
                         >
                           <input {...getInputPropsImage()} />
                           {menuImage ? (
-                            <p>uploaded</p>
+                            <div className="flex justify-between items-center">
+                              <p>uploaded</p>
+                              <IoIosCloseCircle
+                                size={30}
+                                onClick={() => {
+                                  setMenuImage(null);
+                                  setMenuImageFile(null);
+                                }}
+                              />
+                            </div>
                           ) : (
                             <p>Drag & drop pdf here, or click to select one</p>
                           )}
@@ -1155,7 +1199,9 @@ const PackageOneTwo = ({ user }) => {
               <div>
                 <h1 className="text-mainColor text-2xl font-black flex gap-4 items-center flex-wrap my-5">
                   <span className="text-white flex justify-center items-center w-10 h-10 text-center rounded-full bg-mainColor mt-5">
-                    {user?.pivot?.package_id === 3 ? "4" : "3"}
+                    {user?.pivot?.package_id === 3 || packageCheck === "c3"
+                      ? "4"
+                      : "3"}
                   </span>{" "}
                   <span className="mt-5">Branches</span>
                 </h1>
@@ -1177,7 +1223,7 @@ const PackageOneTwo = ({ user }) => {
                           onChange={(e) =>
                             handleInputChange(index, "name", e.target.value)
                           }
-                          className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
+                          className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                         />
                       </div>
                       {/* Branch Location */}
@@ -1195,7 +1241,7 @@ const PackageOneTwo = ({ user }) => {
                           onChange={(e) =>
                             handleInputChange(index, "location", e.target.value)
                           }
-                          className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
+                          className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                         />
                       </div>
                       {/* Branch phones */}
@@ -1213,7 +1259,7 @@ const PackageOneTwo = ({ user }) => {
                           onChange={(e) =>
                             handleInputChange(index, "phones", e.target.value)
                           }
-                          className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-800 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
+                          className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                         />
                       </div>
                     </div>
@@ -1233,16 +1279,24 @@ const PackageOneTwo = ({ user }) => {
 
             {/* submit */}
             <div className="my-5 w-48">
-              {user && (user?.pivot?.package_id === 2 || user?.pivot?.package_id === 3) && (
-                <button
-                  onClick={getQr}
-                  disabled={!user || !user?.pivot?.package_id || user?.pivot?.package_id === 1}
-                  className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-5 hover:bg-secondColor"
-                >
-                  {loading ? <Spinner className="mx-auto" /> : "Submit"}
-                </button>
-              )}
-              {(!user || !user?.pivot?.package_id || user?.pivot?.package_id === 1) && (
+              {user &&
+                (user?.pivot?.package_id === 2 ||
+                  user?.pivot?.package_id === 3) && (
+                  <button
+                    onClick={getQr}
+                    disabled={
+                      !user ||
+                      !user?.pivot?.package_id ||
+                      user?.pivot?.package_id === 1
+                    }
+                    className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-5 hover:bg-secondColor"
+                  >
+                    {loading ? <Spinner className="mx-auto" /> : "Submit"}
+                  </button>
+                )}
+              {(!user ||
+                !user?.pivot?.package_id ||
+                user?.pivot?.package_id === 1) && (
                 <button
                   onClick={() => navigate("/payment")}
                   className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-5 hover:bg-secondColor"
@@ -1251,6 +1305,13 @@ const PackageOneTwo = ({ user }) => {
                 </button>
               )}
             </div>
+
+            {/* loader */}
+            {loading && (
+              <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+                <Spinner className="h-52 w-52 text-white" />
+              </div>
+            )}
 
             <Dialog
               open={openModal}

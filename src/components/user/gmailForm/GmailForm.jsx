@@ -4,6 +4,7 @@ import { AppContext } from "../../../context/AppContext";
 import { Dialog } from "@material-tailwind/react";
 import { Spinner } from "@material-tailwind/react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const GmailForm = ({ user }) => {
   const [email, setEmail] = useState("");
@@ -12,12 +13,13 @@ const GmailForm = ({ user }) => {
   const [image, setImage] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [token, setToken] = useState("");
+  const {token} = useContext(AppContext)
+  const [downloadImage, setDownloadImage] = useState("");
 
-  useEffect(() => {
-    const tn = localStorage.getItem("tn");
-    setToken(tn);
-  }, []);
+  // useEffect(() => {
+  //   const tn = localStorage.getItem("tn");
+  //   setToken(tn);
+  // }, []);
 
   const handleOpen = () => setOpenModal(!openModal);
 
@@ -39,6 +41,11 @@ const GmailForm = ({ user }) => {
       // console.log("qr response", response);
       setOpenModal(true);
       setImage(`https://backend.ofx-qrcode.com${response.data.qr_code_url}`);
+      setDownloadImage(
+        response.data.qr_code_url.substring(
+          response.data.qr_code_url.lastIndexOf("/") + 1
+        )
+      );
       setLoading(false);
     } catch (error) {
       console.log("error", error);
@@ -46,14 +53,14 @@ const GmailForm = ({ user }) => {
     }
   };
 
-  const downloadImage = (imageSrc) => {
-    const link = document.createElement("a");
-    link.href = imageSrc;
-    link.download = "qr-code.png"; // Set the default filename here
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+  // const downloadImage = (imageSrc) => {
+  //   const link = document.createElement("a");
+  //   link.href = imageSrc;
+  //   link.download = "qr-code.png"; // Set the default filename here
+  //   document.body.appendChild(link);
+  //   link.click();
+  //   document.body.removeChild(link);
+  // };
 
   return (
     <div>
@@ -115,7 +122,7 @@ const GmailForm = ({ user }) => {
       </div>
       {/* ======================================================= */}
       <div className="mt-10">
-        {user && user.package_id === 1 && (
+        {/* {user?.pivot?.package_id && (
           <button
             onClick={getQR}
             disabled={
@@ -127,7 +134,16 @@ const GmailForm = ({ user }) => {
           >
             {loading ? <Spinner className="mx-auto" /> : "Submit"}
           </button>
-        )}
+        )} */}
+        {token ? <button
+          onClick={getQR}
+          disabled={
+            email.length === 0 || subject.length === 0 || emailBody.length === 0
+          }
+          className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
+        >
+          {loading ? <Spinner className="mx-auto" /> : "Submit"}
+        </button> : <Link to={"/login"} className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor">Submit</Link>}
       </div>
 
       <Dialog
@@ -136,12 +152,13 @@ const GmailForm = ({ user }) => {
         className="p-10 text-center"
       >
         <img src={image} alt="qr" className="block mx-auto my-10" />
-        <button
-          onClick={() => downloadImage(image)}
+        <a
+          // onClick={() => downloadImageAsPDF(image)}
+          href={`https://backend.ofx-qrcode.com/download-qrcode/${downloadImage}`}
           className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor w-full"
         >
           Download
-        </button>
+        </a>
       </Dialog>
     </div>
   );

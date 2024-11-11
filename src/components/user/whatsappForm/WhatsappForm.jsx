@@ -1,23 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Input, Typography } from "@material-tailwind/react";
 import axios from "axios";
 import { Dialog } from "@material-tailwind/react";
 import { Spinner } from "@material-tailwind/react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AppContext } from "../../../context/AppContext";
 
 const WhatsappForm = ({ user }) => {
   const [number, setNumber] = useState("");
   const [text, setText] = useState("");
-  const [token, setToken] = useState("");
+  const {token} = useContext(AppContext)
   const [image, setImage] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate()
+  const [downloadImage, setDownloadImage] = useState("");
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const tn = localStorage.getItem("tn");
-    setToken(tn);
-  }, []);
+  // useEffect(() => {
+  //   const tn = localStorage.getItem("tn");
+  //   setToken(tn);
+  // }, []);
 
   const handleOpen = () => setOpenModal(!openModal);
 
@@ -36,9 +38,14 @@ const WhatsappForm = ({ user }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      // console.log("qr response", response);
+      console.log("qr response", response);
       setOpenModal(true);
       setImage(`https://backend.ofx-qrcode.com${response.data.qr_code_url}`);
+      setDownloadImage(
+        response.data.qr_code_url.substring(
+          response.data.qr_code_url.lastIndexOf("/") + 1
+        )
+      );
       setLoading(false);
     } catch (error) {
       console.log("error", error);
@@ -46,14 +53,14 @@ const WhatsappForm = ({ user }) => {
     }
   };
 
-  const downloadImage = (imageSrc) => {
-    const link = document.createElement("a");
-    link.href = imageSrc;
-    link.download = "qr-code.png"; // Set the default filename here
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+  // const downloadImage = (imageSrc) => {
+  //   const link = document.createElement("a");
+  //   link.href = imageSrc;
+  //   link.download = "qr-code.png"; // Set the default filename here
+  //   document.body.appendChild(link);
+  //   link.click();
+  //   document.body.removeChild(link);
+  // };
 
   return (
     <div>
@@ -96,7 +103,7 @@ const WhatsappForm = ({ user }) => {
       </div>
       {/* ======================================================= */}
       <div className="mt-10">
-        {user && user.package_id === 1 && (
+        {/* {user?.pivot?.package_id && (
           <button
             onClick={getQR}
             disabled={number.length === 0 && text.length === 0}
@@ -104,8 +111,14 @@ const WhatsappForm = ({ user }) => {
           >
             {loading ? <Spinner className="mx-auto" /> : "Submit"}
           </button>
-        )}
-        
+        )} */}
+        {token ? <button
+          onClick={getQR}
+          disabled={number.length === 0 && text.length === 0}
+          className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
+        >
+          {loading ? <Spinner className="mx-auto" /> : "Submit"}
+        </button> : <Link to={"/login"} className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor">Submit</Link>}
       </div>
 
       <Dialog
@@ -114,12 +127,13 @@ const WhatsappForm = ({ user }) => {
         className="p-10 text-center"
       >
         <img src={image} alt="qr" className="block mx-auto my-10" />
-        <button
-          onClick={() => downloadImage(image)}
+        <a
+          // onClick={() => downloadImageAsPDF(image)}
+          href={`https://backend.ofx-qrcode.com/download-qrcode/${downloadImage}`}
           className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor w-full"
         >
           Download
-        </button>
+        </a>
       </Dialog>
     </div>
   );

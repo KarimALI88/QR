@@ -9,7 +9,8 @@ const ContextProvider = (props) => {
   useEffect(() => {
     const tn = localStorage.getItem("tn");
     tn ? setToken(tn) : setToken("");
-  }, []);
+  }, [token]);
+  // console.log("token", token)
 
   return (
     <AppContext.Provider value={{ token, setToken, packageId, setPackageId }}>

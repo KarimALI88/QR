@@ -133,8 +133,8 @@ const QrForm = ({ user, refresh, setRefresh }) => {
           />
         </button>
       </div>
-      {!user ||
-        (!user.package_id && (
+      {/* {!user ||
+        (!user?.pivot?.package_id && (
           <div className="my-5 mx-auto p-10">
             <button
               onClick={subscribePackageZero}
@@ -143,11 +143,11 @@ const QrForm = ({ user, refresh, setRefresh }) => {
               Subscribe
             </button>
           </div>
-        ))}
+        ))} */}
       {/* =============================================================================== */}
       <div className="py-5 px-10 max-w-[80%]">
         {feature === "whatsapp" && <WhatsappForm user={user} />}
-        {feature === "facebook" && <FaceForm user={user} />}
+        {feature === "facebook" && <FaceForm user={user} />} 
         {feature === "youtube" && <YoutubeForm user={user} />}
         {feature === "twitter" && <XForm user={user} />}
         {feature === "instgram" && <InstgramForm user={user} />}

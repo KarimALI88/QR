@@ -8,7 +8,7 @@ import { Spinner } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import { Select, Option } from "@material-tailwind/react";
 
-const Payment = () => {
+const Payment = ({ user }) => {
   const [activeSection, setActiveSection] = useState("vodafone");
   const [packageNumber, setPackageNumber] = useState("");
   const [activationCode, setActivationCode] = useState("");
@@ -18,11 +18,11 @@ const Payment = () => {
   const [success, setSuccess] = useState(false);
   const { token } = useContext(AppContext);
   const packages = [
-    {package_id: "1", package_name: "free"},
-    {package_id: "2", package_name: "middle"},
-    {package_id: "3", package_name: "advanced"},
-  ]
-  const navigate = useNavigate()
+    { package_id: "1", package_name: "free" },
+    { package_id: "2", package_name: "middle" },
+    { package_id: "3", package_name: "advanced" },
+  ];
+  const navigate = useNavigate();
 
   const handleOpen = () => setOpenModal(!openModal);
 
@@ -62,12 +62,12 @@ const Payment = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      createSubscribtion()
+      createSubscribtion();
       console.log("activation resp", response);
       setLoading(false);
       setMessage("successfully");
       setSuccess(true);
-      navigate("/qr")
+      navigate("/qr");
     } catch (error) {
       console.error("error in api", error);
       setLoading(false);
@@ -108,60 +108,66 @@ const Payment = () => {
           </button>
         </div>
 
-        {/* geidea section */}
-        {activeSection === "geidea" && (
-          <div className="my-10 mx-auto w-[80%]">
-            {/* <h2 className="text-center text-black text-4xl my-10 ">Coming Soon</h2> */}
-            <div className="max-w-[350px] max-h-[300px] mx-auto my-5">
-              <img
-                src="https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg?t=st=1730367471~exp=1730371071~hmac=3aadf5dc530557805e925296fbf452027c5eb39a0e7388048294bf7aecec5f70&w=740"
-                alt="image for payment"
-              />
-            </div>
-          </div>
-        )}
+        {user && user?.pivot?.package_id ? (
+          <>
+          <h2 className="text-center my-5 mx-auto text-xl font-semibold">You have already an account</h2>
+          </>
+        ) : (
+          <>
+            {/* geidea section */}
+            {activeSection === "geidea" && (
+              <div className="my-10 mx-auto w-[80%]">
+                {/* <h2 className="text-center text-black text-4xl my-10 ">Coming Soon</h2> */}
+                <div className="max-w-[350px] max-h-[300px] mx-auto my-5">
+                  <img
+                    src="https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg?t=st=1730367471~exp=1730371071~hmac=3aadf5dc530557805e925296fbf452027c5eb39a0e7388048294bf7aecec5f70&w=740"
+                    alt="image for payment"
+                  />
+                </div>
+              </div>
+            )}
 
-        {/* vodafone section */}
-        {activeSection === "vodafone" && (
-          <div className="my-10 mx-auto w-[80%]">
-            <div className="max-w-[350px] max-h-[300px] mx-auto my-5">
-              <img
-                src="https://img.freepik.com/free-vector/people-using-mobile-bank-remittance-money_74855-6617.jpg?t=st=1730367062~exp=1730370662~hmac=794beadac97b4cc92cfe382b81ea03be0e193ebf473fd6738904245596c6cd25&w=740"
-                alt="image for payment"
-              />
-            </div>
-            <h3 className="text-xl text-black text-center font-semibold">
-              please send money on this phone{" "}
-              <span className="text-mainColor text-2xl">01061472185</span> by
-              vodafone cash
-            </h3>
-          </div>
-        )}
+            {/* vodafone section */}
+            {activeSection === "vodafone" && (
+              <div className="my-10 mx-auto w-[80%]">
+                <div className="max-w-[350px] max-h-[300px] mx-auto my-5">
+                  <img
+                    src="https://img.freepik.com/free-vector/people-using-mobile-bank-remittance-money_74855-6617.jpg?t=st=1730367062~exp=1730370662~hmac=794beadac97b4cc92cfe382b81ea03be0e193ebf473fd6738904245596c6cd25&w=740"
+                    alt="image for payment"
+                  />
+                </div>
+                <h3 className="text-xl text-black text-center font-semibold">
+                  please send money on this phone{" "}
+                  <span className="text-mainColor text-2xl">01061472185</span>{" "}
+                  by vodafone cash
+                </h3>
+              </div>
+            )}
 
-        {/* activate code */}
-        <div>
-          <button
-            onClick={handleOpen}
-            className="bg-mainColor px-5 py-5 font-semibold text-white hover:bg-secondColor block mx-auto my-10"
-          >
-            Active Account
-          </button>
-          <Dialog
-            open={openModal}
-            handler={handleOpen}
-            className="p-10 text-center"
-          >
-            <div className="my-10">
-              {message.length > 0 && (
-                <h4
-                  className={`font-semibold text-xl my-10 ${
-                    success === false ? "text-[red]" : "text-[green]"
-                  }`}
-                >
-                  {message}
-                </h4>
-              )}
-              {/* <Input 
+            {/* activate code */}
+            <div>
+              <button
+                onClick={handleOpen}
+                className="bg-mainColor px-5 py-5 font-semibold text-white hover:bg-secondColor block mx-auto my-10"
+              >
+                Active Account
+              </button>
+              <Dialog
+                open={openModal}
+                handler={handleOpen}
+                className="p-10 text-center"
+              >
+                <div className="my-10">
+                  {message.length > 0 && (
+                    <h4
+                      className={`font-semibold text-xl my-10 ${
+                        success === false ? "text-[red]" : "text-[green]"
+                      }`}
+                    >
+                      {message}
+                    </h4>
+                  )}
+                  {/* <Input 
                 placeholder="package number"
                 value={packageNumber}
                 onChange={(e) => setPackageNumber(e.target.value)}
@@ -170,39 +176,49 @@ const Payment = () => {
                   className: "before:content-none after:content-none",
                 }}
               /> */}
-              <Select
-                  id="font-select"
-                  label="Select Package"
-                  onChange={(val) => setPackageNumber(val)}
-                  value={packageNumber}
-                  className="h-[60px]"
+                  <Select
+                    id="font-select"
+                    label="Select Package"
+                    onChange={(val) => setPackageNumber(val)}
+                    value={packageNumber}
+                    className="h-[60px]"
+                  >
+                    {packages.map((pack) => (
+                      <Option
+                        key={pack.package_id}
+                        value={pack.package_id}
+                        className="capitalize text-black text-lg font-semibold"
+                      >
+                        {pack.package_name}
+                      </Option>
+                    ))}
+                  </Select>
+                </div>
+                <div>
+                  <Input
+                    placeholder="activation code"
+                    value={activationCode}
+                    onChange={(e) => setActivationCode(e.target.value)}
+                    className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                    labelProps={{
+                      className: "before:content-none after:content-none",
+                    }}
+                  />
+                </div>
+                <button
+                  onClick={activeVcash}
+                  className="bg-mainColor px-3 py-3 w-full font-semibold text-white hover:bg-secondColor block mx-auto my-10"
                 >
-                  {packages.map((pack) => (
-                    <Option key={pack.package_id} value={pack.package_id} className="capitalize text-black text-lg font-semibold">
-                      {pack.package_name}
-                    </Option>
-                  ))}
-                </Select>
+                  {loading ? (
+                    <Spinner className="mx-auto" />
+                  ) : (
+                    "Active an Account"
+                  )}
+                </button>
+              </Dialog>
             </div>
-            <div>
-              <Input
-                placeholder="activation code"
-                value={activationCode}
-                onChange={(e) => setActivationCode(e.target.value)}
-                className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                labelProps={{
-                  className: "before:content-none after:content-none",
-                }}
-              />
-            </div>
-            <button
-              onClick={activeVcash}
-              className="bg-mainColor px-3 py-3 w-full font-semibold text-white hover:bg-secondColor block mx-auto my-10"
-            >
-              {loading ? <Spinner className="mx-auto" /> : "Active an Account"}
-            </button>
-          </Dialog>
-        </div>
+          </>
+        )}
       </div>
     </div>
   );
