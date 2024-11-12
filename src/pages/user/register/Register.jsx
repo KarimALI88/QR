@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-// import logo from "./../../../assets/imgs/QR-LOGO2.png";
+import logo from "./../../../assets/imgs/QR-LOGO2.png";
 import { Input } from "@material-tailwind/react";
 import { BiLogoGmail } from "react-icons/bi";
 import { MdKey } from "react-icons/md";
@@ -76,10 +76,10 @@ const Register = () => {
       </div>
       {/* ------------------------------------------------------------------- */}
       <div className="flex-1  p-4 h-[100%] flex-col">
-        {/* <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center">
           <img src={logo} alt="OFX QR CODE" className="w-52 lg:w-72" />
           <IoMdClose className="cursor-pointer" size={35} color="black" onClick={() => navigate("/")}/>
-        </div> */}
+        </div>
         <div className="text-center my-20 mx-auto">
           <h3 className="text-mainColor font-semibold text-3xl">
             Welcome to OFX Signup
