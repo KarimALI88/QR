@@ -26,7 +26,7 @@ const WebsiteForm = ({ user }) => {
     try {
       const response = await axios({
         method: "post",
-        url: `https://backend.ofx-qrcode.com/api/generate-qrcode`,
+        url: `${import.meta.env.VITE_API_LINK}/generate-qrcode`,
         data: {
           link: link,
           package_id: "1",

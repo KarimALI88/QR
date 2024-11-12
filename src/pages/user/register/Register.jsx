@@ -92,6 +92,7 @@ const Register = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="e.g., your-email@gmail.com"
+              size="lg"
               className="w-full block h-14  appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
               icon={<BiLogoGmail size={25} />}
             />
@@ -104,6 +105,7 @@ const Register = () => {
               placeholder="01061472185"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
+              size="lg"
               className="w-full block h-14 appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
               icon={<IoPhonePortrait size={25} />}
             />
@@ -117,6 +119,7 @@ const Register = () => {
               value={password}
               type={view ? "text" : "password"}
               onChange={(e) => setPassword(e.target.value)}
+              size="lg"
               className="w-full block h-14 appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
               icon={<MdKey size={25} onClick={() => setView(prevState => !prevState)}/>}
             />

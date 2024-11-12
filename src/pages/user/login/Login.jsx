@@ -84,6 +84,7 @@ const Login = ({ setRefresh }) => {
               label="email"
               placeholder="e.g., your-email@gmail.com"
               value={email}
+              size="lg"
               onChange={(e) => setEmail(e.target.value)}
               className="w-full block h-14 appearance-none rounded-lg border border-gray-300 py-10 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
               icon={<BiLogoGmail size={25} />}
@@ -97,6 +98,7 @@ const Login = ({ setRefresh }) => {
               placeholder="****************"
               type={view ? "text" : "password"}
               value={password}
+              size="lg"
               onChange={(e) => setPassword(e.target.value)}
               className="w-full block h-14 appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
               icon={

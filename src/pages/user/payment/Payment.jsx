@@ -30,7 +30,7 @@ const Payment = ({ user }) => {
     try {
       const response = await axios({
         method: "post",
-        url: "https://backend.ofx-qrcode.com/api/subscriptions",
+        url: `${import.meta.env.VITE_API_LINK}/subscriptions`,
         data: {
           package_id: packageNumber,
           duration: "year",
@@ -52,7 +52,7 @@ const Payment = ({ user }) => {
     try {
       const response = await axios({
         method: "post",
-        url: "https://backend.ofx-qrcode.com/api/codes/validate",
+        url: `${import.meta.env.VITE_API_LINK}/codes/validate`,
         data: {
           package_id: packageNumber,
           code: activationCode,

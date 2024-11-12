@@ -8,6 +8,7 @@ import PackageOneTwo from "./user/qrBigPackages/PackageOneTwo";
 import Profile from "./user/profile/Profile";
 import Payment from "./user/payment/Payment";
 import { AppContext } from "../context/AppContext";
+import Contact from "./user/contact/Contact";
 
 const UserLayout = ({ country, user, refresh, setRefresh }) => {
   const { token } = useContext(AppContext);
@@ -17,6 +18,7 @@ const UserLayout = ({ country, user, refresh, setRefresh }) => {
       <Route path="" element={<Home country={country} user={user} />} />
       <Route path="/login" element={<Login setRefresh={setRefresh}/>} />
       <Route path="/register" element={<Register />} />
+      <Route path="/contact" element={<Contact />} />
       <Route path="/qr/:id" element={<Profile />} />
       <Route path="/generate-qr" element={<QrForm user={user} refresh={refresh} setRefresh={setRefresh} />} />
       <Route path="/qr" element={<PackageOneTwo user={user} />} />

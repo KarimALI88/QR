@@ -46,7 +46,7 @@ const Profile = () => {
   const getIp = async () => {
     try {
       const response = await axios.get(
-        `https://backend.ofx-qrcode.com/api/scan_qrcode/${id}`
+        `${import.meta.env.VITE_API_LINK}/scan_qrcode/${id}`
       );
       console.log(response);
     } catch (error) {

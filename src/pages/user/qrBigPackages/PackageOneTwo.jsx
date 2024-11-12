@@ -24,8 +24,21 @@ import { RiTwitterXFill } from "react-icons/ri";
 import { FaSnapchatSquare } from "react-icons/fa";
 import { AppContext } from "../../../context/AppContext";
 import { IoIosCloseCircle } from "react-icons/io";
-
+import {
+  Menu,
+  MenuHandler,
+  MenuList,
+  MenuItem,
+  Button,
+} from "@material-tailwind/react";
 const PackageOneTwo = ({ user, refresh }) => {
+  const COUNTRIES = [
+    "Egypt (+20)",
+    "Saudi Arabia (+966)",
+    "UAE (+971)",
+    "Kuwait (+965)",
+  ];
+  const CODES = ["+20", "+966", "+971", "+965"];
   const [image, setImage] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [coverImage, setCoverImage] = useState(null);
@@ -57,7 +70,6 @@ const PackageOneTwo = ({ user, refresh }) => {
     other: false,
   });
   const [token, setToken] = useState("");
-  // const { packageId } = useContext(AppContext);
   const [packageCheck, setPackageCheck] = useState("c3");
   const [facebookLink, setFacebookLink] = useState("");
   const [portfolioLink, setPortfolioLink] = useState("");
@@ -75,6 +87,23 @@ const PackageOneTwo = ({ user, refresh }) => {
   const [branches, setBranches] = useState([
     { name: "", location: "", phones: "" }, // Initial branch
   ]);
+  const [errorIndicator, setErrorIndicator] = useState({
+    nameIndicator: false,
+    descriptionIndicator: false,
+    phone1Indicator: false,
+    phone2Indicator: false,
+    facebookIndicator: false,
+    instgramIndicator: false,
+    twitterIndicator: false,
+    snapchatIndicator: false,
+    whatsappIndicator: false,
+    youtubeIndicator: false,
+    linkedinIndicator: false,
+    portfolioIndicator: false,
+    behanceIndicator: false,
+    otherIndicator: false,
+  });
+  const [country, setCountry] = useState(0)
   const fonts = [
     { name: "Roboto", style: "Roboto, sans-serif" },
     { name: "Noto Sans", style: "Noto Sans, sans-serif" },
@@ -90,6 +119,7 @@ const PackageOneTwo = ({ user, refresh }) => {
   const navigate = useNavigate();
   const [downloadImage, setDownloadImage] = useState("");
 
+  // console.log("country", country)
   const handleOpen = () => setOpenModal(!openModal);
   const addBranch = () => {
     setBranches([...branches, { name: "", location: "", phones: "" }]);
@@ -103,6 +133,11 @@ const PackageOneTwo = ({ user, refresh }) => {
   const handleInputChange = (index, field, value) => {
     const updatedBranches = [...branches];
     updatedBranches[index][field] = value;
+    setBranches(updatedBranches);
+  };
+
+  const removeBranch = (index) => {
+    const updatedBranches = branches.filter((_, i) => i !== index);
     setBranches(updatedBranches);
   };
 
@@ -216,6 +251,7 @@ const PackageOneTwo = ({ user, refresh }) => {
 
   // console.log("pdf", pdfFile);
   // convert to web
+  // console.log("whatsapp link", whatsappLink)
   const convertToWebp = (file) => {
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -250,35 +286,56 @@ const PackageOneTwo = ({ user, refresh }) => {
 
   const getQr = async () => {
     setLoading(true);
-  
+
     try {
       const validationErrors = [];
-  
+      const newErrorIndicator = { ...errorIndicator };
+
       // Basic required fields validation
-      if (!name || !description || !coverImageFile || !logoImageFile || !phone1) {
+      if (
+        !name ||
+        !description ||
+        !coverImageFile ||
+        !logoImageFile ||
+        !phone1
+      ) {
         validationErrors.push(
           "Please fill in all required fields: Name, Description, Cover Image, Logo Image, and Phone 1."
         );
+
+        // Update error indicators for missing fields
+        newErrorIndicator.nameIndicator = !name;
+        newErrorIndicator.descriptionIndicator = !description;
+        newErrorIndicator.phone1Indicator = !phone1;
       }
-  
+
       // Validate phone numbers (only digits allowed)
       const phoneRegex = /^\d+$/;
       if (!phoneRegex.test(phone1) || (phone2 && !phoneRegex.test(phone2))) {
         validationErrors.push("Phone numbers must contain only digits.");
+
+        // Update error indicators for invalid phone numbers
+        newErrorIndicator.phone1Indicator = !phoneRegex.test(phone1);
+        newErrorIndicator.phone2Indicator = phone2 && !phoneRegex.test(phone2);
+      } else {
+        // Reset phone error indicators if valid
+        newErrorIndicator.phone1Indicator = false;
+        newErrorIndicator.phone2Indicator = false;
       }
-  
+
       // Validate PDF files (limit size and count)
       const maxPdfSize = 5 * 1024 * 1024; // 5 MB
       const pdfFiles = [pdfFile, menuImageFile].filter(Boolean);
       if (pdfFiles.length > 5) {
         validationErrors.push("You can upload a maximum of 5 PDF files.");
       }
+
       for (const file of pdfFiles) {
         if (file.size > maxPdfSize) {
           validationErrors.push("PDF file size should not exceed 5 MB.");
         }
       }
-  
+
       // Validate MP3 file duration (max 1 minute)
       if (mp3File) {
         const audio = new Audio(URL.createObjectURL(mp3File));
@@ -288,46 +345,83 @@ const PackageOneTwo = ({ user, refresh }) => {
           };
         });
         if (!isMp3Valid) {
-          validationErrors.push("MP3 file duration should not exceed 1 minute.");
+          validationErrors.push(
+            "MP3 file duration should not exceed 1 minute."
+          );
         }
       }
-  
+
       // Validate social links
       const urlRegex = /^(https?:\/\/)(www\.)?[\w-]+(\.[\w-]+)+/;
       const linkValidations = [
-        { url: facebookLink, base: "https://www.facebook.com" },
-        { url: instgramLink, base: "https://www.instagram.com" },
-        { url: youtubeLink, base: "https://www.youtube.com" },
-        { url: beLink, base: "https://www.behance.net" },
-        { url: otherLink, base: "" },
-        { url: portfolioLink, base: "" },
         {
-          url: whatsappLink && `https://wa.me/${whatsappLink}`,
-          base: "https://wa.me",
+          url: facebookLink,
+          base: "https://www.facebook.com",
+          indicator: "facebookIndicator",
         },
-        { url: linkedinLink, base: "https://www.linkedin.com" },
-        { url: snapchatLink, base: "https://www.snapchat.com" },
-        { url: twitterLink, base: "https://www.twitter.com" },
+        {
+          url: instgramLink,
+          base: "https://www.instagram.com",
+          indicator: "instgramIndicator",
+        },
+        {
+          url: youtubeLink,
+          base: "https://www.youtube.com",
+          indicator: "youtubeIndicator",
+        },
+        {
+          url: beLink,
+          base: "https://www.behance.net",
+          indicator: "behanceIndicator",
+        },
+        { url: otherLink, base: "", indicator: "otherIndicator" },
+        { url: portfolioLink, base: "", indicator: "portfolioIndicator" },
+        {
+          url: whatsappLink && `https://wa.me/${CODES[country]}${whatsappLink}`,
+          base: "https://wa.me",
+          indicator: "whatsappIndicator",
+        },
+        {
+          url: linkedinLink,
+          base: "https://www.linkedin.com",
+          indicator: "linkedinIndicator",
+        },
+        {
+          url: snapchatLink,
+          base: "https://www.snapchat.com",
+          indicator: "snapchatIndicator",
+        },
+        {
+          url: twitterLink,
+          base: "https://www.twitter.com",
+          indicator: "twitterIndicator",
+        },
       ];
-  
-      for (const { url, base } of linkValidations) {
+
+      for (const { url, base, indicator } of linkValidations) {
         if (url && (!urlRegex.test(url) || (base && !url.startsWith(base)))) {
           validationErrors.push(
             `Invalid URL: Please ensure the link starts with ${base}`
           );
+          newErrorIndicator[indicator] = true;
+        } else {
+          newErrorIndicator[indicator] = false;
         }
       }
-  
+
+      // Update error indicators state
+      setErrorIndicator(newErrorIndicator);
+
       // If there are validation errors, show them and return early
       if (validationErrors.length > 0) {
         alert(validationErrors.join("\n"));
         setLoading(false);
         return;
       }
-  
+
       // Proceed with request if all validations pass
       const formData = new FormData();
-  
+
       // Append files
       coverImageFile && formData.append("cover", coverImageFile);
       logoImageFile && formData.append("logo", logoImageFile);
@@ -336,18 +430,18 @@ const PackageOneTwo = ({ user, refresh }) => {
       pdfName && formData.append("type[]", pdfName);
       menuImageFile && formData.append("pdfs[]", menuImageFile);
       menuImageFile && formData.append("type[]", "menue");
-  
+
       // Append basic information
       formData.append("title", name);
       formData.append("description", description);
       formData.append("color", color);
       formData.append("font", selectedFont);
-      formData.append("package_id", "3");
-  
+      formData.append("package_id", user?.pivot?.package_id);
+
       // Append phone numbers
       formData.append("phones[]", phone1);
       phone2 && formData.append("phones[]", phone2);
-  
+
       // Append social links
       const links = [
         { url: facebookLink, type: "facebook" },
@@ -356,30 +450,39 @@ const PackageOneTwo = ({ user, refresh }) => {
         { url: beLink, type: "behance" },
         { url: otherLink, type: "other" },
         { url: portfolioLink, type: "portfolio" },
-        { url: `https://wa.me/2${whatsappLink}`, type: "whatsapp" },
+        { url: `https://wa.me/${CODES[country]}${whatsappLink}`, type: "whatsapp" },
         { url: linkedinLink, type: "linkedin" },
         { url: snapchatLink, type: "snapchat" },
         { url: twitterLink, type: "twitter" },
       ];
-  
+
       links.forEach((link, index) => {
+        // Skip adding the WhatsApp link if `whatsappLink` is empty or not greater than 0
+        if (link.type === "whatsapp" && (!whatsappLink || whatsappLink <= 0)) {
+          return;
+        }
+      
+        // Check if the link URL is not empty before appending to `formData`
         if (link.url && link.url.length > 0) {
           formData.append(`links[${index}][url]`, link.url);
           formData.append(`links[${index}][type]`, link.type);
         }
       });
-  
-      // Append branch details only if branch name has length
+
+      // Append branch details
       branches.forEach((branch, index) => {
         if (branch.name && branch.name.trim().length > 0) {
           formData.append(`branches[${index}][name]`, branch.name);
-          formData.append(`branches[${index}][location]`, branch.location || "");
+          formData.append(
+            `branches[${index}][location]`,
+            branch.location || ""
+          );
           formData.append(`branches[${index}][phones][0]`, branch.phones || "");
         }
       });
-  
+
       const response = await fetch(
-        "https://backend.ofx-qrcode.com/api/qrcode/smart",
+        `${import.meta.env.VITE_API_LINK}/qrcode/smart`,
         {
           method: "POST",
           headers: {
@@ -388,24 +491,21 @@ const PackageOneTwo = ({ user, refresh }) => {
           body: formData,
         }
       );
-  
+
       const data = await response.json();
       console.log("Response data:", data);
-  
+
       setOpenModal(true);
       setImage(`https://backend.ofx-qrcode.com/storage/${data.qr_code}`);
       setDownloadImage(data.qr_code.split("/")[1]);
       setLoading(false);
-  
+
       return data;
     } catch (error) {
       console.error("Error during request:", error);
       setLoading(false);
     }
   };
-  
-  
-  
 
   // const getQr = async () => {
   //   setLoading(true);
@@ -642,6 +742,7 @@ const PackageOneTwo = ({ user, refresh }) => {
                   placeholder="OFX"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  error={errorIndicator.nameIndicator}
                   className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                 />
               </div>
@@ -659,6 +760,7 @@ const PackageOneTwo = ({ user, refresh }) => {
                   maxLength={50}
                   placeholder="OFX marketing agency"
                   value={description}
+                  error={errorIndicator.descriptionIndicator}
                   onChange={(e) => setDescription(e.target.value)}
                   className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                 />
@@ -677,6 +779,8 @@ const PackageOneTwo = ({ user, refresh }) => {
                   maxLength={16}
                   placeholder="01061472185"
                   value={phone1}
+                  type="number"
+                  error={errorIndicator.phone1Indicator}
                   onChange={(e) => setPhone1(e.target.value)}
                   className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                 />
@@ -695,7 +799,9 @@ const PackageOneTwo = ({ user, refresh }) => {
                   maxLength={16}
                   placeholder="01100942108"
                   value={phone2}
+                  type="number"
                   onChange={(e) => setPhone2(e.target.value)}
+                  error={errorIndicator.phone2Indicator}
                   className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                 />
               </div>
@@ -971,6 +1077,7 @@ const PackageOneTwo = ({ user, refresh }) => {
                     placeholder="facebook.com"
                     value={facebookLink}
                     onChange={(e) => setFacebookLink(e.target.value)}
+                    error={errorIndicator.facebookIndicator}
                     className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
@@ -989,6 +1096,7 @@ const PackageOneTwo = ({ user, refresh }) => {
                   <Input
                     placeholder="instgram.com"
                     value={instgramLink}
+                    error={errorIndicator.instgramIndicator}
                     onChange={(e) => setInstgramLink(e.target.value)}
                     className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
@@ -1008,6 +1116,7 @@ const PackageOneTwo = ({ user, refresh }) => {
                   <Input
                     placeholder="youtube.com"
                     value={youtubeLink}
+                    error={errorIndicator.youtubeIndicator}
                     onChange={(e) => setYoutubeLink(e.target.value)}
                     className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
@@ -1024,12 +1133,49 @@ const PackageOneTwo = ({ user, refresh }) => {
                   >
                     Whatsapp Number
                   </Typography>
-                  <Input
-                    placeholder="01100942108"
-                    value={whatsappLink}
-                    onChange={(e) => setWhatsappLink(e.target.value)}
-                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
-                  />
+                  <div className="relative flex w-full">
+                    <Menu placement="bottom-start">
+                      <MenuHandler>
+                        <Button
+                          ripple={false}
+                          variant="text"
+                          color="blue-gray"
+                          className="h-10 w-14 shrink-0 rounded-r-none border border-r-0 border-blue-gray-200 bg-transparent px-3"
+                        >
+                          {CODES[country]}
+                        </Button>
+                      </MenuHandler>
+                      <MenuList className="max-h-[20rem] max-w-[18rem]">
+                        {COUNTRIES.map((country, index) => {
+                          return (
+                            <MenuItem
+                              key={country}
+                              value={country}
+                              onClick={() => setCountry(index)}
+                            >
+                              {country}
+                            </MenuItem>
+                          );
+                        })}
+                      </MenuList>
+                    </Menu>
+                    <Input
+                      type="tel"
+                      pattern="[0-9]*"
+                      inputMode="numeric"
+                      value={whatsappLink}
+                      onChange={(e) => setWhatsappLink(e.target.value)}
+                      maxLength={12}
+                      placeholder="324-456-2323"
+                      className="appearance-none rounded-l-none !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                      labelProps={{
+                        className: "before:content-none after:content-none",
+                      }}
+                      containerProps={{
+                        className: "min-w-0",
+                      }}
+                    />
+                  </div>
                 </div>
               )}
 
@@ -1046,6 +1192,7 @@ const PackageOneTwo = ({ user, refresh }) => {
                   <Input
                     placeholder="Linkedin"
                     value={linkedinLink}
+                    error={errorIndicator.linkedinIndicator}
                     onChange={(e) => setLinkedinLink(e.target.value)}
                     className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
@@ -1066,6 +1213,7 @@ const PackageOneTwo = ({ user, refresh }) => {
                     placeholder="behance.com"
                     value={beLink}
                     onChange={(e) => setBeLink(e.target.value)}
+                    error={errorIndicator.behanceIndicator}
                     className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
@@ -1085,6 +1233,7 @@ const PackageOneTwo = ({ user, refresh }) => {
                     placeholder="www.ofxegypt.com"
                     value={portfolioLink}
                     onChange={(e) => setPortfolioLink(e.target.value)}
+                    error={errorIndicator.portfolioIndicator}
                     className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
@@ -1104,6 +1253,7 @@ const PackageOneTwo = ({ user, refresh }) => {
                     placeholder="snapchat.com"
                     value={snapchatLink}
                     onChange={(e) => setSnapchatLink(e.target.value)}
+                    error={errorIndicator.snapchatIndicator}
                     className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
@@ -1123,6 +1273,7 @@ const PackageOneTwo = ({ user, refresh }) => {
                     placeholder="x.com"
                     value={twitterLink}
                     onChange={(e) => setTwitterLink(e.target.value)}
+                    error={errorIndicator.twitterIndicator}
                     className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
@@ -1142,6 +1293,7 @@ const PackageOneTwo = ({ user, refresh }) => {
                     placeholder="ex: drive link"
                     value={otherLink}
                     onChange={(e) => setOtherLink(e.target.value)}
+                    error={errorIndicator.otherIndicator}
                     className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
@@ -1229,6 +1381,7 @@ const PackageOneTwo = ({ user, refresh }) => {
                           className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                         />
                       </div>
+
                       {/* Branch Location */}
                       <div className="w-[300px]">
                         <Typography
@@ -1247,7 +1400,8 @@ const PackageOneTwo = ({ user, refresh }) => {
                           className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                         />
                       </div>
-                      {/* Branch phones */}
+
+                      {/* Branch Phones */}
                       <div className="w-[300px]">
                         <Typography
                           variant="small"
@@ -1259,14 +1413,24 @@ const PackageOneTwo = ({ user, refresh }) => {
                         <Input
                           placeholder="Branch Number"
                           value={branch.phones}
+                          type="number"
                           onChange={(e) =>
                             handleInputChange(index, "phones", e.target.value)
                           }
                           className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                         />
                       </div>
+
+                      {/* Remove Branch Button */}
+                      <button
+                        onClick={() => removeBranch(index)}
+                        className="text-red-600 font-semibold mt-5"
+                      >
+                        Remove Branch -
+                      </button>
                     </div>
                   ))}
+
                   {/* Add Branch Button */}
                   <div className="my-10">
                     <button

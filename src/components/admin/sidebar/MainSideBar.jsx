@@ -84,11 +84,11 @@ const MainSideBar = ({setRefresh}) => {
 
         <ListItem
           className="text-white text-xl my-3 flex gap-2"
-          // onClick={() => {
-          //   navigate("/generate-qr")
-          //   // localStorage.setItem("lg", "a1")
-          //   setRefresh(prevState => !prevState)
-          // }}
+          onClick={() => {
+            navigate("/admin/renew")
+            // localStorage.setItem("lg", "a1")
+            // setRefresh(prevState => !prevState)
+          }}
         >
           <ListItemPrefix>
             <FaPlus className="h-5 w-5" />

@@ -65,7 +65,7 @@ const MyQrs = () => {
     try {
       const response = await axios({
         method: "get",
-        url: `https://backend.ofx-qrcode.com/api/user/qrcode`,
+        url: `${import.meta.env.VITE_API_LINK}/user/qrcode`,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
