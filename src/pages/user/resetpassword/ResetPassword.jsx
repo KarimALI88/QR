@@ -10,47 +10,54 @@ import { AppContext } from "./../../../context/AppContext";
 import loginImage from "../../../assets/imgs/loginImage.jpg";
 import { IoMdClose } from "react-icons/io";
 import { FcGoogle } from "react-icons/fc";
+import axios from "axios";
+import { useLocation } from "react-router-dom";
 
-const Login = ({ setRefresh }) => {
-  const [email, setEmail] = useState("");
+const ResetPassword = () => {
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState("");
   const [view, setView] = useState(false);
-  const { setToken } = useContext(AppContext);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const userLogin = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(`${import.meta.env.VITE_API_LINK}/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
+  const queryParams = new URLSearchParams(location.search);
+  const token = queryParams.get("token");
+  const email = queryParams.get("email");
 
-      if (!response.ok) {
-        toast.error("wrong answers");
+  console.log("Token:", token);
+  console.log("Email:", email);
+
+  const resetPassword = async () => {
+    setLoading(true);
+    if (password !== confirmPassword) {
+      toast.error("password and confirm password not matched");
+      setLoading(false);
+    } else {
+      try {
+        const response = await axios({
+          method: "post",
+          url: `${import.meta.env.VITE_API_LINK}/reset-password`,
+          data: {
+            email,
+            token,
+            password,
+            password_confirmation: confirmPassword,
+          },
+        });
+        console.log("response of reset ", response);
         setLoading(false);
-        throw new Error(`Error: ${response.status}`);
+        if(response.data) {
+            toast.success("Changed Succeesfully")
+            navigate("/login")
+        }else{
+            toast.error("error")
+        }
+      } catch (error) {
+        console.error("error in api reset", error);
+        setLoading(false);
+        toast.error(error.response.data.message)
       }
-
-      const data = await response.json();
-      // console.log("logged in", data);
-      setLoading(false);
-      localStorage.setItem("tn", data.token);
-      setToken(data.token);
-      toast.success("Logged in successfully");
-      setRefresh((prevState) => !prevState);
-      navigate("/admin/my-qrs");
-    } catch (error) {
-      console.error("error", error);
-      toast.error("wrong answers");
-      setLoading(false);
     }
   };
 
@@ -63,43 +70,42 @@ const Login = ({ setRefresh }) => {
             className="cursor-pointer"
             size={35}
             color="black"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/login")}
           />
         </div>
         <div className="text-center my-20 mx-auto">
           <h3 className="text-mainColor font-semibold text-3xl">
-            Welcome to OFX Login
+            Add New Password
           </h3>
 
-          <div className="w-fit mx-auto px-5 my-5">
-            <button className="flex justify-start items-center text-xl gap-3 border-2 border-gray-500 rounded-xl px-3 py-2">
-              <FcGoogle size={35} />
-              Sign in with google
-            </button>
-          </div>
-
-          {/* email */}
+          {/* new password */}
           <div className="w-[80%] md:w-[70%] lg:w-[60%] mx-auto my-10">
             <Input
-              label="email"
-              placeholder="e.g., your-email@gmail.com"
-              value={email}
+              label="New Password"
+              placeholder="*****************"
+              value={password}
+              type={view ? "text" : "password"}
               size="lg"
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full block h-14 appearance-none rounded-lg border border-gray-300 py-10 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
-              icon={<BiLogoGmail size={25} />}
+              icon={
+                <MdKey
+                  size={25}
+                  onClick={() => setView((prevState) => !prevState)}
+                />
+              }
             />
           </div>
 
-          {/* password */}
+          {/* confirm password */}
           <div className="w-[80%] md:w-[70%] lg:w-[60%] mx-auto mb-5">
             <Input
-              label="password"
+              label="Confirm Password"
               placeholder="****************"
               type={view ? "text" : "password"}
-              value={password}
+              value={confirmPassword}
               size="lg"
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               className="w-full block h-14 appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
               icon={
                 <MdKey
@@ -110,29 +116,14 @@ const Login = ({ setRefresh }) => {
             />
           </div>
 
-          {/* register */}
-          <p className="mt-5 text-center">
-            if you don't have an account{" "}
-            <Link to={"/register"} className="text-mainColor underline text-lg">
-              signup
-            </Link>
-          </p>
-
-          {/* forget password */}
-          <p className="mt-2">
-            if you forget your password{" "}
-            <Link to={"/forget-password"} className="text-mainColor underline text-lg">
-              forget password
-            </Link>
-          </p>
-
           {/* button submit */}
           <div className="w-[80%] md:w-[70%] lg:w-[60%] mx-auto my-5">
             <button
-              onClick={userLogin}
+              onClick={resetPassword}
+              disabled={password.length === 0 || confirmPassword === 0}
               className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-white hover:bg-secondColor"
             >
-              {loading ? <Spinner className="mx-auto" /> : "Login"}
+              {loading ? <Spinner className="mx-auto" /> : "Submit"}
             </button>
           </div>
         </div>
@@ -150,4 +141,4 @@ const Login = ({ setRefresh }) => {
   );
 };
 
-export default Login;
+export default ResetPassword;
