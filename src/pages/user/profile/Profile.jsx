@@ -92,7 +92,7 @@ const Profile = () => {
         className="relative z-10 flex flex-col items-center justify-start w-full h-full "
         // style={{ backgroundColor: profileData?.background_color }}
       >
-        <div className="w-full h-[400px] relative mb-14 ">
+        <div className="w-full h-[270px] relative mb-14 ">
           <img
             src={`https://backend.ofx-qrcode.com/storage/${profileData?.cover}`}
             alt=""
@@ -125,7 +125,7 @@ const Profile = () => {
           </div>
 
           <div
-            className="flex gap-5 items-center px-3 py-5 flex-wrap justify-center"
+            className="flex gap-5 items-start px-3 py-5 flex-wrap justify-center"
             style={{ color: profileData?.background_color }}
           >
             {profileData?.links?.find((link) => link.type === "whatsapp") && (
@@ -152,15 +152,17 @@ const Profile = () => {
               </a>
             )}
 
-            {profileData?.links?.find((link) => link.type === "other") && (
+            {profileData?.links?.find((link) => link?.type.includes("other")) && (
               <a
                 href={
-                  profileData.links.find((link) => link.type === "other").url
+                  profileData?.links?.find((link) => link?.type.includes("other")).url
                 }
                 target="_blank"
                 rel="noopener noreferrer"
+                className="font-semibold text-lg text-center"
               >
                 <FaLink size={60} className="" />
+                {profileData?.links?.find((link) => link?.type.includes("other")).type.slice(5,)}
               </a>
             )}
 
@@ -235,6 +237,8 @@ const Profile = () => {
                 <FaSnapchatSquare size={60} className="" />
               </a>
             )}
+
+            
           </div>
 
           {profileData?.phones && (

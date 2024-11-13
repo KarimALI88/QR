@@ -38,6 +38,7 @@ const PhoneAnimation = ({
   twitter,
   other,
   pdfName,
+  otherLinkName
 }) => {
   return (
     <div className="flex justify-center rounded-3xl items-center h-fit mx-auto max-w-[100%] md:fixed md:right-16 md:top-28">
@@ -109,7 +110,7 @@ const PhoneAnimation = ({
           </p>
           {/* social media icons */}
           <div
-            className={`flex gap-5 items-center px-3 py-5 ${
+            className={`flex gap-5 items-start px-3 py-5 ${
               [
                 facebook,
                 whatsapp,
@@ -129,10 +130,10 @@ const PhoneAnimation = ({
                     youtube,
                     other,
                     snapchat,
-                    twitter,
+                    twitter
                   ].filter(Boolean).length === 3
                 ? "flex-col"
-                : "flex-wrap justify-center"
+                : "flex-wrap justify-center items-start"
             }`}
           >
             {facebook && <FaFacebook size={40} style={{ color }} />}
@@ -141,9 +142,12 @@ const PhoneAnimation = ({
             {behance && <FaBehance size={40} style={{ color }} />}
             {linkedin && <FaLinkedin size={40} style={{ color }} />}
             {youtube && <FaYoutube size={40} style={{ color }} />}
-            {other && <FaLink size={40} style={{ color }} />}
             {snapchat && <FaSnapchatSquare size={40} style={{ color }} />}
             {twitter && <RiTwitterXFill size={40} style={{ color }} />}
+            {other && <div className="flex flex-col gap-1">
+              <FaLink size={40} style={{ color }} />
+              <p>{otherLinkName || "title"}</p>
+              </div>}
           </div>
           {/* phone 1 */}
           <h3

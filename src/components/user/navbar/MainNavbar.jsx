@@ -92,6 +92,15 @@ const MainNavbar = () => {
       >
         Contact
       </Typography>
+      <Typography
+        as={Link}
+        to="/policies"
+        variant="small"
+        color="blue-gray"
+        className="p-4 text-md text-gray-600 hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
+      >
+        Policies
+      </Typography>
     </ul>
   );
 

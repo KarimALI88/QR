@@ -5,6 +5,7 @@ import { Textarea } from "@material-tailwind/react";
 import axios from "axios"; 
 import { toast } from "react-toastify";
 import { Spinner } from "@material-tailwind/react";
+import Footer from "../../../components/user/footer/Footer";
 
 const Contact = () => {
   const [email, setEmail] = useState("");
@@ -70,6 +71,7 @@ const Contact = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

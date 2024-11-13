@@ -84,6 +84,7 @@ const PackageOneTwo = ({ user, refresh }) => {
   const [color, setColor] = useState("#ffffff");
   const [loading, setLoading] = useState(false);
   const [selectedFont, setSelectedFont] = useState("Roboto");
+  const [otherLinkName, setOtherLinkName] = useState("");
   const [branches, setBranches] = useState([
     { name: "", location: "", phones: "" }, // Initial branch
   ]);
@@ -103,7 +104,7 @@ const PackageOneTwo = ({ user, refresh }) => {
     behanceIndicator: false,
     otherIndicator: false,
   });
-  const [country, setCountry] = useState(0)
+  const [country, setCountry] = useState(0);
   const fonts = [
     { name: "Roboto", style: "Roboto, sans-serif" },
     { name: "Noto Sans", style: "Noto Sans, sans-serif" },
@@ -249,9 +250,8 @@ const PackageOneTwo = ({ user, refresh }) => {
       },
     });
 
-  // console.log("pdf", pdfFile);
   // convert to web
-  // console.log("whatsapp link", whatsappLink)
+
   const convertToWebp = (file) => {
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -448,9 +448,12 @@ const PackageOneTwo = ({ user, refresh }) => {
         { url: instgramLink, type: "instgram" },
         { url: youtubeLink, type: "youtube" },
         { url: beLink, type: "behance" },
-        { url: otherLink, type: "other" },
+        { url: otherLink, type: `other${otherLinkName}`},
         { url: portfolioLink, type: "portfolio" },
-        { url: `https://wa.me/${CODES[country]}${whatsappLink}`, type: "whatsapp" },
+        {
+          url: `https://wa.me/${CODES[country]}${whatsappLink}`,
+          type: "whatsapp",
+        },
         { url: linkedinLink, type: "linkedin" },
         { url: snapchatLink, type: "snapchat" },
         { url: twitterLink, type: "twitter" },
@@ -461,7 +464,7 @@ const PackageOneTwo = ({ user, refresh }) => {
         if (link.type === "whatsapp" && (!whatsappLink || whatsappLink <= 0)) {
           return;
         }
-      
+
         // Check if the link URL is not empty before appending to `formData`
         if (link.url && link.url.length > 0) {
           formData.append(`links[${index}][url]`, link.url);
@@ -499,7 +502,6 @@ const PackageOneTwo = ({ user, refresh }) => {
       setImage(`https://backend.ofx-qrcode.com/storage/${data.qr_code}`);
       setDownloadImage(data.qr_code.split("/")[1]);
       setLoading(false);
-
       return data;
     } catch (error) {
       console.error("Error during request:", error);
@@ -642,6 +644,7 @@ const PackageOneTwo = ({ user, refresh }) => {
               menuImage={menuImage}
               other={otherLink}
               pdfName={pdfName}
+              otherLinkName={otherLinkName}
             />
           </div>
           {/* ======================================== */}
@@ -1281,7 +1284,7 @@ const PackageOneTwo = ({ user, refresh }) => {
 
               {/* other */}
               {activeInputs.other && (
-                <div className="w-[300px]  ">
+                <div className="w-[300px] ">
                   <Typography
                     variant="small"
                     color="blue-gray"
@@ -1297,6 +1300,25 @@ const PackageOneTwo = ({ user, refresh }) => {
                     className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>
+              )}
+
+              {/* other Name */}
+              {activeInputs.other && (
+                <div className="w-[300px]">
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="mb-1 mt-5 font-semibold text-lg"
+                >
+                  Other Link Name
+                </Typography>
+                <Input
+                  placeholder="ex: drive link"
+                  value={otherLinkName}
+                  onChange={(e) => setOtherLinkName(e.target.value)}
+                  className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
+                />
+              </div>
               )}
             </div>
 
