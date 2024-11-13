@@ -7,8 +7,6 @@ import { IoPhonePortrait } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { IoMdClose } from "react-icons/io";
-
-// ${import.meta.env.VITE_LINK_API}
 import { toast } from "react-toastify";
 import { Spinner } from "@material-tailwind/react";
 
@@ -17,10 +15,12 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
-  const [view, setView] = useState(false)
+  const [view, setView] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [VerfiationCode, setVerficationCode] = useState("");
   const navigate = useNavigate();
 
-  console.log(view)
+  console.log(view);
 
   const userRegister = async () => {
     setLoading(true);
@@ -40,7 +40,9 @@ const Register = () => {
       // console.log("response", response);
       toast.success("registered successfully");
       setLoading(false);
-      navigate("/login");
+      setOpenModal(true);
+      localStorage.setItem("em", email)
+      navigate("/verification-code");
     } catch (error) {
       // console.log("error", error.message);
       setLoading(false);
@@ -62,7 +64,7 @@ const Register = () => {
     }
   };
 
-
+  const handleOpen = () => setOpenModal(!openModal);
 
   return (
     <div className="flex flex-col md:flex-row">
@@ -72,13 +74,17 @@ const Register = () => {
           alt="login img"
           className="h-[100vh] object-cover object-right"
         />
-        
       </div>
       {/* ------------------------------------------------------------------- */}
       <div className="flex-1  p-4 h-[100%] flex-col">
         <div className="flex justify-between items-center">
-          <img src={logo} alt="OFX QR CODE" className="w-52 lg:w-72" />
-          <IoMdClose className="cursor-pointer" size={35} color="black" onClick={() => navigate("/")}/>
+          <img src={logo} alt="OFX QR CODE" className="w-52 lg:w-72" onClick={() => navigate("/")}/>
+          <IoMdClose
+            className="cursor-pointer"
+            size={35}
+            color="black"
+            onClick={() => navigate("/")}
+          />
         </div>
         <div className="text-center my-20 mx-auto">
           <h3 className="text-mainColor font-semibold text-3xl">
@@ -121,7 +127,12 @@ const Register = () => {
               onChange={(e) => setPassword(e.target.value)}
               size="lg"
               className="w-full block h-14 appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
-              icon={<MdKey size={25} onClick={() => setView(prevState => !prevState)}/>}
+              icon={
+                <MdKey
+                  size={25}
+                  onClick={() => setView((prevState) => !prevState)}
+                />
+              }
             />
           </div>
 

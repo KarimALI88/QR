@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../../../assets/imgs/QR-LOGO2.PNG";
 import { useNavigate } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
@@ -9,31 +9,42 @@ import { BiLogoGmail } from "react-icons/bi";
 import axios from "axios";
 import loginImage from "../../../assets/imgs/loginImage.jpg";
 
-const ForgetPassword = () => {
+const VerificationPage = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
 
-  const forgetPassword = async () => {
-    setLoading(true)
-    try {
-      const response = await axios({
-        method: "post",
-        url: `${import.meta.env.VITE_API_LINK}/forgot-password`,
-        data: {
-          email: email,
-        },
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      console.log("forget password ", response);
-      setLoading(false)
-      response.data.token && toast.success("Email sent successfully")
-    } catch (error) {
-      console.error("error in forget api", error);
-      setLoading(false)
-      toast.error("error")
+  useEffect(() => {
+    const em = localStorage.getItem("em");
+    setEmail(em);
+  }, []);
+
+  const checkVerification = async () => {
+    setLoading(true);
+    if (email.length === 0 || verificationCode === 0) {
+      toast.error("email and code must contain values");
+    } else {
+      try {
+        const response = await axios({
+          method: "post",
+          url: `${import.meta.env.VITE_API_LINK}/verify-code`,
+          data: {
+            verification_code: verificationCode,
+            email,
+          },
+        });
+        console.log("response verify", response);
+        setLoading(false)
+        if(response.data.user){
+            toast.success("Done")
+            navigate("/login")
+        }
+      } catch (error) {
+        console.log("error in verCode", error);
+        setLoading(false)
+        toast.error("error")
+      }
     }
   };
 
@@ -46,7 +57,7 @@ const ForgetPassword = () => {
             className="cursor-pointer"
             size={35}
             color="black"
-            onClick={() => navigate("/login")}
+            onClick={() => navigate("/register")}
           />
         </div>
         <div className="text-center my-20 mx-auto">
@@ -54,14 +65,14 @@ const ForgetPassword = () => {
             If you forget password
           </h3>
 
-          {/* email */}
+          {/* Verification Code */}
           <div className="w-[80%] md:w-[70%] lg:w-[60%] mx-auto my-10">
             <Input
-              label="Enter Your Email"
-              placeholder="e.g., your-email@gmail.com"
-              value={email}
+              label="Verification Code"
+              placeholder="**********"
+              value={verificationCode}
               size="lg"
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setVerificationCode(e.target.value)}
               className="w-full block h-14 appearance-none rounded-lg border border-gray-300 py-10 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
               icon={<BiLogoGmail size={25} />}
             />
@@ -70,7 +81,7 @@ const ForgetPassword = () => {
           {/* button submit */}
           <div className="w-[80%] md:w-[70%] lg:w-[60%] mx-auto my-5">
             <button
-              onClick={forgetPassword}
+              onClick={checkVerification}
               className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-white hover:bg-secondColor"
             >
               {loading ? <Spinner className="mx-auto" /> : "Reset"}
@@ -91,4 +102,4 @@ const ForgetPassword = () => {
   );
 };
 
-export default ForgetPassword;
+export default VerificationPage;

@@ -70,7 +70,7 @@ const PackageCard = ({
   return (
     <div
       ref={ref}
-      className={`bg-white shadow-sm rounded-lg overflow-hidden h-[470px] w-[250px] mx-auto my-3 border-mainColor border-solid border-2 flex flex-col transition-opacity duration-700 ${
+      className={`bg-white shadow-sm rounded-lg overflow-hidden h-fit w-[250px] mx-auto my-3 border-mainColor border-solid border-2 flex flex-col transition-opacity duration-700 ${
         inView ? "opacity-100" : "opacity-0"
       } ${index === 2 ? "scale-110 border-secondColor border-4" : ""} ${
         index === 1 ? "scale-105" : ""
@@ -86,9 +86,9 @@ const PackageCard = ({
             {country === "Egypt" ? price : price_dollar + "$"}
           </p>
         </div>
-        <p className="text-gray-500 mt-2">
+        {/* <p className="text-gray-500 mt-2">
           <span className="text-green-500 font-bold">{savings}</span> SAVE
-        </p>
+        </p> */}
         <ul className="mt-8 space-y-4 capitalize">
           {features.map((feature, index) => (
             <li

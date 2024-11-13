@@ -92,7 +92,7 @@ const Profile = () => {
         className="relative z-10 flex flex-col items-center justify-start w-full h-full "
         // style={{ backgroundColor: profileData?.background_color }}
       >
-        <div className="w-full h-[270px] relative mb-14 ">
+        <div className="w-full h-[170px] lg:h-[270px] relative mb-14 ">
           <img
             src={`https://backend.ofx-qrcode.com/storage/${profileData?.cover}`}
             alt=""
@@ -102,7 +102,7 @@ const Profile = () => {
             <img
               src={`https://backend.ofx-qrcode.com/storage/${profileData?.logo}`}
               alt="logo"
-              className="w-[200px] h-[200px] rounded-full border-4 border-white"
+              className="w-[160px] h-[160px] rounded-full border-4 border-white"
             />
           </div>
         </div>

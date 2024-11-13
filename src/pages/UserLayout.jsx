@@ -12,6 +12,7 @@ import Contact from "./user/contact/Contact";
 import Policies from "./user/policies/Policies";
 import ForgetPassword from "./user/forgetPassword/ForgetPassword";
 import ResetPassword from "./user/resetpassword/ResetPassword";
+import VerificationPage from "./user/verificationPage/VerificationPage";
 
 const UserLayout = ({ country, user, refresh, setRefresh }) => {
   const { token } = useContext(AppContext);
@@ -21,6 +22,7 @@ const UserLayout = ({ country, user, refresh, setRefresh }) => {
       <Route path="" element={<Home country={country} user={user} />} />
       <Route path="/login" element={<Login setRefresh={setRefresh}/>} />
       <Route path="/forget-password" element={<ForgetPassword setRefresh={setRefresh}/>} />
+      <Route path="/verification-code" element={<VerificationPage />} />
       <Route path="/register" element={<Register />} />
       <Route path="/resetpassword" element={<ResetPassword />} />
       <Route path="/contact" element={<Contact />} />

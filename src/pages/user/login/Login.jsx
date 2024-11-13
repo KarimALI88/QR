@@ -58,7 +58,7 @@ const Login = ({ setRefresh }) => {
     <div className="flex flex-col md:flex-row">
       <div className="flex-1 p-4 min-h-[100%] flex-col">
         <div className="flex justify-between items-center">
-          <img src={logo} alt="OFX QR CODE" className="w-52 lg:w-72" />
+          <img src={logo} alt="OFX QR CODE" className="w-52 lg:w-72" onClick={() => navigate("/")}/>
           <IoMdClose
             className="cursor-pointer"
             size={35}
