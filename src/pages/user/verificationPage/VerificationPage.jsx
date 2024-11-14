@@ -38,6 +38,7 @@ const VerificationPage = () => {
         setLoading(false)
         if(response.data.user){
             toast.success("Done")
+            localStorage.removeItem("em")
             navigate("/login")
         }
       } catch (error) {
