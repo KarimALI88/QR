@@ -24,6 +24,27 @@ const Payment = ({ user }) => {
   ];
   const navigate = useNavigate();
 
+  const onSuccess = () => {
+    console.log("payment success")
+  }
+  const onError = () => {
+    console.log("payment error");
+    
+  }
+  const onCancel = () => {
+    console.log("payment cancellation");
+    
+  }
+
+  const payment = new GeideaCheckout(onSuccess, onError, onCancel);
+
+
+
+  // start the payment
+  const startPayment = (sessionId) => {
+    payment.startPayment(sessionId);
+  }
+
   const handleOpen = () => setOpenModal(!openModal);
 
   const createSubscribtion = async () => {
@@ -119,10 +140,11 @@ const Payment = ({ user }) => {
               <div className="my-10 mx-auto w-[80%]">
                 {/* <h2 className="text-center text-black text-4xl my-10 ">Coming Soon</h2> */}
                 <div className="max-w-[350px] max-h-[300px] mx-auto my-5">
-                  <img
+                  {/* <img
                     src="https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg?t=st=1730367471~exp=1730371071~hmac=3aadf5dc530557805e925296fbf452027c5eb39a0e7388048294bf7aecec5f70&w=740"
                     alt="image for payment"
-                  />
+                  /> */}
+                  <button onClick={() => startPayment("dkjcbkjdbckjd")} className="bg-mainColor px-5 py-5 font-semibold text-white hover:bg-secondColor block mx-auto my-10">Pay</button>
                 </div>
               </div>
             )}
