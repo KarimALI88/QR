@@ -65,7 +65,7 @@ const Contact = () => {
             {/* submit */}
             <div className="float-right">
               <button onClick={contactUs} disabled={message.length === 0 || email.length === 0} className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-2 hover:bg-secondColor mx-auto block">
-                {loading ? <Spinner className="mx-auto"/> : "Send"}
+                {loading ? <Spinner className="mx-auto"/> : "Submit"}
               </button>
             </div>
           </div>
