@@ -393,7 +393,7 @@ const PackageOneTwo = ({ user, refresh }) => {
         },
         {
           url: twitterLink,
-          base: "https://www.twitter.com",
+          base: "https://www.x.com",
           indicator: "twitterIndicator",
         },
       ];
@@ -407,7 +407,7 @@ const PackageOneTwo = ({ user, refresh }) => {
         } else {
           newErrorIndicator[indicator] = false;
         }
-      }
+      } 
 
       // Update error indicators state
       setErrorIndicator(newErrorIndicator);
@@ -506,6 +506,27 @@ const PackageOneTwo = ({ user, refresh }) => {
     } catch (error) {
       console.error("Error during request:", error);
       setLoading(false);
+    }
+  };
+
+  const payGeidea = async () => {
+    try {
+      const response = await axios({
+        method: "post",
+        url: `${import.meta.env.VITE_API_LINK}/create-payment-link`,
+        data: {
+          amount: 200,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("response of pay", response);
+      if (response.data.data.paymentIntent.link) {
+        window.open(response.data.data.paymentIntent.link, "_blank");
+      }
+    } catch (error) {
+      console.error("error in pay", error);
     }
   };
 
@@ -1487,7 +1508,7 @@ const PackageOneTwo = ({ user, refresh }) => {
                 !user?.pivot?.package_id ||
                 user?.pivot?.package_id === 1) && (
                 <button
-                  onClick={() => navigate("/payment")}
+                  onClick={token ? payGeidea : () => navigate("/login")}
                   className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-5 hover:bg-secondColor"
                 >
                   Pay for use it

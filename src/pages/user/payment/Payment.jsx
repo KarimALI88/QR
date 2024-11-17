@@ -10,7 +10,7 @@ import { Select, Option } from "@material-tailwind/react";
 import geidea from "../../../assets/imgs/geidea.png";
 
 const Payment = ({ user }) => {
-  const [activeSection, setActiveSection] = useState("vodafone");
+  const [activeSection, setActiveSection] = useState("geidea");
   const [packageNumber, setPackageNumber] = useState("");
   const [activationCode, setActivationCode] = useState("");
   const [openModal, setOpenModal] = useState(false);
@@ -120,7 +120,7 @@ const Payment = ({ user }) => {
 
         {/* payment methods */}
         <div className="flex justify-center gap-8 items-center my-10 mx-auto flex-wrap">
-          <button
+          {/* <button
             className={`flex gap-2 items-center py-2 px-5 text-center text-2xl font-black `}
             onClick={() => setActiveSection("vodafone")}
           >
@@ -129,7 +129,7 @@ const Payment = ({ user }) => {
               alt="vodafone cash"
               className="w-[150px] h-[80px]"
             />{" "}
-          </button>
+          </button> */}
           <button
             className={`py-2 px-5 text-center text-2xl font-black`}
             onClick={() => setActiveSection("geidea")}
@@ -161,7 +161,7 @@ const Payment = ({ user }) => {
                   /> */}
                   <button
                     onClick={payGeidea}
-                    className="bg-mainColor px-5 py-5 font-semibold text-white hover:bg-secondColor block mx-auto my-10"
+                    className="bg-mainColor w-40 px-5 py-3 font-semibold text-white hover:bg-secondColor block mx-auto my-10"
                   >
                     Pay
                   </button>
