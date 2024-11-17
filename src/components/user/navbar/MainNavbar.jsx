@@ -60,7 +60,7 @@ const MainNavbar = () => {
     await logoutApi()
     localStorage.removeItem("tn")
     navigate("/login")
-    // window.location.reload();
+    window.location.reload();
   }
 
   const navList = (

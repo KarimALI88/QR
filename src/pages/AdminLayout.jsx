@@ -16,15 +16,15 @@ const AdminLayout = ({setRefresh, user}) => {
       </div>
       <div className="py-10 px-5">
         <Routes>
-          {token ? (
+          {/* {token ? ( */}
             <>
               <Route path="/statistics" element={<QrStatistics />} />
               <Route path="/my-qrs" element={<MyQrs />} />
               <Route path="/renew" element={<Renew user={user}/>} />
             </>
-          ) : (
+          {/* ) : (
             <Route path="*" element={<Navigate to="/login" replace />} />
-          )}
+          )} */}
         </Routes>
       </div>
     </div>

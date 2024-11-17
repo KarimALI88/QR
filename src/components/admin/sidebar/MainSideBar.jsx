@@ -43,7 +43,7 @@ const MainSideBar = ({setRefresh}) => {
     setToken("")
     localStorage.removeItem("tn");
     navigate("/login");
-    // window.location.reload();
+    window.location.reload();
   };
 
   return (

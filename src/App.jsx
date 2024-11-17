@@ -75,14 +75,14 @@ function App() {
 
   useEffect(() => {
     {token && validateSubscribtion()}
-  },[])
+  },[token])
 
   return (
     <>
       <ToastContainer />
       <Routes>
         <Route path="/*" element={<UserLayout country={country} user={user} refresh={refresh} setRefresh={setRefresh}/>} />
-        {token && <Route path="/admin/*" element={<AdminLayout setRefresh={setRefresh} user={user}/>} />}
+        <Route path="/admin/*" element={<AdminLayout setRefresh={setRefresh} user={user}/>} /> 
       </Routes>
     </>
   );
