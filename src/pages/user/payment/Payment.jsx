@@ -7,6 +7,7 @@ import { AppContext } from "./../../../context/AppContext";
 import { Spinner } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import { Select, Option } from "@material-tailwind/react";
+import geidea from "../../../assets/imgs/geidea.png";
 
 const Payment = ({ user }) => {
   const [activeSection, setActiveSection] = useState("vodafone");
@@ -24,26 +25,38 @@ const Payment = ({ user }) => {
   ];
   const navigate = useNavigate();
 
-  const onSuccess = () => {
-    console.log("payment success")
-  }
-  const onError = () => {
-    console.log("payment error");
-    
-  }
-  const onCancel = () => {
-    console.log("payment cancellation");
-    
-  }
+  // const onSuccess = () => {
+  //   console.log("payment success")
+  // }
+  // const onError = () => {
+  //   console.log("payment error");
 
-  const payment = new GeideaCheckout(onSuccess, onError, onCancel);
+  // }
+  // const onCancel = () => {
+  //   console.log("payment cancellation");
 
+  // }
 
-
-  // start the payment
-  const startPayment = (sessionId) => {
-    payment.startPayment(sessionId);
-  }
+  const payGeidea = async () => {
+    try {
+      const response = await axios({
+        method: "post",
+        url: `${import.meta.env.VITE_API_LINK}/create-payment-link`,
+        data: {
+          amount: 200,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("response of pay", response);
+      if (response.data.data.paymentIntent.link) {
+        window.open(response.data.data.paymentIntent.link, "_blank");
+      }
+    } catch (error) {
+      console.error("error in pay", error);
+    }
+  };
 
   const handleOpen = () => setOpenModal(!openModal);
 
@@ -122,16 +135,18 @@ const Payment = ({ user }) => {
             onClick={() => setActiveSection("geidea")}
           >
             <img
-              src="https://geidea.net/egypt/wp-content/uploads/G_BRAND-LOGO-1-1.svg"
+              src={geidea}
               alt="geidea"
-              className=""
+              className="w-[200px] h-[100px] object-center"
             />
           </button>
         </div>
 
         {user && user?.pivot?.package_id ? (
           <>
-          <h2 className="text-center my-5 mx-auto text-xl font-semibold">You have already an account</h2>
+            <h2 className="text-center my-5 mx-auto text-xl font-semibold">
+              You have already an account
+            </h2>
           </>
         ) : (
           <>
@@ -144,7 +159,12 @@ const Payment = ({ user }) => {
                     src="https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg?t=st=1730367471~exp=1730371071~hmac=3aadf5dc530557805e925296fbf452027c5eb39a0e7388048294bf7aecec5f70&w=740"
                     alt="image for payment"
                   /> */}
-                  <button onClick={() => startPayment("dkjcbkjdbckjd")} className="bg-mainColor px-5 py-5 font-semibold text-white hover:bg-secondColor block mx-auto my-10">Pay</button>
+                  <button
+                    onClick={payGeidea}
+                    className="bg-mainColor px-5 py-5 font-semibold text-white hover:bg-secondColor block mx-auto my-10"
+                  >
+                    Pay
+                  </button>
                 </div>
               </div>
             )}
@@ -163,33 +183,30 @@ const Payment = ({ user }) => {
                   <span className="text-mainColor text-2xl">01061472185</span>{" "}
                   by vodafone cash
                 </h3>
-              </div>
-            )}
-
-            {/* activate code */}
-            <div>
-              <button
-                onClick={handleOpen}
-                className="bg-mainColor px-5 py-5 font-semibold text-white hover:bg-secondColor block mx-auto my-10"
-              >
-                Active Account
-              </button>
-              <Dialog
-                open={openModal}
-                handler={handleOpen}
-                className="p-10 text-center"
-              >
-                <div className="my-10">
-                  {message.length > 0 && (
-                    <h4
-                      className={`font-semibold text-xl my-10 ${
-                        success === false ? "text-[red]" : "text-[green]"
-                      }`}
-                    >
-                      {message}
-                    </h4>
-                  )}
-                  {/* <Input 
+                {/* activate code */}
+                <div>
+                  <button
+                    onClick={handleOpen}
+                    className="bg-mainColor px-5 py-5 font-semibold text-white hover:bg-secondColor block mx-auto my-10"
+                  >
+                    Active Account
+                  </button>
+                  <Dialog
+                    open={openModal}
+                    handler={handleOpen}
+                    className="p-10 text-center"
+                  >
+                    <div className="my-10">
+                      {message.length > 0 && (
+                        <h4
+                          className={`font-semibold text-xl my-10 ${
+                            success === false ? "text-[red]" : "text-[green]"
+                          }`}
+                        >
+                          {message}
+                        </h4>
+                      )}
+                      {/* <Input 
                 placeholder="package number"
                 value={packageNumber}
                 onChange={(e) => setPackageNumber(e.target.value)}
@@ -198,47 +215,49 @@ const Payment = ({ user }) => {
                   className: "before:content-none after:content-none",
                 }}
               /> */}
-                  <Select
-                    id="font-select"
-                    label="Select Package"
-                    onChange={(val) => setPackageNumber(val)}
-                    value={packageNumber}
-                    className="h-[60px]"
-                  >
-                    {packages.map((pack) => (
-                      <Option
-                        key={pack.package_id}
-                        value={pack.package_id}
-                        className="capitalize text-black text-lg font-semibold"
+                      <Select
+                        id="font-select"
+                        label="Select Package"
+                        onChange={(val) => setPackageNumber(val)}
+                        value={packageNumber}
+                        className="h-[60px]"
                       >
-                        {pack.package_name}
-                      </Option>
-                    ))}
-                  </Select>
+                        {packages.map((pack) => (
+                          <Option
+                            key={pack.package_id}
+                            value={pack.package_id}
+                            className="capitalize text-black text-lg font-semibold"
+                          >
+                            {pack.package_name}
+                          </Option>
+                        ))}
+                      </Select>
+                    </div>
+                    <div>
+                      <Input
+                        placeholder="activation code"
+                        value={activationCode}
+                        onChange={(e) => setActivationCode(e.target.value)}
+                        className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                        labelProps={{
+                          className: "before:content-none after:content-none",
+                        }}
+                      />
+                    </div>
+                    <button
+                      onClick={activeVcash}
+                      className="bg-mainColor px-3 py-3 w-full font-semibold text-white hover:bg-secondColor block mx-auto my-10"
+                    >
+                      {loading ? (
+                        <Spinner className="mx-auto" />
+                      ) : (
+                        "Active an Account"
+                      )}
+                    </button>
+                  </Dialog>
                 </div>
-                <div>
-                  <Input
-                    placeholder="activation code"
-                    value={activationCode}
-                    onChange={(e) => setActivationCode(e.target.value)}
-                    className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                    labelProps={{
-                      className: "before:content-none after:content-none",
-                    }}
-                  />
-                </div>
-                <button
-                  onClick={activeVcash}
-                  className="bg-mainColor px-3 py-3 w-full font-semibold text-white hover:bg-secondColor block mx-auto my-10"
-                >
-                  {loading ? (
-                    <Spinner className="mx-auto" />
-                  ) : (
-                    "Active an Account"
-                  )}
-                </button>
-              </Dialog>
-            </div>
+              </div>
+            )}
           </>
         )}
       </div>

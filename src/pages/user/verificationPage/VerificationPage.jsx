@@ -63,7 +63,7 @@ const VerificationPage = () => {
         </div>
         <div className="text-center my-20 mx-auto">
           <h3 className="text-mainColor font-semibold text-3xl">
-            If you forget password
+            Check Your mail
           </h3>
 
           {/* Verification Code */}

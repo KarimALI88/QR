@@ -9,11 +9,13 @@ import axios from "axios";
 import { IoMdClose } from "react-icons/io";
 import { toast } from "react-toastify";
 import { Spinner } from "@material-tailwind/react";
+import { FaUserAlt } from "react-icons/fa";
 
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
+  const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [view, setView] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -24,42 +26,64 @@ const Register = () => {
 
   const userRegister = async () => {
     setLoading(true);
-    try {
-      const response = await axios({
-        method: "post",
-        url: `${import.meta.env.VITE_API_LINK}/signup`,
-        data: {
-          email,
-          password,
-          phone,
-        },
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      // console.log("response", response);
-      toast.success("registered successfully");
-      setLoading(false);
-      setOpenModal(true);
-      localStorage.setItem("em", email)
-      navigate("/verification-code");
-    } catch (error) {
-      // console.log("error", error.message);
-      setLoading(false);
-      if (error.response && error.response.data && error.response.data.errors) {
-        const emailError = error.response.data.errors.email
-          ? error.response.data.errors.email[0]
-          : "";
-        const phoneError = error.response.data.errors.phone
-          ? error.response.data.errors.phone[0]
-          : "";
-        const passwordError = error.response.data.errors.password
-          ? error.response.data.errors.password[0]
-          : "";
+    if (name.length === 0) {
+      toast.error("name is required");
+      setLoading(false)
+    } else if (phone.length === 0) {
+      toast.error("phone is required");
+      setLoading(false)
+    } else if (email.length === 0) {
+      toast.error("email is required");
+      setLoading(false)
+    } else if (password.length === 0) {
+      toast.error("password is required");
+      setLoading(false)
+    } else if (phone.length < 11 || phone.length > 11) {
+      toast.error("phone must be 11 number");
+      setLoading(false)
+    } else {
+      try {
+        const response = await axios({
+          method: "post",
+          url: `${import.meta.env.VITE_API_LINK}/signup`,
+          data: {
+            email,
+            password,
+            phone,
+            name
+          },
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        // console.log("response", response);
+        toast.success("registered successfully");
+        setLoading(false);
+        setOpenModal(true);
+        localStorage.setItem("em", email);
+        navigate("/verification-code");
+      } catch (error) {
+        // console.log("error", error.message);
+        setLoading(false);
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.errors
+        ) {
+          const emailError = error.response.data.errors.email
+            ? error.response.data.errors.email[0]
+            : "";
+          const phoneError = error.response.data.errors.phone
+            ? error.response.data.errors.phone[0]
+            : "";
+          const passwordError = error.response.data.errors.password
+            ? error.response.data.errors.password[0]
+            : "";
 
-        toast.error(`Errors: ${emailError} ${phoneError} ${passwordError}`);
-      } else {
-        toast.error("An unexpected error occurred");
+          toast.error(`Errors: ${emailError} ${phoneError} ${passwordError}`);
+        } else {
+          toast.error("An unexpected error occurred");
+        }
       }
     }
   };
@@ -78,7 +102,12 @@ const Register = () => {
       {/* ------------------------------------------------------------------- */}
       <div className="flex-1  p-4 h-[100%] flex-col">
         <div className="flex justify-between items-center">
-          <img src={logo} alt="OFX QR CODE" className="w-52 lg:w-72" onClick={() => navigate("/")}/>
+          <img
+            src={logo}
+            alt="OFX QR CODE"
+            className="w-52 lg:w-72"
+            onClick={() => navigate("/")}
+          />
           <IoMdClose
             className="cursor-pointer"
             size={35}
@@ -101,6 +130,19 @@ const Register = () => {
               size="lg"
               className="w-full block h-14  appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
               icon={<BiLogoGmail size={25} />}
+            />
+          </div>
+
+          {/* name */}
+          <div className="w-[80%] md:w-[70%] lg:w-[60%] mx-auto my-10">
+            <Input
+              label="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="karim"
+              size="lg"
+              className="w-full block h-14  appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
+              icon={<FaUserAlt size={25} />}
             />
           </div>
 
