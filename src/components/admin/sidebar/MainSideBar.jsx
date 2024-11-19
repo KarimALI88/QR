@@ -16,9 +16,9 @@ import logo from "../../../assets/imgs/QR-LOGO1.png";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AppContext } from "./../../../context/AppContext";
+import { CgProfile } from "react-icons/cg";
 
-
-const MainSideBar = ({setRefresh}) => {
+const MainSideBar = ({ setRefresh }) => {
   const navigate = useNavigate();
   const { token, setToken } = useContext(AppContext);
 
@@ -39,8 +39,8 @@ const MainSideBar = ({setRefresh}) => {
   };
 
   const logout = async () => {
-    await logoutApi()
-    setToken("")
+    await logoutApi();
+    setToken("");
     localStorage.removeItem("tn");
     navigate("/login");
     window.location.reload();
@@ -54,12 +54,18 @@ const MainSideBar = ({setRefresh}) => {
         </Typography>
       </div>
       <List>
+        <ListItem className="text-white text-xl my-3" onClick={() => navigate("/admin/profile")}>
+          <ListItemPrefix>
+            <CgProfile className="h-5 w-5" />
+          </ListItemPrefix>
+          <button>Profile</button>
+        </ListItem>
         <ListItem
           className="text-white text-xl my-3 flex gap-2"
           onClick={() => {
-            localStorage.removeItem("lg")
-            navigate("/qr")
-            setRefresh(prevState => !prevState)
+            localStorage.removeItem("lg");
+            navigate("/qr");
+            setRefresh((prevState) => !prevState);
           }}
         >
           <ListItemPrefix>
@@ -71,9 +77,9 @@ const MainSideBar = ({setRefresh}) => {
         <ListItem
           className="text-white text-xl my-3 flex gap-2"
           onClick={() => {
-            navigate("/generate-qr")
+            navigate("/generate-qr");
             // localStorage.setItem("lg", "a1")
-            setRefresh(prevState => !prevState)
+            setRefresh((prevState) => !prevState);
           }}
         >
           <ListItemPrefix>
@@ -85,7 +91,7 @@ const MainSideBar = ({setRefresh}) => {
         <ListItem
           className="text-white text-xl my-3 flex gap-2"
           onClick={() => {
-            navigate("/admin/renew")
+            navigate("/admin/renew");
             // localStorage.setItem("lg", "a1")
             // setRefresh(prevState => !prevState)
           }}

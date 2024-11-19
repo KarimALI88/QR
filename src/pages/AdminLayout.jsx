@@ -5,6 +5,7 @@ import QrStatistics from "./admin/dashboard/stats/QrStatistics";
 import MyQrs from "./admin/dashboard/myqrCodes/MyQrs";
 import { AppContext } from "../context/AppContext";
 import Renew from "./admin/dashboard/renew/Renew";
+import Profile from "./admin/dashboard/profile/Profile";
 
 const AdminLayout = ({setRefresh, user}) => {
   const { token } = useContext(AppContext);
@@ -20,6 +21,7 @@ const AdminLayout = ({setRefresh, user}) => {
             <>
               <Route path="/statistics" element={<QrStatistics />} />
               <Route path="/my-qrs" element={<MyQrs />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="/renew" element={<Renew user={user}/>} />
             </>
           {/* ) : (

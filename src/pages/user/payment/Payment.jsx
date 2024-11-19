@@ -25,6 +25,26 @@ const Payment = ({ user }) => {
   ];
   const navigate = useNavigate();
 
+  const onSuccess = () => {
+    console.log("pay success");
+  }
+
+  const onError = () => {
+    console.log("pay error");
+    
+  }
+
+  const onCancel = () => {
+    console.log("pay cancel");
+    
+  }
+
+  const payment = new GeideaCheckout(onSuccess, onError, onCancel);
+
+  const payHpp = () => {
+    payment.startPayment("7cf575f4-6454-4374-75c2-08dd03f8d2e7");
+  }
+
   // const onSuccess = () => {
   //   console.log("payment success")
   // }
@@ -174,7 +194,7 @@ const Payment = ({ user }) => {
                     ))}
                   </Select>
                   <button
-                    onClick={payGeidea}
+                    onClick={payHpp}
                     className="bg-mainColor w-full px-5 py-3 font-semibold text-white hover:bg-secondColor block mx-auto my-10"
                   >
                     Pay
