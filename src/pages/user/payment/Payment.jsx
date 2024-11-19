@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import MainNavbar from "../../../components/user/navbar/MainNavbar";
 import { Dialog } from "@material-tailwind/react";
 import { Input } from "@material-tailwind/react";
@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { Select, Option } from "@material-tailwind/react";
 import geidea from "../../../assets/imgs/geidea.png";
 
-const Payment = ({ user }) => {
+const Payment = ({ user, setRefresh }) => {
   const [activeSection, setActiveSection] = useState("geidea");
   const [packageNumber, setPackageNumber] = useState("");
   const [activationCode, setActivationCode] = useState("");
@@ -17,16 +17,35 @@ const Payment = ({ user }) => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [success, setSuccess] = useState(false);
+  const [amount, setAmount] = useState(0)
   const { token } = useContext(AppContext);
-  const packages = [
-    { package_id: "1", package_name: "free" },
-    { package_id: "2", package_name: "middle" },
-    { package_id: "3", package_name: "advanced" },
-  ];
+  const [packages, setPackages] = useState([])
   const navigate = useNavigate();
+
+  const getPackages = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_LINK}/packages`);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      // console.log("packages", data);
+      setPackages(data);
+    } catch (error) {
+      console.error("error", error);
+    }
+  };
+
+  useEffect(() => {
+    getPackages();
+  }, []);
+  
 
   const onSuccess = () => {
     console.log("pay success");
+    createSubscribtion()
+    navigate("/")
   }
 
   const onError = () => {
@@ -36,45 +55,35 @@ const Payment = ({ user }) => {
 
   const onCancel = () => {
     console.log("pay cancel");
-    
   }
 
   const payment = new GeideaCheckout(onSuccess, onError, onCancel);
 
-  const payHpp = () => {
-    payment.startPayment("7cf575f4-6454-4374-75c2-08dd03f8d2e7");
+  const payHpp = (sessionId) => {
+    payment.startPayment(sessionId);
   }
 
-  // const onSuccess = () => {
-  //   console.log("payment success")
-  // }
-  // const onError = () => {
-  //   console.log("payment error");
-
-  // }
-  // const onCancel = () => {
-  //   console.log("payment cancellation");
-
-  // }
-
   const payGeidea = async () => {
+    setLoading(true)
     try {
       const response = await axios({
         method: "post",
-        url: `${import.meta.env.VITE_API_LINK}/create-payment-link`,
+        url: `${import.meta.env.VITE_API_LINK}/payment/initiate`,
         data: {
-          amount: 200,
+          amount: amount,
         },
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       console.log("response of pay", response);
-      if (response.data.data.paymentIntent.link) {
-        window.open(response.data.data.paymentIntent.link, "_blank");
+      setLoading(false)
+      if (response.data.sessionId) {
+        payHpp(response.data.sessionId)
       }
     } catch (error) {
       console.error("error in pay", error);
+      setLoading(false)
     }
   };
 
@@ -95,6 +104,7 @@ const Payment = ({ user }) => {
         },
       });
       console.log("subscribe", response);
+      setRefresh(prevState => !prevState)
     } catch (error) {
       console.error("error in subscribe", error);
       toast.error(error.response.data.message);
@@ -129,6 +139,11 @@ const Payment = ({ user }) => {
       setSuccess(false);
     }
   };
+
+  const handleChangeSelect = (val) => {
+    setPackageNumber(val)
+    packages.find((pack) => pack.id === val && setAmount(pack.price_EGP))
+  }
 
   return (
     <div>
@@ -179,25 +194,26 @@ const Payment = ({ user }) => {
                   <Select
                     id="font-select"
                     label="Select Package"
-                    onChange={(val) => setPackageNumber(val)}
+                    onChange={(val) => handleChangeSelect(val)}
                     value={packageNumber}
                     className="h-[60px]"
                   >
-                    {packages.map((pack) => (
+                    {packages.map((pack, index) => (
                       <Option
-                        key={pack.package_id}
-                        value={pack.package_id}
+                        key={index}
+                        value={pack.id}
                         className="capitalize text-black text-lg font-semibold"
                       >
-                        {pack.package_name}
+                        {pack.name}
                       </Option>
                     ))}
                   </Select>
                   <button
-                    onClick={payHpp}
+                    onClick={payGeidea}
+                    disabled={packageNumber.length === 0}
                     className="bg-mainColor w-full px-5 py-3 font-semibold text-white hover:bg-secondColor block mx-auto my-10"
                   >
-                    Pay
+                    {loading ? <Spinner /> : `Pay ${amount}`}
                   </button>
                 </div>
               </div>

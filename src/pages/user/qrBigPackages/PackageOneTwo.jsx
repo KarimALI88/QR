@@ -31,7 +31,7 @@ import {
   MenuItem,
   Button,
 } from "@material-tailwind/react";
-const PackageOneTwo = ({ user, refresh }) => {
+const PackageOneTwo = ({ user, refresh, valid }) => {
   const COUNTRIES = [
     "Egypt (+20)",
     "Saudi Arabia (+966)",
@@ -436,7 +436,7 @@ const PackageOneTwo = ({ user, refresh }) => {
       formData.append("description", description);
       formData.append("color", color);
       formData.append("font", selectedFont);
-      formData.append("package_id", user?.pivot?.package_id);
+      formData.append("package_id", user.pivot.package_id);
 
       // Append phone numbers
       formData.append("phones[]", phone1);
@@ -639,7 +639,7 @@ const PackageOneTwo = ({ user, refresh }) => {
     // }}
     >
       <MainNavbar />
-      <div className="p-10 h-fit ">
+      {valid ? (<div className="p-10 h-fit ">
         <div className="flex flex-col sm:flex-col md:flex-row space-y-5 sm:space-y-0 sm:space-x-5">
           <div className="flex-1 shadow-none sm:w-[300px] md:[200px] order-1 sm:order-2">
             <PhoneAnimation
@@ -1508,7 +1508,7 @@ const PackageOneTwo = ({ user, refresh }) => {
                 !user?.pivot?.package_id ||
                 user?.pivot?.package_id === 1) && (
                 <button
-                  onClick={token ? payGeidea : () => navigate("/login")}
+                  onClick={() => navigate("/payment")}
                   className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-5 hover:bg-secondColor"
                 >
                   Pay for use
@@ -1540,7 +1540,7 @@ const PackageOneTwo = ({ user, refresh }) => {
           </div>
           {/* ======================================== */}
         </div>
-      </div>
+      </div>) : <h1 className="text-center font-black my-20 mx-auto text-5xl">Your Subscribtion end</h1>}
     </div>
   );
 };

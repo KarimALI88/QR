@@ -14,7 +14,7 @@ import ForgetPassword from "./user/forgetPassword/ForgetPassword";
 import ResetPassword from "./user/resetpassword/ResetPassword";
 import VerificationPage from "./user/verificationPage/VerificationPage";
 
-const UserLayout = ({ country, user, refresh, setRefresh }) => {
+const UserLayout = ({ country, user, refresh, setRefresh, valid }) => {
   const { token } = useContext(AppContext);
 
   return ( 
@@ -29,11 +29,11 @@ const UserLayout = ({ country, user, refresh, setRefresh }) => {
       <Route path="/policies" element={<Policies />} />
       <Route path="/qr/:id" element={<Profile />} />
       <Route path="/generate-qr" element={<QrForm user={user} refresh={refresh} setRefresh={setRefresh} />} />
-      <Route path="/qr" element={<PackageOneTwo user={user} />} />
+      <Route path="/qr" element={<PackageOneTwo valid={valid} user={user} />} />
       {/* Protected Routes */}
       {token ? (
         <>
-          <Route path="/payment" element={<Payment user={user} />} />
+          <Route path="/payment" element={<Payment user={user} setRefresh={setRefresh}/>} />
         </>
       ) : (
         <Route path="*" element={<Navigate to="/login" replace />} />

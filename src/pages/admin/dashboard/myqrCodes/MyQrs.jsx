@@ -268,19 +268,7 @@ const MyQrs = () => {
                         </td>
 
                         <td className={classes}>
-                          <div className="w-max">
-                            {/* <Button
-                              className="flex items-center gap-3"
-                              size="sm"
-                              onClick={() =>
-                                downloadImage(
-                                  // `${row?.qr_code?.qrcode?.slice("/")}`
-                                  row?.qr_code?.qrcode?.split('/')[1]
-                                )
-                              }
-                            >
-                              <FaDownload className="h-4 w-4" /> Download
-                            </Button> */}
+                          <div className="w-max flex gap-3">
                             <a
                               className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-5 hover:bg-secondColor"
                               href={`https://backend.ofx-qrcode.com/download-qrcode/${
@@ -289,6 +277,9 @@ const MyQrs = () => {
                             >
                               download
                             </a>
+                            <button className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-5 hover:bg-secondColor">
+                              Update
+                            </button>
                           </div>
                         </td>
                       </tr>

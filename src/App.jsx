@@ -12,6 +12,7 @@ function App() {
   const [country, setCountry] = useState('');
   const [user, setUser] = useState({})
   const [refresh, setRefresh] = useState(false)
+  const [valid, setValid] = useState(false)
   const {token} = useContext(AppContext)
 
   const getUserLocation = async () => {
@@ -40,7 +41,8 @@ function App() {
           Authorization: `Bearer ${token}`
         }
       })
-      // console.log("response", response)
+      console.log("response", response)
+      response.data.message === "Subscription is still active." ?  setValid(true) : setValid(false)
     } catch (error) {
       console.error("error in validate")
     }
@@ -75,13 +77,13 @@ function App() {
 
   useEffect(() => {
     {token && validateSubscribtion()}
-  },[token])
+  },[token, refresh])
 
   return (
     <>
       <ToastContainer />
       <Routes>
-        <Route path="/*" element={<UserLayout country={country} user={user} refresh={refresh} setRefresh={setRefresh}/>} />
+        <Route path="/*" element={<UserLayout valid={valid} country={country} user={user} refresh={refresh} setRefresh={setRefresh}/>} />
         <Route path="/admin/*" element={<AdminLayout setRefresh={setRefresh} user={user}/>} /> 
       </Routes>
     </>

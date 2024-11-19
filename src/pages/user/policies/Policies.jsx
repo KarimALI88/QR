@@ -33,14 +33,14 @@ const Policies = () => {
               </li>
               <li className="text-xl font-medium my-3">
                 <span className="font-semibold">
-                  Smart QRCode Paid Plan {`($2400)`}:
+                  Smart QRCode Paid Plan {`(2400 EGP)`}:
                 </span>{" "}
                 This plan allows you to create 20 QR codes. Each QR code links
                 to a page that collects all the links of one company.
               </li>
               <li className="text-xl font-medium my-3">
                 <span className="font-semibold">
-                  All In One Link Paid Plan:{`($6000)`}:
+                  All In One Link Paid Plan:{`(6000 EGP)`}:
                 </span>{" "}
                 This plan allows you to create 50 QR codes and is valid for
                 unlimited visitors. Each QR code links to a page that collects

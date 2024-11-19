@@ -53,7 +53,7 @@ const Register = () => {
             password,
             phone,
             name,
-            address
+            // address
           },
           headers: {
             "Content-Type": "application/json",
