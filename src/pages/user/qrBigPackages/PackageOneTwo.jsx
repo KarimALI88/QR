@@ -1511,7 +1511,7 @@ const PackageOneTwo = ({ user, refresh }) => {
                   onClick={token ? payGeidea : () => navigate("/login")}
                   className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-5 hover:bg-secondColor"
                 >
-                  Pay for use it
+                  Pay for use
                 </button>
               )}
             </div>

@@ -10,12 +10,14 @@ import { IoMdClose } from "react-icons/io";
 import { toast } from "react-toastify";
 import { Spinner } from "@material-tailwind/react";
 import { FaUserAlt } from "react-icons/fa";
+import { FaAddressCard } from "react-icons/fa";
 
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const [view, setView] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -50,7 +52,8 @@ const Register = () => {
             email,
             password,
             phone,
-            name
+            name,
+            address
           },
           headers: {
             "Content-Type": "application/json",
@@ -156,6 +159,19 @@ const Register = () => {
               size="lg"
               className="w-full block h-14 appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
               icon={<IoPhonePortrait size={25} />}
+            />
+          </div>
+
+          {/* address */}
+          <div className="w-[80%] md:w-[70%] lg:w-[60%] mx-auto my-10">
+            <Input
+              label="address"
+              placeholder="Cairo"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              size="lg"
+              className="w-full block h-14 appearance-none rounded-lg border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:ring-offset-0 focus:ring-opacity-50"
+              icon={<FaAddressCard size={25} />}
             />
           </div>
 
