@@ -60,6 +60,14 @@ const MainSideBar = ({ setRefresh }) => {
           </ListItemPrefix>
           <button>Profile</button>
         </ListItem>
+
+        <ListItem className="text-white text-xl my-3" onClick={() => navigate("/admin/my-qrs")}>
+          <ListItemPrefix>
+            <FaQrcode className="h-5 w-5"/>
+          </ListItemPrefix>
+          <button>My QRs</button>
+        </ListItem>
+
         <ListItem
           className="text-white text-xl my-3 flex gap-2"
           onClick={() => {
@@ -91,9 +99,19 @@ const MainSideBar = ({ setRefresh }) => {
         <ListItem
           className="text-white text-xl my-3 flex gap-2"
           onClick={() => {
+            navigate("/admin/upgrade");
+          }}
+        >
+          <ListItemPrefix>
+            <FaPlus className="h-5 w-5" />
+          </ListItemPrefix>
+          <p>Upgrade</p>
+        </ListItem>
+
+        <ListItem
+          className="text-white text-xl my-3 flex gap-2"
+          onClick={() => {
             navigate("/admin/renew");
-            // localStorage.setItem("lg", "a1")
-            // setRefresh(prevState => !prevState)
           }}
         >
           <ListItemPrefix>

@@ -46,7 +46,7 @@ const Login = ({ setRefresh }) => {
       setToken(data.token);
       toast.success("Logged in successfully");
       setRefresh((prevState) => !prevState);
-      navigate("/admin/my-qrs");
+      navigate(-1);
     } catch (error) {
       console.error("error", error);
       toast.error("wrong answers");

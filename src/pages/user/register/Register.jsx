@@ -30,19 +30,22 @@ const Register = () => {
     setLoading(true);
     if (name.length === 0) {
       toast.error("name is required");
-      setLoading(false)
+      setLoading(false);
     } else if (phone.length === 0) {
       toast.error("phone is required");
-      setLoading(false)
+      setLoading(false);
     } else if (email.length === 0) {
       toast.error("email is required");
-      setLoading(false)
+      setLoading(false);
     } else if (password.length === 0) {
       toast.error("password is required");
-      setLoading(false)
+      setLoading(false);
+    } else if (address.length === 0) {
+      toast.error("address is required");
+      setLoading(false);
     } else if (phone.length < 11 || phone.length > 11) {
       toast.error("phone must be 11 number");
-      setLoading(false)
+      setLoading(false);
     } else {
       try {
         const response = await axios({
@@ -53,20 +56,20 @@ const Register = () => {
             password,
             phone,
             name,
-            // address
+            address,
           },
           headers: {
             "Content-Type": "application/json",
           },
         });
-        // console.log("response", response);
+        console.log("response", response);
         toast.success("registered successfully");
         setLoading(false);
         setOpenModal(true);
         localStorage.setItem("em", email);
         navigate("/verification-code");
       } catch (error) {
-        // console.log("error", error.message);
+        console.log("error", error);
         setLoading(false);
         if (
           error.response &&

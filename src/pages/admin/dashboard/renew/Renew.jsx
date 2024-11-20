@@ -46,7 +46,7 @@ const Renew = ({user}) => {
   return (
     <div>
       <h1 className="text-center font-black text-5xl text-mainColor">
-        Renew Packages
+        Upgrade Packages
       </h1>
 
       {/* inputs */}
@@ -76,7 +76,7 @@ const Renew = ({user}) => {
       {/* submit */}
       <div>
         <button onClick={renew} className="bg-mainColor px-5 py-3 font-semibold text-white hover:bg-secondColor block my-10">
-          {loading ? <Spinner /> : "Renew"}
+          {loading ? <Spinner /> : "Upgrade"}
         </button>
       </div>
     </div>

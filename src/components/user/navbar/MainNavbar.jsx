@@ -19,18 +19,20 @@ import {
 } from "@material-tailwind/react";
 import axios from "axios";
 import { AppContext } from "../../../context/AppContext";
+import { CgProfile } from "react-icons/cg";
+
 const MainNavbar = () => {
   const [openNav, setOpenNav] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const {token, setToken} = useContext(AppContext)
+  const { token, setToken } = useContext(AppContext);
 
-  const navigate = useNavigate()
-  
+  const navigate = useNavigate();
+
   // useEffect(() => {
   //   const tn = localStorage.tn;
   //   tn ? setToken(tn) : "";
   // }, []);
-  
+
   const closeMenu = () => setIsMenuOpen(false);
 
   React.useEffect(() => {
@@ -57,11 +59,11 @@ const MainNavbar = () => {
   };
 
   const logout = async () => {
-    await logoutApi()
-    localStorage.removeItem("tn")
-    navigate("/login")
+    await logoutApi();
+    localStorage.removeItem("tn");
+    navigate("/login");
     window.location.reload();
-  }
+  };
 
   const navList = (
     <ul className="mt-2 mb-4 flex flex-col gap-2 lg:pl-12 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
@@ -83,15 +85,7 @@ const MainNavbar = () => {
       >
         Payment
       </Typography>
-      <Typography
-        as={Link}
-        to="/Contact"
-        variant="small"
-        color="blue-gray"
-        className="p-4 text-md text-gray-600 hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
-      >
-        Contact
-      </Typography>
+
       <Typography
         as={Link}
         to="/policies"
@@ -101,6 +95,26 @@ const MainNavbar = () => {
       >
         Policies
       </Typography>
+      <Typography
+        as={Link}
+        to="/Contact"
+        variant="small"
+        color="blue-gray"
+        className="p-4 text-md text-gray-600 hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
+      >
+        Contact
+      </Typography>
+      {token && (
+        <Typography
+          as={Link}
+          to="/admin/my-qrs"
+          variant="small"
+          color="blue-gray"
+          className="p-4 text-md text-gray-600 hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
+        >
+          Dashboard
+        </Typography>
+      )}
     </ul>
   );
 
@@ -149,11 +163,11 @@ const MainNavbar = () => {
                 >
                   <Typography
                     as={Link}
-                    to="/admin/my-qrs"
+                    to="/admin/profile"
                     variant="small"
                     className="font-normal flex items-center gap-2 text-lg"
                   >
-                    <FaChartSimple /> Dashboard
+                    <CgProfile /> Profile 
                   </Typography>
                 </MenuItem>
                 <MenuItem

@@ -12,7 +12,7 @@ function App() {
   const [country, setCountry] = useState('');
   const [user, setUser] = useState({})
   const [refresh, setRefresh] = useState(false)
-  const [valid, setValid] = useState(false)
+  const [valid, setValid] = useState(true)
   const {token} = useContext(AppContext)
 
   const getUserLocation = async () => {
@@ -35,14 +35,15 @@ function App() {
     try {
       const response = await axios({
         method:"get",
-        url: "https://backend.ofx-qrcode.com/api/subscriptions/validate",
+        url: `${import.meta.env.VITE_API_LINK}/subscriptions/validate`,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`
         }
       })
-      console.log("response", response)
-      response.data.message === "Subscription is still active." ?  setValid(true) : setValid(false)
+      // console.log("validate response", response)
+      response.data.message === "Subscription is still active." &&  setValid(true)
+      response.data.message === "Subscription has expired and has been disabled. All QR codes have been disabled" &&  setValid(false)
     } catch (error) {
       console.error("error in validate")
     }
@@ -53,13 +54,13 @@ function App() {
     try {
       const response = await axios({
         method:"get",
-        url:"https://backend.ofx-qrcode.com/api/subscriptions/user",
+        url:`${import.meta.env.VITE_API_LINK}/subscriptions/user`,
         headers: {
           "Content-Type":"application/json",
           Authorization: `Bearer ${token}`
         }
       })
-      console.log("user data", response)
+      // console.log("user data", response)
       setUser(response.data[0])
       // console.log("user ", user)
     } catch (error) {
