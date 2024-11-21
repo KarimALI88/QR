@@ -5,11 +5,12 @@ import { Dialog } from "@material-tailwind/react";
 import { Spinner } from "@material-tailwind/react";
 import { Link, useNavigate } from "react-router-dom";
 import { AppContext } from "../../../context/AppContext";
+import { toast } from "react-toastify";
 
 const WhatsappForm = ({ user }) => {
   const [number, setNumber] = useState("");
   const [text, setText] = useState("");
-  const {token} = useContext(AppContext)
+  const { token } = useContext(AppContext);
   const [image, setImage] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -25,31 +26,37 @@ const WhatsappForm = ({ user }) => {
 
   const getQR = async () => {
     setLoading(true);
-    try {
-      const response = await axios({
-        method: "post",
-        url: `${import.meta.env.VITE_API_LINK}/generate-qrcode`,
-        data: {
-          link: `https://wa.me/2${number}?text=${encodeURIComponent(text)}`,
-          package_id: "1",
-        },
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log("qr response", response);
-      setOpenModal(true);
-      setImage(`https://backend.ofx-qrcode.com${response.data.qr_code_url}`);
-      setDownloadImage(
-        response.data.qr_code_url.substring(
+    if (number.length < 11 || number.length > 11) {
+      toast.error("The Length of number not matched");
+      setLoading(false)
+    } else {
+      try {
+        const response = await axios({
+          method: "post",
+          url: `${import.meta.env.VITE_API_LINK}/generate-qrcode`,
+          data: {
+            link: `https://wa.me/2${number}?text=${encodeURIComponent(text)}`,
+            package_id: "1",
+          },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log("qr response", response);
+        setOpenModal(true);
+        setImage(`https://backend.ofx-qrcode.com${response.data.qr_code_url}`);
+        setDownloadImage(
+          response.data.qr_code_url.substring(
           response.data.qr_code_url.lastIndexOf("/") + 1
-        )
-      );
-      setLoading(false);
-    } catch (error) {
-      console.log("error", error);
-      setLoading(false);
+          )
+        );
+        setLoading(false);
+      } catch (error) {
+        console.log("error", error);
+        setLoading(false);
+        toast.error(error.response.data.message);
+      }
     }
   };
 
@@ -75,6 +82,7 @@ const WhatsappForm = ({ user }) => {
         <Input
           placeholder="whatsapp number"
           value={number}
+          type="number"
           onChange={(e) => setNumber(e.target.value)}
           className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
           labelProps={{
@@ -92,7 +100,7 @@ const WhatsappForm = ({ user }) => {
           Message
         </Typography>
         <Input
-          placeholder="whatsapp number"
+          placeholder="whatsapp Message"
           value={text}
           onChange={(e) => setText(e.target.value)}
           className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
@@ -112,13 +120,27 @@ const WhatsappForm = ({ user }) => {
             {loading ? <Spinner className="mx-auto" /> : "Submit"}
           </button>
         )} */}
-        {token ? <button
-          onClick={getQR}
-          disabled={number.length === 0 && text.length === 0}
-          className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
-        >
-          {loading ? <Spinner className="mx-auto" /> : "Submit"}
-        </button> : <Link to={"/login"} className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor">Submit</Link>}
+
+        {user && user?.pivot?.package_id && (
+          <>
+            {token ? (
+              <button
+                onClick={getQR}
+                disabled={number.length === 0}
+                className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
+              >
+                {loading ? <Spinner className="mx-auto" /> : "Submit"}
+              </button>
+            ) : (
+              <Link
+                to={"/login"}
+                className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
+              >
+                Submit
+              </Link>
+            )}
+          </>
+        )}
       </div>
 
       <Dialog

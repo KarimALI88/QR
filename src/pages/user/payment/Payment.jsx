@@ -177,7 +177,7 @@ const Payment = ({ user, setRefresh }) => {
           </button>
         </div>
 
-        {user && user?.pivot?.package_id ? (
+        {user && (user?.pivot?.package_id === 2 || user?.pivot?.package_id === 3)  ? (
           <>
             <h2 className="text-center my-5 mx-auto text-xl font-semibold">
               You have already an account

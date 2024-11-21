@@ -18,9 +18,11 @@ import axios from "axios";
 import { AppContext } from "./../../../context/AppContext";
 import { CgProfile } from "react-icons/cg";
 
-const MainSideBar = ({ setRefresh }) => {
+const MainSideBar = ({ setRefresh, user }) => {
   const navigate = useNavigate();
   const { token, setToken } = useContext(AppContext);
+
+  console.log("user", user);
 
   const logoutApi = async () => {
     try {
@@ -54,16 +56,22 @@ const MainSideBar = ({ setRefresh }) => {
         </Typography>
       </div>
       <List>
-        <ListItem className="text-white text-xl my-3" onClick={() => navigate("/admin/profile")}>
+        <ListItem
+          className="text-white text-xl my-3"
+          onClick={() => navigate("/admin/profile")}
+        >
           <ListItemPrefix>
             <CgProfile className="h-5 w-5" />
           </ListItemPrefix>
           <button>Profile</button>
         </ListItem>
 
-        <ListItem className="text-white text-xl my-3" onClick={() => navigate("/admin/my-qrs")}>
+        <ListItem
+          className="text-white text-xl my-3"
+          onClick={() => navigate("/admin/my-qrs")}
+        >
           <ListItemPrefix>
-            <FaQrcode className="h-5 w-5"/>
+            <FaQrcode className="h-5 w-5" />
           </ListItemPrefix>
           <button>My QRs</button>
         </ListItem>
@@ -96,29 +104,33 @@ const MainSideBar = ({ setRefresh }) => {
           <p>Free QR</p>
         </ListItem>
 
-        <ListItem
-          className="text-white text-xl my-3 flex gap-2"
-          onClick={() => {
-            navigate("/admin/upgrade");
-          }}
-        >
-          <ListItemPrefix>
-            <FaPlus className="h-5 w-5" />
-          </ListItemPrefix>
-          <p>Upgrade</p>
-        </ListItem>
+        {user?.pivot?.package_id < 3 && (
+          <ListItem
+            className="text-white text-xl my-3 flex gap-2"
+            onClick={() => {
+              navigate("/admin/upgrade");
+            }}
+          >
+            <ListItemPrefix>
+              <FaPlus className="h-5 w-5" />
+            </ListItemPrefix>
+            <p>Upgrade</p>
+          </ListItem>
+        )}
 
-        <ListItem
-          className="text-white text-xl my-3 flex gap-2"
-          onClick={() => {
-            navigate("/admin/renew");
-          }}
-        >
-          <ListItemPrefix>
-            <FaPlus className="h-5 w-5" />
-          </ListItemPrefix>
-          <p>Renew</p>
-        </ListItem>
+        {user?.pivot?.package_id >= 2 && (
+          <ListItem
+            className="text-white text-xl my-3 flex gap-2"
+            onClick={() => {
+              navigate("/admin/renew");
+            }}
+          >
+            <ListItemPrefix>
+              <FaPlus className="h-5 w-5" />
+            </ListItemPrefix>
+            <p>Renew</p>
+          </ListItem>
+        )}
 
         <ListItem className="text-white text-xl my-3" onClick={logout}>
           <ListItemPrefix>

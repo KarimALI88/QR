@@ -5,6 +5,7 @@ import { Dialog } from "@material-tailwind/react";
 import { Spinner } from "@material-tailwind/react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const GmailForm = ({ user }) => {
   const [email, setEmail] = useState("");
@@ -13,7 +14,7 @@ const GmailForm = ({ user }) => {
   const [image, setImage] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const {token} = useContext(AppContext)
+  const { token } = useContext(AppContext);
   const [downloadImage, setDownloadImage] = useState("");
 
   // useEffect(() => {
@@ -50,6 +51,7 @@ const GmailForm = ({ user }) => {
     } catch (error) {
       console.log("error", error);
       setLoading(false);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -135,15 +137,31 @@ const GmailForm = ({ user }) => {
             {loading ? <Spinner className="mx-auto" /> : "Submit"}
           </button>
         )} */}
-        {token ? <button
-          onClick={getQR}
-          disabled={
-            email.length === 0 || subject.length === 0 || emailBody.length === 0
-          }
-          className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
-        >
-          {loading ? <Spinner className="mx-auto" /> : "Submit"}
-        </button> : <Link to={"/login"} className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor">Submit</Link>}
+        {user && user?.pivot?.package_id && (
+          <>
+            {" "}
+            {token ? (
+              <button
+                onClick={getQR}
+                disabled={
+                  email.length === 0 ||
+                  subject.length === 0 ||
+                  emailBody.length === 0
+                }
+                className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
+              >
+                {loading ? <Spinner className="mx-auto" /> : "Submit"}
+              </button>
+            ) : (
+              <Link
+                to={"/login"}
+                className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
+              >
+                Submit
+              </Link>
+            )}
+          </>
+        )}
       </div>
 
       <Dialog

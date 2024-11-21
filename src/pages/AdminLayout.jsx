@@ -4,7 +4,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import QrStatistics from "./admin/dashboard/stats/QrStatistics";
 import MyQrs from "./admin/dashboard/myqrCodes/MyQrs";
 import { AppContext } from "../context/AppContext";
-import Renew from "./admin/dashboard/renew/Renew";
+import Renew from "./admin/dashboard/upgrade/Renew";
 import Profile from "./admin/dashboard/profile/Profile";
 import RenewPackage from "./admin/dashboard/renewPackages/RenewPackage";
 
@@ -14,7 +14,7 @@ const AdminLayout = ({setRefresh, user}) => {
   return (
     <div className="flex gap-96">
       <div>
-        <MainSideBar setRefresh={setRefresh}/>
+        <MainSideBar setRefresh={setRefresh} user={user}/>
       </div>
       <div className="py-10 px-5">
         <Routes>

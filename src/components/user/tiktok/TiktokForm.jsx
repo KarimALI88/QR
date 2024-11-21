@@ -7,7 +7,7 @@ import { AppContext } from "../../../context/AppContext";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
-const InstgramForm = ({ user }) => {
+const TikTok = ({ user }) => {
   const [link, setLink] = useState("");
   const { token } = useContext(AppContext);
   const [image, setImage] = useState("");
@@ -15,16 +15,11 @@ const InstgramForm = ({ user }) => {
   const [loading, setLoading] = useState(false);
   const [downloadImage, setDownloadImage] = useState("");
 
-  // useEffect(() => {
-  //   const tn = localStorage.getItem("tn");
-  //   setToken(tn);
-  // }, []);
-
   const handleOpen = () => setOpenModal(!openModal);
 
   const getQR = async () => {
     setLoading(true);
-    if (link.includes("instgram.com")) {
+    if (link.includes("tiktok.com")) {
       try {
         const response = await axios({
           method: "post",
@@ -53,19 +48,10 @@ const InstgramForm = ({ user }) => {
         toast.error(error.response.data.message);
       }
     } else {
-      toast.error("link must contain instgram.com");
-      setLoading(false)
+      toast.error("link must contain tiktok.com");
+      setLoading(false);
     }
   };
-
-  // const downloadImage = (imageSrc) => {
-  //   const link = document.createElement("a");
-  //   link.href = imageSrc;
-  //   link.download = "qr-code.png"; // Set the default filename here
-  //   document.body.appendChild(link);
-  //   link.click();
-  //   document.body.removeChild(link);
-  // };
 
   return (
     <div>
@@ -75,10 +61,10 @@ const InstgramForm = ({ user }) => {
           color="blue-gray"
           className="mb-1 font-semibold text-lg"
         >
-          Instgram URL
+          Tiktok URL
         </Typography>
         <Input
-          placeholder="Instgram URL"
+          placeholder="Tiktok URL"
           value={link}
           onChange={(e) => setLink(e.target.value)}
           className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
@@ -97,6 +83,22 @@ const InstgramForm = ({ user }) => {
           >
             {loading ? <Spinner className="mx-auto" /> : "Submit"}
           </button>
+        )} */}
+        {/* {token ? (
+          <button
+            onClick={getQR}
+            disabled={link.length === 0}
+            className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
+          >
+            {loading ? <Spinner className="mx-auto" /> : "Submit"}
+          </button>
+        ) : (
+          <Link
+            to={"/login"}
+            className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
+          >
+            Submit
+          </Link>
         )} */}
         {user && user?.pivot?.package_id && (
           <>
@@ -118,24 +120,24 @@ const InstgramForm = ({ user }) => {
             )}
           </>
         )}
-      </div>
 
-      <Dialog
-        open={openModal}
-        handler={handleOpen}
-        className="p-10 text-center"
-      >
-        <img src={image} alt="qr" className="block mx-auto my-10" />
-        <a
-          // onClick={() => downloadImageAsPDF(image)}
-          href={`https://backend.ofx-qrcode.com/download-qrcode/${downloadImage}`}
-          className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor w-full"
+        <Dialog
+          open={openModal}
+          handler={handleOpen}
+          className="p-10 text-center"
         >
-          Download
-        </a>
-      </Dialog>
+          <img src={image} alt="qr" className="block mx-auto my-10" />
+          <a
+            // onClick={() => downloadImageAsPDF(image)}
+            href={`https://backend.ofx-qrcode.com/download-qrcode/${downloadImage}`}
+            className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor w-full"
+          >
+            Download
+          </a>
+        </Dialog>
+      </div>
     </div>
   );
 };
 
-export default InstgramForm;
+export default TikTok;

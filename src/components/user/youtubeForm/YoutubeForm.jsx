@@ -5,10 +5,11 @@ import { Spinner } from "@material-tailwind/react";
 import axios from "axios";
 import { AppContext } from "../../../context/AppContext";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const YoutubeForm = ({ user }) => {
   const [link, setLink] = useState("");
-  const {token} = useContext(AppContext)
+  const { token } = useContext(AppContext);
   const [image, setImage] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -23,31 +24,37 @@ const YoutubeForm = ({ user }) => {
 
   const getQR = async () => {
     setLoading(true);
-    try {
-      const response = await axios({
-        method: "post",
-        url: `${import.meta.env.VITE_API_LINK}/generate-qrcode`,
-        data: {
-          link: link,
-          package_id: "1",
-        },
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      // console.log("qr response", response);
-      setOpenModal(true);
-      setImage(`https://backend.ofx-qrcode.com${response.data.qr_code_url}`);
-      setDownloadImage(
-        response.data.qr_code_url.substring(
-          response.data.qr_code_url.lastIndexOf("/") + 1
-        )
-      );
-      setLoading(false);
-    } catch (error) {
-      console.log("error", error);
-      setLoading(false);
+    if (link.includes("youtube.com")) {
+      try {
+        const response = await axios({
+          method: "post",
+          url: `${import.meta.env.VITE_API_LINK}/generate-qrcode`,
+          data: {
+            link: link,
+            package_id: "1",
+          },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        // console.log("qr response", response);
+        setOpenModal(true);
+        setImage(`https://backend.ofx-qrcode.com${response.data.qr_code_url}`);
+        setDownloadImage(
+          response.data.qr_code_url.substring(
+            response.data.qr_code_url.lastIndexOf("/") + 1
+          )
+        );
+        setLoading(false);
+      } catch (error) {
+        console.log("error", error);
+        setLoading(false);
+        toast.error(error.response.data.message);
+      }
+    } else {
+      toast.error("link must contain youtube.com");
+      setLoading(false)
     }
   };
 
@@ -91,13 +98,26 @@ const YoutubeForm = ({ user }) => {
             {loading ? <Spinner className="mx-auto" /> : "Submit"}
           </button>
         )} */}
-        {token ? <button
-          onClick={getQR}
-          disabled={link.length === 0}
-          className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
-        >
-          {loading ? <Spinner className="mx-auto" /> : "Submit"}
-        </button> : <Link to={"/login"} className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor">Submit</Link>}
+        {user && user?.pivot?.package_id && (
+          <>
+            {token ? (
+              <button
+                onClick={getQR}
+                disabled={link.length === 0}
+                className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
+              >
+                {loading ? <Spinner className="mx-auto" /> : "Submit"}
+              </button>
+            ) : (
+              <Link
+                to={"/login"}
+                className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
+              >
+                Submit
+              </Link>
+            )}
+          </>
+        )}
       </div>
 
       <Dialog

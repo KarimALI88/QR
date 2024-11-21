@@ -6,15 +6,11 @@ import {
   FaFacebook,
   FaInstagramSquare,
   FaYoutube,
-  FaEnvelopeOpenText,
+  FaTiktok,
   FaLaptop,
-  FaMicrophone,
-  FaVideo,
-  FaImage,
-  FaFilePdf,
+  FaSnapchat,
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import { MdMenuBook, MdEventNote } from "react-icons/md";
 import { SiGmail } from "react-icons/si";
 import WhatsappForm from "../../../components/user/whatsappForm/WhatsappForm";
 import FaceForm from "../../../components/user/facebookForm/FaceForm";
@@ -28,11 +24,13 @@ import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Snapchat from "../../../components/user/snapchatForm/Snapchat";
+import TikTok from "../../../components/user/tiktok/TiktokForm";
 
 const QrForm = ({ user, refresh, setRefresh }) => {
   const [feature, setFeature] = useState("whatsapp");
   const { token } = useContext(AppContext);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const createSubscribtion = async () => {
     try {
@@ -41,7 +39,7 @@ const QrForm = ({ user, refresh, setRefresh }) => {
         url: "https://backend.ofx-qrcode.com/api/subscriptions",
         data: {
           package_id: "1",
-          duration: "year", 
+          duration: "year",
         },
         headers: {
           "Content-Type": "application/json",
@@ -49,7 +47,13 @@ const QrForm = ({ user, refresh, setRefresh }) => {
         },
       });
       console.log("subscribe", response);
-      setRefresh(prevState => !prevState)
+      response.data && setRefresh((prevState) => !prevState);
+      response.data &&
+        Swal.fire({
+          title: "Subscribed!",
+          text: "Now Can Generate your QR code",
+          icon: "success",
+        });
     } catch (error) {
       console.error("error in subscribe", error);
       toast.error(error.response.data.message);
@@ -57,24 +61,23 @@ const QrForm = ({ user, refresh, setRefresh }) => {
   };
 
   const subscribePackageZero = () => {
-    {token ? Swal.fire({
-      title: "Are you sure to subscribe on this package?",
-      text: "You will be subscribed in this package",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#053B5C",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, Subscribe",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: "Subscribed!",
-          text: "Now Can Generate your QR code",
-          icon: "success",
-        });
-        createSubscribtion();
-      }
-    }) : navigate("/login")}
+    {
+      token
+        ? Swal.fire({
+            title: "Are you sure to subscribe on this package?",
+            text: "You will be subscribed in this package",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#053B5C",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, Subscribe",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              createSubscribtion();
+            }
+          })
+        : navigate("/login");
+    }
   };
 
   // console.log("feature", feature);
@@ -132,8 +135,22 @@ const QrForm = ({ user, refresh, setRefresh }) => {
             selected={feature === "email" ? true : false}
           />
         </button>
+        <button onClick={() => setFeature("Snapchat")}>
+          <QrGoal
+            icon={<FaSnapchat size={30} />}
+            feature={"Snapchat"}
+            selected={feature === "Snapchat" ? true : false}
+          />
+        </button>
+        <button onClick={() => setFeature("tiktok")}>
+          <QrGoal
+            icon={<FaTiktok size={30} />}
+            feature={"tiktok"}
+            selected={feature === "tiktok" ? true : false}
+          />
+        </button>
       </div>
-      {/* {!user ||
+      {!user ||
         (!user?.pivot?.package_id && (
           <div className="my-5 mx-auto p-10">
             <button
@@ -143,16 +160,18 @@ const QrForm = ({ user, refresh, setRefresh }) => {
               Subscribe
             </button>
           </div>
-        ))} */}
+        ))}
       {/* =============================================================================== */}
       <div className="py-5 px-10 max-w-[80%]">
         {feature === "whatsapp" && <WhatsappForm user={user} />}
-        {feature === "facebook" && <FaceForm user={user} />} 
+        {feature === "facebook" && <FaceForm user={user} />}
         {feature === "youtube" && <YoutubeForm user={user} />}
         {feature === "twitter" && <XForm user={user} />}
         {feature === "instgram" && <InstgramForm user={user} />}
         {feature === "website" && <WebsiteForm user={user} />}
         {feature === "email" && <GmailForm user={user} />}
+        {feature === "Snapchat" && <Snapchat user={user} />}
+        {feature === "tiktok" && <TikTok user={user} />}
       </div>
     </div>
   );
