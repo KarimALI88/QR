@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import MainSideBar from "../components/admin/sidebar/MainSideBar";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import QrStatistics from "./admin/dashboard/stats/QrStatistics";
 import MyQrs from "./admin/dashboard/myqrCodes/MyQrs";
 import { AppContext } from "../context/AppContext";
@@ -10,7 +10,7 @@ import RenewPackage from "./admin/dashboard/renewPackages/RenewPackage";
 
 const AdminLayout = ({setRefresh, user}) => {
   const { token } = useContext(AppContext);
-  // console.log("token", token)
+
   return (
     <div className="flex gap-96">
       <div>

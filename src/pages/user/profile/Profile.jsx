@@ -7,6 +7,7 @@ import {
   FaWhatsappSquare,
   FaLinkedin,
   FaSnapchatSquare,
+  FaTiktok 
 } from "react-icons/fa";
 import { FaLocationDot, FaLink } from "react-icons/fa6";
 import { FaPhoneAlt } from "react-icons/fa";
@@ -66,7 +67,7 @@ const Profile = () => {
     <>
       {profileData?.cover ? (
         <div
-          className="relative flex flex-col items-center justify-start h-full overflow-auto"
+          className="relative flex flex-col items-center justify-start min-h-[100vh] overflow-auto"
           style={{
             color: profileData?.backgraound_color,
             fontFamily: profileData?.font,
@@ -241,6 +242,21 @@ const Profile = () => {
                 )}
 
                 {profileData?.links?.find(
+                  (link) => link.type === "tiktok"
+                ) && (
+                  <a
+                    href={
+                      profileData.links.find((link) => link.type === "tiktok")
+                        .url
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <FaTiktok size={60} className="" />
+                  </a>
+                )}
+
+                {profileData?.links?.find(
                   (link) => link.type === "twitter"
                 ) && (
                   <a
@@ -370,7 +386,9 @@ const Profile = () => {
         </div>
       ) : (
         <div className="my-32 mx-auto">
-          <p className="text-center font-black my-20 mx-auto text-5xl text-gray-800">404 || Not Found</p>
+          <p className="text-center font-black my-20 mx-auto text-5xl text-gray-800">
+            404 || Not Found
+          </p>
         </div>
       )}
     </>

@@ -12,6 +12,7 @@ import {
   FaLinkedin,
   FaLaptopCode,
   FaPlus,
+  FaTiktok
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { Spinner } from "@material-tailwind/react";
@@ -80,6 +81,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
   const [otherLink, setOtherLink] = useState("");
   const [youtubeLink, setYoutubeLink] = useState("");
   const [whatsappLink, setWhatsappLink] = useState("");
+  const [tiktokLink, setTiktokLink] = useState("");
   const [beLink, setBeLink] = useState("");
   const [color, setColor] = useState("#ffffff");
   const [loading, setLoading] = useState(false);
@@ -103,6 +105,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
     portfolioIndicator: false,
     behanceIndicator: false,
     otherIndicator: false,
+    tiktokIndicator: false,
   });
   const [country, setCountry] = useState(0);
   const fonts = [
@@ -396,6 +399,11 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
           base: "https://www.x.com",
           indicator: "twitterIndicator",
         },
+        {
+          url: tiktokLink,
+          base: "https://www.tiktok.com",
+          indicator: "tiktokIndicator",
+        },
       ];
 
       for (const { url, base, indicator } of linkValidations) {
@@ -457,6 +465,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
         { url: linkedinLink, type: "linkedin" },
         { url: snapchatLink, type: "snapchat" },
         { url: twitterLink, type: "twitter" },
+        { url: tiktokLink, type: "tiktok" },
       ];
 
       links.forEach((link, index) => {
@@ -1056,6 +1065,18 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                     }))
                   }
                 />
+                <FaTiktok
+                  size={40}
+                  className={`cursor-pointer ${
+                    activeInputs.tiktok ? "text-secondColor" : "text-gray-800"
+                  }`}
+                  onClick={() =>
+                    setActiveInputs((prevState) => ({
+                      ...prevState,
+                      tiktok: !prevState.tiktok,
+                    }))
+                  }
+                />
 
                 <RiTwitterXFill
                   size={40}
@@ -1142,6 +1163,26 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                     value={youtubeLink}
                     error={errorIndicator.youtubeIndicator}
                     onChange={(e) => setYoutubeLink(e.target.value)}
+                    className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
+                  />
+                </div>
+              )}
+
+              {/* tiktok */}
+              {activeInputs.tiktok && (
+                <div className="w-[300px]  ">
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="mb-1 mt-5 font-semibold text-lg"
+                  >
+                    Tiktok Link
+                  </Typography>
+                  <Input
+                    placeholder="tiktok.com"
+                    value={tiktokLink}
+                    onChange={(e) => setTiktokLink(e.target.value)}
+                    error={errorIndicator.tiktokIndicator}
                     className="appearance-none min-h-[60px] border-gray-900 placeholder:text-gray-400 placeholder:opacity-100 focus:border-gray-900 focus:text-black font-semibold"
                   />
                 </div>

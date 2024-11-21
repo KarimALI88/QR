@@ -85,7 +85,7 @@ function App() {
       <ToastContainer />
       <Routes>
         <Route path="/*" element={<UserLayout valid={valid} country={country} user={user} refresh={refresh} setRefresh={setRefresh}/>} />
-        <Route path="/admin/*" element={<AdminLayout setRefresh={setRefresh} user={user}/>} /> 
+        <Route path="/admin/*" element={<AdminLayout setRefresh={setRefresh} user={user}/>} />
       </Routes>
     </>
   );
