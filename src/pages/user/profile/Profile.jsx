@@ -65,7 +65,7 @@ const Profile = () => {
 
   return (
     <>
-      {profileData?.cover ? (
+      {/* {profileData?.cover ? ( */}
         <div
           className="relative flex flex-col items-center justify-start min-h-[100vh] overflow-auto"
           style={{
@@ -384,13 +384,13 @@ const Profile = () => {
             </div>
           </div>
         </div>
-      ) : (
-        <div className="my-32 mx-auto">
-          <p className="text-center font-black my-20 mx-auto text-5xl text-gray-800">
-            404 || Not Found
-          </p>
-        </div>
-      )}
+      {/* // ) : (
+      //   <div className="my-32 mx-auto">
+      //     <p className="text-center font-black my-20 mx-auto text-5xl text-gray-800">
+      //       404 || Not Found
+      //     </p>
+      //   </div>
+      // )} */}
     </>
   );
 };
