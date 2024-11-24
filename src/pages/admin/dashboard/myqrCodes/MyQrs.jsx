@@ -277,9 +277,9 @@ const MyQrs = () => {
                             >
                               download
                             </a>
-                            <button className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-5 hover:bg-secondColor">
+                            {/* <button className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-5 hover:bg-secondColor">
                               Update
-                            </button>
+                            </button> */}
                           </div>
                         </td>
                       </tr>

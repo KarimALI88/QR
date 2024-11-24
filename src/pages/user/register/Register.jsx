@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import { Spinner } from "@material-tailwind/react";
 import { FaUserAlt } from "react-icons/fa";
 import { FaAddressCard } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -96,6 +97,19 @@ const Register = () => {
 
   const handleOpen = () => setOpenModal(!openModal);
 
+  const googleAuth = async () => {
+    try {
+      const response = await axios({
+        method:"get",
+        url:`${import.meta.env.VITE_API_LINK}/auth/google`
+      })
+      console.log("google response", response)
+      response.token && localStorage.setItem("tn", response.token)
+    } catch (error) {
+      console.log("error in google auth ", error)
+    }
+  }
+
   return (
     <div className="flex flex-col md:flex-row">
       <div className="flex-1 h-[100vh] hidden md:block">
@@ -125,6 +139,16 @@ const Register = () => {
           <h3 className="text-mainColor font-semibold text-3xl">
             Welcome to OFX Signup
           </h3>
+
+          <div className="w-fit mx-auto px-5 my-5">
+            <button
+              onClick={googleAuth}
+              className="flex justify-start items-center text-xl gap-3 border-2 border-gray-500 rounded-xl px-3 py-2"
+            >
+              <FcGoogle size={35} />
+              Sign up with google
+            </button>
+          </div>
 
           {/* email */}
           <div className="w-[80%] md:w-[70%] lg:w-[60%] mx-auto my-10">

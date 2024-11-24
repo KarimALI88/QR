@@ -47,14 +47,14 @@ const Footer = () => {
             </Typography>
 
 
-            <Typography
+            {/* <Typography
               as="a"
               href="https://www.facebook.com/ofxqrcode"
               className="opacity-80 transition-opacity hover:opacity-100"
               target="_blank"
             >
               <FaInstagramSquare size={25} color="white"/>
-            </Typography>
+            </Typography> */}
           </div>
         </div>
       </div>
