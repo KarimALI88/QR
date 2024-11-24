@@ -379,7 +379,7 @@ const Profile = () => {
               variant="small"
               className="mb-4 text-center text-white md:mb-0 font-medium text-xl"
             >
-              &copy; {currentYear} OUT OF THE BOX All Rights Reserved.
+              &copy; {currentYear} OFX-QRCODE All Rights Reserved.
             </Typography>
           </div>
         </div>

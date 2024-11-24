@@ -70,7 +70,8 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
     twitter: false,
     other: false,
   });
-  const [token, setToken] = useState("");
+  // const [token, setToken] = useState("");
+  const {token, setPackageId} = useContext(AppContext)
   const [packageCheck, setPackageCheck] = useState("c3");
   const [facebookLink, setFacebookLink] = useState("");
   const [portfolioLink, setPortfolioLink] = useState("");
@@ -147,10 +148,10 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
 
   // console.log("package",packageId)
 
-  useEffect(() => {
-    const tn = localStorage.getItem("tn");
-    setToken(tn);
-  }, []);
+  // useEffect(() => {
+  //   const tn = localStorage.getItem("tn");
+  //   setToken(tn);
+  // }, []);
 
   // Handle drop for cover image
   const onDropCover = useCallback(async (acceptedFiles) => {
@@ -377,8 +378,8 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
           base: "https://www.behance.net",
           indicator: "behanceIndicator",
         },
-        { url: otherLink, base: "", indicator: "otherIndicator" },
-        { url: portfolioLink, base: "", indicator: "portfolioIndicator" },
+        { url: otherLink, base: "https://www.", indicator: "otherIndicator" },
+        { url: portfolioLink, base: "https://www.", indicator: "portfolioIndicator" },
         {
           url: whatsappLink && `https://wa.me/${CODES[country]}${whatsappLink}`,
           base: "https://wa.me",
@@ -437,7 +438,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
       pdfFile && formData.append("pdfs[]", pdfFile);
       pdfName && formData.append("type[]", pdfName);
       menuImageFile && formData.append("pdfs[]", menuImageFile);
-      menuImageFile && formData.append("type[]", "menue");
+      menuImageFile && formData.append("type[]", "menu");
 
       // Append basic information
       formData.append("title", name);
@@ -675,6 +676,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
               other={otherLink}
               pdfName={pdfName}
               otherLinkName={otherLinkName}
+              tiktok={tiktokLink}
             />
           </div>
           {/* ======================================== */}
@@ -1549,7 +1551,10 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                 !user?.pivot?.package_id ||
                 user?.pivot?.package_id === 1) && (
                 <button
-                  onClick={() => navigate("/payment")}
+                  onClick={() => {
+                    // setPackageId()
+                    navigate("/payment")
+                  }}
                   className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-5 hover:bg-secondColor"
                 >
                   Pay for use

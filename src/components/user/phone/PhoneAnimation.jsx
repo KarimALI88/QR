@@ -7,12 +7,13 @@ import {
   FaWhatsappSquare,
   FaLinkedin,
   FaSnapchatSquare,
+  FaTiktok
 } from "react-icons/fa";
 import { Collapse, Button, Card } from "@material-tailwind/react";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaPhoneAlt } from "react-icons/fa";
 import altImage from "../../../assets/imgs/loginImage.jpg";
-import altLogo from "../../../assets/imgs/QR-LOGO2.png";
+import altLogo from "../../../assets/imgs/tabIcon.jpg";
 import { RiTwitterXFill } from "react-icons/ri";
 
 const PhoneAnimation = ({
@@ -38,7 +39,8 @@ const PhoneAnimation = ({
   twitter,
   other,
   pdfName,
-  otherLinkName
+  otherLinkName,
+  tiktok
 }) => {
   return (
     <div className="flex justify-center rounded-3xl items-center h-fit mx-auto max-w-[100%] md:fixed md:right-16 md:top-28">
@@ -82,11 +84,7 @@ const PhoneAnimation = ({
             {/* Logo positioned over the Cover */}
             <div className="absolute top-[100%] left-1/2 transform -translate-x-1/2 -translate-y-1/2">
               <img
-                src={
-                  logo
-                    ? logo
-                    : "https://scontent.fcai21-3.fna.fbcdn.net/v/t39.30808-6/464223952_122093874182593961_6197794060995444811_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=FV0rV3hzYVwQ7kNvgEney8-&_nc_zt=23&_nc_ht=scontent.fcai21-3.fna&_nc_gid=Arok7p8JOhA0FKq8tGMNhuT&oh=00_AYBZnfa_mDdM1OGxyyo_XQz6xMGfBTbjmikybHamjunUZg&oe=672E6622"
-                }
+                src={logo ? logo : altLogo}
                 alt="Logo"
                 className="w-[100px] h-[100px] rounded-full border-4 border-white"
               />
@@ -101,6 +99,7 @@ const PhoneAnimation = ({
           >
             {name || "OFX"}
           </h1>
+
           {/* description */}
           <p
             className="mx-auto p-1 text-center text-lg font-medium capitalize"
@@ -108,6 +107,20 @@ const PhoneAnimation = ({
           >
             {description || "marketing agency"}
           </p>
+
+          {(!facebook &&
+            !instgram &&
+            !youtube &&
+            !twitter &&
+            !whatsapp &&
+            !behance &&
+            !other &&
+            !linkedin &&
+            !snapchat) && (
+            <p>
+              <FaFacebook size={40} style={{ color }} />
+            </p>
+          )}
           {/* social media icons */}
           <div
             className={`flex gap-5 items-start px-3 py-5 ${
@@ -130,7 +143,7 @@ const PhoneAnimation = ({
                     youtube,
                     other,
                     snapchat,
-                    twitter
+                    twitter,
                   ].filter(Boolean).length === 3
                 ? "flex-col"
                 : "flex-wrap justify-center items-start"
@@ -139,30 +152,36 @@ const PhoneAnimation = ({
             {facebook && <FaFacebook size={40} style={{ color }} />}
             {whatsapp && <FaWhatsappSquare size={40} style={{ color }} />}
             {instgram && <FaInstagramSquare size={40} style={{ color }} />}
+            {tiktok && <FaTiktok size={40} style={{ color }} />}
             {behance && <FaBehance size={40} style={{ color }} />}
             {linkedin && <FaLinkedin size={40} style={{ color }} />}
             {youtube && <FaYoutube size={40} style={{ color }} />}
             {snapchat && <FaSnapchatSquare size={40} style={{ color }} />}
             {twitter && <RiTwitterXFill size={40} style={{ color }} />}
-            {other && <div className="flex flex-col gap-1">
-              <FaLink size={40} style={{ color }} />
-              <p>{otherLinkName || "title"}</p>
-              </div>}
+            {other && (
+              <div className="flex flex-col gap-1">
+                <FaLink size={40} style={{ color }} />
+                <p>{otherLinkName || "title"}</p>
+              </div>
+            )}
           </div>
+
           {/* phone 1 */}
           <h3
-            className="text-lg font-semibold mt-3 text-center"
+            className="text-lg font-semibold mt-3 text-center flex items-center gap-2"
             style={{ color }}
           >
-            {phone1 ? phone1 : "01061472185"}
+            <FaPhoneAlt size={25} /> {phone1 ? phone1 : "01234567890"}
           </h3>
           {/* phone 2 */}
-          <h3
-            className="text-lg font-semibold my-2 text-center"
-            style={{ color }}
-          >
-            {phone2 ? phone2 : "01100942108"}
-          </h3>
+          {phone2 && (
+            <h3
+              className="text-lg font-semibold my-2 text-center flex items-center gap-2"
+              style={{ color }}
+            >
+              <FaPhoneAlt size={25} /> {phone2 ? phone2 : "01234567890"}
+            </h3>
+          )}
           {/* mp3 */}
           <div className="flex gap-5 items-center px-2 justify-center">
             {mp3 && <audio controls src={mp3} className="w-[200px]" />}

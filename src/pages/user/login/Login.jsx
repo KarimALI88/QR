@@ -47,7 +47,7 @@ const Login = ({ setRefresh }) => {
       setToken(data.token);
       toast.success("Logged in successfully");
       setRefresh((prevState) => !prevState);
-      navigate("/");
+      navigate("/admin/profile");
     } catch (error) {
       console.error("error", error);
       toast.error("wrong answers");
@@ -59,7 +59,10 @@ const Login = ({ setRefresh }) => {
     try {
       const response = await axios({
         method:"get",
-        url:`${import.meta.env.VITE_API_LINK}/auth/google`
+        url:`${import.meta.env.VITE_API_LINK}/auth/google`,
+        headers:{
+          "Content-Type":"application/json"
+        }
       })
       console.log("google response", response)
       response.token && localStorage.setItem("tn", response.token)
@@ -86,12 +89,12 @@ const Login = ({ setRefresh }) => {
             Welcome to OFX Login
           </h3>
 
-          <div className="w-fit mx-auto px-5 my-5">
+          {/* <div className="w-fit mx-auto px-5 my-5">
             <button onClick={googleAuth} className="flex justify-start items-center text-xl gap-3 border-2 border-gray-500 rounded-xl px-3 py-2">
               <FcGoogle size={35} />
               Sign in with google
             </button>
-          </div>
+          </div> */}
 
           {/* email */}
           <div className="w-[80%] md:w-[70%] lg:w-[60%] mx-auto my-10">

@@ -140,7 +140,7 @@ const Register = () => {
             Welcome to OFX Signup
           </h3>
 
-          <div className="w-fit mx-auto px-5 my-5">
+          {/* <div className="w-fit mx-auto px-5 my-5">
             <button
               onClick={googleAuth}
               className="flex justify-start items-center text-xl gap-3 border-2 border-gray-500 rounded-xl px-3 py-2"
@@ -148,7 +148,7 @@ const Register = () => {
               <FcGoogle size={35} />
               Sign up with google
             </button>
-          </div>
+          </div> */}
 
           {/* email */}
           <div className="w-[80%] md:w-[70%] lg:w-[60%] mx-auto my-10">

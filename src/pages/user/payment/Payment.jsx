@@ -45,7 +45,8 @@ const Payment = ({ user, setRefresh }) => {
   const onSuccess = () => {
     console.log("pay success");
     createSubscribtion()
-    navigate("/")
+    setRefresh(prevState => !prevState)
+    navigate("/qr")
   }
 
   const onError = () => {
