@@ -16,6 +16,7 @@ import { FaSearch, FaDownload } from "react-icons/fa";
 import axios from "axios";
 import { AppContext } from "./../../../../context/AppContext";
 import { Spinner } from "@material-tailwind/react";
+import { Link } from "react-router-dom";
 
 const MyQrs = () => {
   const TABLE_HEAD = [
@@ -222,7 +223,7 @@ const MyQrs = () => {
                         </td>
 
                         <td className={classes}>
-                          <div className="w-max">
+                          <div className="w-max text-center mb-2">
                             <Chip
                               size="sm"
                               variant="ghost"
@@ -239,6 +240,18 @@ const MyQrs = () => {
                                   : ""
                               }
                             />
+                            {row?.qr_code?.is_active === 0 && (
+                              <p className="">
+                                You should upgrade <br /> to active this again
+                                <br />
+                                <Link
+                                  to={"/admin/upgrade"}
+                                  className="text-mainColor font-semibold"
+                                >
+                                  Upgrade
+                                </Link>
+                              </p>
+                            )}
                           </div>
                         </td>
 
@@ -282,6 +295,7 @@ const MyQrs = () => {
                             </button> */}
                           </div>
                         </td>
+                        
                       </tr>
                     );
                   })}

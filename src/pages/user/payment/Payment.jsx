@@ -8,19 +8,17 @@ import { Spinner } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import { Select, Option } from "@material-tailwind/react";
 import geidea from "../../../assets/imgs/geidea.png";
+import { useInView } from "react-intersection-observer";
+import Footer from "../../../components/user/footer/Footer";
 
 const Payment = ({ user, setRefresh }) => {
   const [activeSection, setActiveSection] = useState("geidea");
-  const [packageNumber, setPackageNumber] = useState("");
-  const [activationCode, setActivationCode] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
-  const [success, setSuccess] = useState(false);
-  const [amount, setAmount] = useState(0)
-  const { token } = useContext(AppContext);
-  const [packages, setPackages] = useState([])
+  const [packages, setPackages] = useState([]);
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
   const navigate = useNavigate();
+  const { token } = useContext(AppContext);
 
   const getPackages = async () => {
     try {
@@ -28,82 +26,68 @@ const Payment = ({ user, setRefresh }) => {
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
-
       const data = await response.json();
-      // console.log("packages", data);
       setPackages(data);
     } catch (error) {
-      console.error("error", error);
+      console.error("error fetching packages", error);
     }
   };
 
   useEffect(() => {
     getPackages();
   }, []);
-  
-  useEffect(() => {
-    const lg = localStorage.getItem("lg")
-    lg == "a1" && handleChangeSelect("1")
-    lg == "b2" && handleChangeSelect("2")
-    lg == "c3" && handleChangeSelect("3")
-  }, [])
-  
 
   const onSuccess = () => {
-    console.log("pay success");
-    createSubscribtion()
-    setRefresh(prevState => !prevState)
-    navigate("/qr")
-  }
+    console.log("Payment success");
+    createSubscription();
+    setRefresh((prevState) => !prevState);
+    navigate("/qr");
+  };
 
   const onError = () => {
-    console.log("pay error");
-    
-  }
+    console.log("Payment error");
+  };
 
   const onCancel = () => {
-    console.log("pay cancel");
-  }
+    console.log("Payment canceled");
+  };
 
   const payment = new GeideaCheckout(onSuccess, onError, onCancel);
 
   const payHpp = (sessionId) => {
     payment.startPayment(sessionId);
-  }
+  };
 
-  const payGeidea = async () => {
-    setLoading(true)
+  const payGeidea = async (selectedAmount, selectedPackageId) => {
+    setLoading(true);
     try {
       const response = await axios({
         method: "post",
         url: `${import.meta.env.VITE_API_LINK}/payment/initiate`,
         data: {
-          amount: amount,
+          amount: selectedAmount,
         },
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("response of pay", response);
-      setLoading(false)
+      setLoading(false);
       if (response.data.sessionId) {
-        payHpp(response.data.sessionId)
+        payHpp(response.data.sessionId);
       }
     } catch (error) {
-      console.error("error in pay", error);
-      setLoading(false)
+      console.error("error in payment", error);
+      setLoading(false);
     }
   };
 
-  const handleOpen = () => setOpenModal(!openModal);
-
-  const createSubscribtion = async () => {
+  const createSubscription = async () => {
     try {
       const response = await axios({
         method: "post",
         url: `${import.meta.env.VITE_API_LINK}/subscriptions`,
         data: {
-          package_id: packageNumber,
+          package_id: activeSection,
           duration: "year",
         },
         headers: {
@@ -111,68 +95,23 @@ const Payment = ({ user, setRefresh }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("subscribe", response);
-      setRefresh(prevState => !prevState)
+      console.log("Subscription successful", response);
+      setRefresh((prevState) => !prevState);
     } catch (error) {
-      console.error("error in subscribe", error);
-      toast.error(error.response.data.message);
+      console.error("error in subscription", error);
     }
   };
-
-  const activeVcash = async () => {
-    setLoading(true);
-    try {
-      const response = await axios({
-        method: "post",
-        url: `${import.meta.env.VITE_API_LINK}/codes/validate`,
-        data: {
-          package_id: packageNumber,
-          code: activationCode,
-        },
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      createSubscribtion();
-      console.log("activation resp", response);
-      setLoading(false);
-      setMessage("successfully");
-      setSuccess(true);
-      navigate("/qr");
-    } catch (error) {
-      console.error("error in api", error);
-      setLoading(false);
-      setMessage(error.response.data.message);
-      setSuccess(false);
-    }
-  };
-
-  const handleChangeSelect = (val) => {
-    setPackageNumber(val)
-    packages.find((pack) => pack.id === val && setAmount(pack.price_EGP))
-  }
 
   return (
     <div>
       <MainNavbar />
-      <div className="py-5 px-10">
+      <div className="py-5 px-10 w-full">
         <h1 className="text-center text-4xl text-mainColor font-black my-5">
           Payment Methods
         </h1>
 
-        {/* payment methods */}
+        {/* Payment Methods */}
         <div className="flex justify-center gap-8 items-center my-10 mx-auto flex-wrap">
-          {/* <button
-            className={`flex gap-2 items-center py-2 px-5 text-center text-2xl font-black `}
-            onClick={() => setActiveSection("vodafone")}
-          >
-            <img
-              src="https://storage.faydety.com/images/blogs/images/melwmat_aktr_en_fwdafwn_kash_wazay_astlf_mn_vodafone_cash_8364b32049.webp"
-              alt="vodafone cash"
-              className="w-[150px] h-[80px]"
-            />{" "}
-          </button> */}
           <button
             className={`py-2 px-5 text-center text-2xl font-black`}
             onClick={() => setActiveSection("geidea")}
@@ -185,140 +124,85 @@ const Payment = ({ user, setRefresh }) => {
           </button>
         </div>
 
-        {user && (user?.pivot?.package_id === 2 || user?.pivot?.package_id === 3)  ? (
-          <>
-            <h2 className="text-center my-5 mx-auto text-xl font-semibold">
-              You have already an account
-            </h2>
-          </>
+        {user &&
+        (user?.pivot?.package_id === 2 || user?.pivot?.package_id === 3) ? (
+          <h2 className="text-center my-5 mx-auto text-xl font-semibold">
+            You already have an account
+          </h2>
         ) : (
-          <>
-            {/* geidea section */}
-            {activeSection === "geidea" && (
-              <div className="my-10 mx-auto w-[80%]">
-                {/* <h2 className="text-center text-black text-4xl my-10 ">Coming Soon</h2> */}
-                <div className="max-w-[350px] max-h-[300px] mx-auto my-5">
-                  
-                  <Select
-                    id="font-select"
-                    label="Select Package"
-                    onChange={(val) => handleChangeSelect(val)}
-                    value={packageNumber}
-                    className="h-[60px]"
-                  >
+          activeSection === "geidea" && (
+            <div className="my-10 mx-auto w-full">
+              <div className="mx-auto my-5">
+                <div className="w-full">
+                  <div className="flex flex-wrap justify-center items-center gap-10 sm:flex-col lg:flex-row w-full">
                     {packages.map((pack, index) => (
-                      <Option
-                        key={index}
-                        value={pack.id}
-                        className="capitalize text-black text-lg font-semibold"
-                      >
-                        {pack.name}
-                      </Option>
-                    ))}
-                  </Select>
-                  <button
-                    onClick={payGeidea}
-                    disabled={packageNumber.length === 0}
-                    className="bg-mainColor w-full px-5 py-3 font-semibold text-white hover:bg-secondColor block mx-auto my-10"
-                  >
-                    {loading ? <Spinner /> : `Pay ${amount}`}
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* vodafone section */}
-            {activeSection === "vodafone" && (
-              <div className="my-10 mx-auto w-[80%]">
-                <div className="max-w-[350px] max-h-[300px] mx-auto my-5">
-                  <img
-                    src="https://img.freepik.com/free-vector/people-using-mobile-bank-remittance-money_74855-6617.jpg?t=st=1730367062~exp=1730370662~hmac=794beadac97b4cc92cfe382b81ea03be0e193ebf473fd6738904245596c6cd25&w=740"
-                    alt="image for payment"
-                  />
-                </div>
-                <h3 className="text-xl text-black text-center font-semibold">
-                  please send money on this phone{" "}
-                  <span className="text-mainColor text-2xl">01061472185</span>{" "}
-                  by vodafone cash
-                </h3>
-                {/* activate code */}
-                <div>
-                  <button
-                    onClick={handleOpen}
-                    className="bg-mainColor px-5 py-5 font-semibold text-white hover:bg-secondColor block mx-auto my-10"
-                  >
-                    Active Account
-                  </button>
-                  <Dialog
-                    open={openModal}
-                    handler={handleOpen}
-                    className="p-10 text-center"
-                  >
-                    <div className="my-10">
-                      {message.length > 0 && (
-                        <h4
-                          className={`font-semibold text-xl my-10 ${
-                            success === false ? "text-[red]" : "text-[green]"
-                          }`}
+                      <div key={index}>
+                        <div
+                          ref={ref}
+                          data-aos="fade-up"
+                          className={`bg-white shadow-sm rounded-lg my-10 overflow-hidden h-fit w-[250px] mx-auto border-mainColor border-solid border-2 flex flex-col transition-opacity duration-700 ${
+                            inView ? "opacity-100" : "opacity-0"
+                          } ${
+                            index === 2
+                              ? "scale-110 border-secondColor border-4"
+                              : ""
+                          } ${index === 1 ? "scale-105" : ""}`}
                         >
-                          {message}
-                        </h4>
-                      )}
-                      {/* <Input 
-                placeholder="package number"
-                value={packageNumber}
-                onChange={(e) => setPackageNumber(e.target.value)}
-                className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                labelProps={{
-                  className: "before:content-none after:content-none",
-                }}
-              /> */}
-                      <Select
-                        id="font-select"
-                        label="Select Package"
-                        onChange={(val) => setPackageNumber(val)}
-                        value={packageNumber}
-                        className="h-[60px]"
-                      >
-                        {packages.map((pack) => (
-                          <Option
-                            key={pack.package_id}
-                            value={pack.package_id}
-                            className="capitalize text-black text-lg font-semibold"
-                          >
-                            {pack.package_name}
-                          </Option>
-                        ))}
-                      </Select>
-                    </div>
-                    <div>
-                      <Input
-                        placeholder="activation code"
-                        value={activationCode}
-                        onChange={(e) => setActivationCode(e.target.value)}
-                        className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                        labelProps={{
-                          className: "before:content-none after:content-none",
-                        }}
-                      />
-                    </div>
-                    <button
-                      onClick={activeVcash}
-                      className="bg-mainColor px-3 py-3 w-full font-semibold text-white hover:bg-secondColor block mx-auto my-10"
-                    >
-                      {loading ? (
-                        <Spinner className="mx-auto" />
-                      ) : (
-                        "Active an Account"
-                      )}
-                    </button>
-                  </Dialog>
+                          <div className="px-6 py-8 flex-grow">
+                            <div className="flex flex-col justify-between gap-4">
+                              <h2 className="text-2xl font-bold text-mainColor capitalize">
+                                {pack?.name}
+                              </h2>
+                              <p className="text-xl font-semibold text-gray-400">
+                                {pack?.description}
+                              </p>
+                              <p className="text-3xl font-bold text-gray-500">
+                                {pack?.price_EGP}
+                              </p>
+                            </div>
+                            <ul className="mt-8 space-y-4 capitalize">
+                              {pack?.features?.map((feature, idx) => (
+                                <li
+                                  key={idx}
+                                  className="flex items-center text-lg font-semibold"
+                                >
+                                  <svg
+                                    className="h-5 w-5 text-secondColor mr-2"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                  >
+                                    <path
+                                      fillRule="evenodd"
+                                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                      clipRule="evenodd"
+                                    />
+                                  </svg>
+                                  {feature}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div className="bg-gray-100 px-6 py-4">
+                            <button
+                              onClick={() =>
+                                payGeidea(pack?.price_EGP, pack?.id)
+                              }
+                              className="w-full min-w-[90%] mx-auto block text-center bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded"
+                            >
+                              Pay {pack?.price_EGP}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-            )}
-          </>
+            </div>
+          )
         )}
       </div>
+      <Footer />
     </div>
   );
 };
