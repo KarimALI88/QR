@@ -1,10 +1,5 @@
 import React, { useContext } from "react";
-import {
-  Card,
-  List,
-  ListItem,
-  ListItemPrefix,
-} from "@material-tailwind/react";
+import { Card, List, ListItem, ListItemPrefix } from "@material-tailwind/react";
 import { FaQrcode, FaPlus } from "react-icons/fa";
 import { IoMdLogOut } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
@@ -65,19 +60,68 @@ const MainSideBar = ({ setRefresh, user }) => {
           My QRs
         </ListItem>
 
-        <ListItem
-          className="text-white text-xl my-3 cursor-pointer"
-          onClick={() => {
-            localStorage.removeItem("lg");
-            navigate("/qr");
-            setRefresh((prev) => !prev);
-          }}
-        >
-          <ListItemPrefix>
-            <FaPlus className="h-5 w-5" />
-          </ListItemPrefix>
-          Smart QR
-        </ListItem>
+        {user?.pivot?.package_id == 2 && (
+          <ListItem
+            className="text-white text-xl my-3 cursor-pointer"
+            onClick={() => {
+              localStorage.removeItem("lg");
+              navigate("/qr");
+              setRefresh((prev) => !prev);
+            }}
+          >
+            <ListItemPrefix>
+              <FaPlus className="h-5 w-5" />
+            </ListItemPrefix>
+            Smart QR
+          </ListItem>
+        )}
+
+        {user?.pivot?.package_id == 3 && (
+          <ListItem
+            className="text-white text-xl my-3 cursor-pointer"
+            onClick={() => {
+              localStorage.removeItem("lg");
+              navigate("/qr");
+              setRefresh((prev) => !prev);
+            }}
+          >
+            <ListItemPrefix>
+              <FaPlus className="h-5 w-5" />
+            </ListItemPrefix>
+            All in one QR
+          </ListItem>
+        )}
+
+        {(!user || user?.pivot?.package_id == 1) && (
+          <>
+            <ListItem
+              className="text-white text-xl my-3 cursor-pointer"
+              onClick={() => {
+                localStorage.setItem("lg", "b2");
+                navigate("/qr");
+                setRefresh((prev) => !prev);
+              }}
+            >
+              <ListItemPrefix>
+                <FaPlus className="h-5 w-5" />
+              </ListItemPrefix>
+              Smart QR
+            </ListItem>
+            <ListItem
+              className="text-white text-xl my-3 cursor-pointer"
+              onClick={() => {
+                localStorage.setItem("lg", "c3");
+                navigate("/qr");
+                setRefresh((prev) => !prev);
+              }}
+            >
+              <ListItemPrefix>
+                <FaPlus className="h-5 w-5" />
+              </ListItemPrefix>
+              All in one QR
+            </ListItem>
+          </>
+        )}
 
         <ListItem
           className="text-white text-xl my-3 cursor-pointer"

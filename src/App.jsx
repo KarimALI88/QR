@@ -6,6 +6,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { AppContext } from "./context/AppContext";
+import SuperAdmin from "./pages/SuperAdmin";
+
 
 function App() {
   const [ip, setIp] = useState('');
@@ -86,6 +88,7 @@ function App() {
       <Routes>
         <Route path="/*" element={<UserLayout valid={valid} country={country} user={user} refresh={refresh} setRefresh={setRefresh}/>} />
         <Route path="/admin/*" element={<AdminLayout setRefresh={setRefresh} user={user}/>} />
+        <Route path="/superadmin/*" element={<SuperAdmin/>} />
       </Routes>
     </>
   );

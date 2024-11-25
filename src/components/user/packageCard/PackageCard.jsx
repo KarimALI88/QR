@@ -115,8 +115,9 @@ const PackageCard = ({
           ))}
         </ul>
       </div>
+
       <div className="bg-gray-100 px-6 py-4">
-        {!user?.pivot?.package_id ? (
+        {(!user?.pivot?.package_id || user?.pivot?.package_id == 1) && (
           <Link
             to={packageZero ? "/generate-qr" : "qr"}
             onClick={() => {
@@ -129,14 +130,33 @@ const PackageCard = ({
           >
             View
           </Link>
-        ) : (
-          <Link
-            to={"/admin/my-qrs"}
-            className="w-full min-w-[90%] mx-auto block text-center bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded"
-          >
-            View
-          </Link>
         )}
+
+        {user?.pivot?.package_id == 2 &&
+          (() => {
+            localStorage.setItem("lg", "b2");
+            return (
+              <Link
+                to={packageZero ? "/generate-qr" : "qr"}
+                className="w-full min-w-[90%] mx-auto block text-center bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded"
+              >
+                View
+              </Link>
+            );
+          })()}
+
+        {user?.pivot?.package_id == 3 &&
+          (() => {
+            localStorage.setItem("lg", "c3");
+            return (
+              <Link
+                to={packageZero ? "/generate-qr" : "qr"}
+                className="w-full min-w-[90%] mx-auto block text-center bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded"
+              >
+                View
+              </Link>
+            );
+          })()}
       </div>
     </div>
   );

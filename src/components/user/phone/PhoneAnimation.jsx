@@ -7,7 +7,8 @@ import {
   FaWhatsappSquare,
   FaLinkedin,
   FaSnapchatSquare,
-  FaTiktok
+  FaTiktok,
+  FaGlobe 
 } from "react-icons/fa";
 import { Collapse, Button, Card } from "@material-tailwind/react";
 import { FaLocationDot } from "react-icons/fa6";
@@ -40,7 +41,8 @@ const PhoneAnimation = ({
   other,
   pdfName,
   otherLinkName,
-  tiktok
+  tiktok,
+  portfolio
 }) => {
   return (
     <div className="flex justify-center rounded-3xl items-center h-fit mx-auto max-w-[100%] md:fixed md:right-16 md:top-28">
@@ -158,6 +160,7 @@ const PhoneAnimation = ({
             {youtube && <FaYoutube size={40} style={{ color }} />}
             {snapchat && <FaSnapchatSquare size={40} style={{ color }} />}
             {twitter && <RiTwitterXFill size={40} style={{ color }} />}
+            {portfolio && <FaGlobe  size={40} style={{ color }} />}
             {other && (
               <div className="flex flex-col gap-1">
                 <FaLink size={40} style={{ color }} />

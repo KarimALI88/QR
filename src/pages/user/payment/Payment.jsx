@@ -41,6 +41,13 @@ const Payment = ({ user, setRefresh }) => {
     getPackages();
   }, []);
   
+  useEffect(() => {
+    const lg = localStorage.getItem("lg")
+    lg == "a1" && handleChangeSelect("1")
+    lg == "b2" && handleChangeSelect("2")
+    lg == "c3" && handleChangeSelect("3")
+  }, [])
+  
 
   const onSuccess = () => {
     console.log("pay success");

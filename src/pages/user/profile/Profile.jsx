@@ -16,8 +16,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { RiTwitterXFill } from "react-icons/ri";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const currentYear = new Date().getFullYear();
 
@@ -277,6 +277,19 @@ const Profile = () => {
                   <FaSnapchatSquare size={60} className="" />
                 </a>
               )}
+
+              {profileData?.links?.find((link) => link.type === "portfolio") && (
+                <a
+                  href={
+                    profileData.links.find((link) => link.type === "portfolio")
+                      .url
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaGlobe size={60} className="" />
+                </a>
+              )}
             </div>
 
             {profileData?.phones && (
@@ -297,7 +310,10 @@ const Profile = () => {
               </div>
             )}
 
-            <div className="flex flex-wrap justify-center items-start" data-aos="fade-up">
+            <div
+              className="flex flex-wrap justify-center items-start"
+              data-aos="fade-up"
+            >
               {profileData?.pdfs &&
                 profileData?.pdfs.map((pdf, index) => (
                   <div

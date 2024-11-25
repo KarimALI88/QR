@@ -12,7 +12,8 @@ import {
   FaLinkedin,
   FaLaptopCode,
   FaPlus,
-  FaTiktok
+  FaTiktok,
+  FaGlobe
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { Spinner } from "@material-tailwind/react";
@@ -677,6 +678,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
               pdfName={pdfName}
               otherLinkName={otherLinkName}
               tiktok={tiktokLink}
+              portfolio={portfolioLink}
             />
           </div>
           {/* ======================================== */}
@@ -1040,7 +1042,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                   }
                 />
 
-                <FaLaptopCode
+                <FaGlobe
                   size={40}
                   className={`cursor-pointer ${
                     activeInputs.portfolio
