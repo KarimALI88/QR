@@ -6,14 +6,16 @@ import { toast } from "react-toastify";
 
 const RenewPackage = ({ user }) => {
   const { token } = useContext(AppContext);
-  const [check, setCheck] = useState(false)
-  const [loading, setLoading] = useState(false)
-  console.log("user", user);
+  const [check, setCheck] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [period, setPeriod] = useState("");
+
+  // console.log("user", user);
 
   const onSuccess = () => {
     console.log("pay success");
     check && renewDurationApi();
-    !check && renewQRLimitsApi()
+    !check && renewQRLimitsApi();
     navigate("/admin/renew");
   };
 
@@ -61,7 +63,7 @@ const RenewPackage = ({ user }) => {
         method: "post",
         url: `${import.meta.env.VITE_API_LINK}/Upgrade-QR-Duration`,
         data: {
-          duration: "year",
+          duration: period === "annually" ? "year" : "month",
         },
         headers: {
           "Content-Type": "application/json",
@@ -85,7 +87,15 @@ const RenewPackage = ({ user }) => {
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-        payGeidea(user?.price_EGP);
+        // payGeidea(user?.price_EGP);
+        user?.pivot?.package_id == 3 &&
+          period === "annually" &&
+          payGeidea(user?.price_EGP);
+        user?.pivot?.package_id == 2 &&
+          period === "annually" &&
+          payGeidea(user?.price_EGP);
+        user?.pivot?.package_id == 3 && period === "monthly" && payGeidea(150);
+        user?.pivot?.package_id == 2 && period === "monthly" && payGeidea(99);
       } else if (result.isDenied) {
         Swal.fire("Changes are not saved", "", "info");
       }
@@ -101,7 +111,7 @@ const RenewPackage = ({ user }) => {
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-        setCheck(false)
+        setCheck(false);
         payGeidea(3000);
       } else if (result.isDenied) {
         Swal.fire("Changes are not saved", "", "info");
@@ -132,27 +142,36 @@ const RenewPackage = ({ user }) => {
 
   const checkSubscribtion = async () => {
     try {
-        const response = await axios({
-            method: "get",
-            url: `${import.meta.env.VITE_API_LINK}/check-subscription-status`,
-            headers: {
-                "Content-Type":"application/json",
-                Authorization: `Bearer ${token}`
-            }
-        })
-        console.log("response of check", response)
-        // response.data.message === 200 && !check && renewQrLimits()
-        response.data.message  && check && renewDuration()
+      const response = await axios({
+        method: "get",
+        url: `${import.meta.env.VITE_API_LINK}/check-subscription-status`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("response of check", response);
+      // response.data.message === 200 && !check && renewQrLimits()
+      response.data.message && check && renewDuration();
     } catch (error) {
-        console.error("error in check subscribtion", error)
-        toast.error(error.response.data.message)
+      console.error("error in check subscribtion", error);
+      toast.error(error.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    if (check && period) {
+      checkSubscribtion(check, period);
+    }
+  }, [check, period]);
+
+  const getBalance = async () => {
+    try {
+      
+    } catch (error) {
+      console.error("error in get balance ")
     }
   }
-
-
-//   useEffect(() => {
-//     token && checkSubscribtion()
-//   }, [token])
 
   return (
     <div>
@@ -160,20 +179,32 @@ const RenewPackage = ({ user }) => {
         <div>
           <button
             onClick={() => {
-                setCheck(true)
-                checkSubscribtion()
+              setCheck(true);
+              setPeriod("annually");
             }}
             className="bg-mainColor px-5 py-3 font-semibold text-white hover:bg-secondColor block my-10"
           >
-            Renew Duration by {`${user?.price_EGP}`} EGP
+            Renew Year by {`${user?.price_EGP}`} EGP
           </button>
         </div>
 
         <div>
           <button
             onClick={() => {
-                setCheck(false)
-                renewQrLimits()
+              setCheck(true);
+              setPeriod("monthly");
+            }}
+            className="bg-mainColor px-5 py-3 font-semibold text-white hover:bg-secondColor block my-10"
+          >
+            Renew Month by {user?.pivot?.package_id === 2 ? "99" : "150"} EGP
+          </button>
+        </div>
+
+        <div>
+          <button
+            onClick={() => {
+              setCheck(false);
+              renewQrLimits();
             }}
             className="bg-mainColor px-5 py-3 font-semibold text-white hover:bg-secondColor block my-10"
           >

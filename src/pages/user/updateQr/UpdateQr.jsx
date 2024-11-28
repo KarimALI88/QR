@@ -1,5 +1,6 @@
 import React, { useCallback, useState, useEffect, useContext } from "react";
 import MainNavbar from "../../../components/user/navbar/MainNavbar";
+import { useParams } from "react-router-dom";
 import { Input, Typography } from "@material-tailwind/react";
 import PhoneAnimation from "../../../components/user/phone/PhoneAnimation";
 import { useDropzone } from "react-dropzone";
@@ -29,9 +30,10 @@ import {
   MenuItem,
   Button,
 } from "@material-tailwind/react";
-import { IoCloseCircle } from "react-icons/io5";
+import axios from "axios";
 
-const PackageOneTwo = ({ user, refresh, valid }) => {
+const UpdateQr = ({ valid, user, refresh }) => {
+  const { id } = useParams();
   const COUNTRIES = [
     "Egypt (+20)",
     "Saudi Arabia (+966)",
@@ -58,16 +60,16 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
   const [phone2, setPhone2] = useState("");
   const [activeInputs, setActiveInputs] = useState({
     facebook: true,
-    instgram: false,
-    linkedin: false,
-    youtube: false,
-    be: false,
-    whatsapp: false,
-    portfolio: false,
-    tiktok: false,
-    snapchat: false,
-    twitter: false,
-    other: false,
+    instgram: true,
+    linkedin: true,
+    youtube: true,
+    be: true,
+    whatsapp: true,
+    portfolio: true,
+    tiktok: true,
+    snapchat: true,
+    twitter: true,
+    other: true,
   });
   const { token, setPackageId } = useContext(AppContext);
   const [packageCheck, setPackageCheck] = useState("c3");
@@ -246,7 +248,6 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
     });
 
   // convert to web
-
   const convertToWebp = (file) => {
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -279,241 +280,42 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
     });
   };
 
-  const getQr = async () => {
-    setLoading(true);
-
+  const getProfile = async () => {
     try {
-      const validationErrors = [];
-      const newErrorIndicator = { ...errorIndicator };
+      const response = await axios({
+        method: "get",
+        url: `${import.meta.env.VITE_API_LINK}/profile/${id}`,
+      });
+      console.log("response of profile ", response);
+      if (response.data.cover) {
+        setColor(response.data.background_color);
+        setDescription(response.data.description);
+        setName(response.data.title);
+        response.data.phones[0] && setPhone1(response.data.phones[0]);
+        response.data.phones[1] && setPhone2(response.data.phones[1]);
+        response.data.font && setSelectedFont(response.data.font);
 
-      // Basic required fields validation
-      if (
-        !name ||
-        !description ||
-        !coverImageFile ||
-        !logoImageFile ||
-        !phone1
-      ) {
-        validationErrors.push(
-          "Please fill in all required fields: Name, Description, Cover Image, Logo Image, and Phone 1."
+        const behanceLink = response.data.links.find(
+          (link) => link.type === "behance"
         );
-
-        // Update error indicators for missing fields
-        newErrorIndicator.nameIndicator = !name;
-        newErrorIndicator.descriptionIndicator = !description;
-        newErrorIndicator.phone1Indicator = !phone1;
-      }
-
-      // Validate phone numbers (only digits allowed)
-      const phoneRegex = /^\d+$/;
-      if (!phoneRegex.test(phone1) || (phone2 && !phoneRegex.test(phone2))) {
-        validationErrors.push("Phone numbers must contain only digits.");
-
-        // Update error indicators for invalid phone numbers
-        newErrorIndicator.phone1Indicator = !phoneRegex.test(phone1);
-        newErrorIndicator.phone2Indicator = phone2 && !phoneRegex.test(phone2);
-      } else {
-        // Reset phone error indicators if valid
-        newErrorIndicator.phone1Indicator = false;
-        newErrorIndicator.phone2Indicator = false;
-      }
-
-      // Validate PDF files (limit size and count)
-      const maxPdfSize = 5 * 1024 * 1024; // 5 MB
-      const pdfFiles = [pdfFile, menuImageFile].filter(Boolean);
-      if (pdfFiles.length > 5) {
-        validationErrors.push("You can upload a maximum of 5 PDF files.");
-      }
-
-      for (const file of pdfFiles) {
-        if (file.size > maxPdfSize) {
-          validationErrors.push("PDF file size should not exceed 5 MB.");
-        }
-      }
-
-      // Validate MP3 file duration (max 1 minute)
-      if (mp3File) {
-        const audio = new Audio(URL.createObjectURL(mp3File));
-        const isMp3Valid = await new Promise((resolve) => {
-          audio.onloadedmetadata = () => {
-            resolve(audio.duration <= 60);
-          };
-        });
-        if (!isMp3Valid) {
-          validationErrors.push(
-            "MP3 file duration should not exceed 1 minute."
-          );
-        }
-      }
-
-      // Validate social links
-      const urlRegex = /^(https?:\/\/)(www\.)?[\w-]+(\.[\w-]+)+/;
-      const linkValidations = [
-        {
-          url: facebookLink,
-          base: "https://www.facebook.com",
-          indicator: "facebookIndicator",
-        },
-        {
-          url: instgramLink,
-          base: "https://www.instagram.com",
-          indicator: "instgramIndicator",
-        },
-        {
-          url: youtubeLink,
-          base: "https://www.youtube.com",
-          indicator: "youtubeIndicator",
-        },
-        {
-          url: beLink,
-          base: "https://www.behance.net",
-          indicator: "behanceIndicator",
-        },
-        { url: otherLink, base: "https://www.", indicator: "otherIndicator" },
-        {
-          url: portfolioLink,
-          base: "https://www.",
-          indicator: "portfolioIndicator",
-        },
-        {
-          url: whatsappLink && `https://wa.me/${CODES[country]}${whatsappLink}`,
-          base: "https://wa.me",
-          indicator: "whatsappIndicator",
-        },
-        {
-          url: linkedinLink,
-          base: "https://www.linkedin.com",
-          indicator: "linkedinIndicator",
-        },
-        {
-          url: snapchatLink,
-          base: "https://www.snapchat.com",
-          indicator: "snapchatIndicator",
-        },
-        {
-          url: twitterLink,
-          base: "https://www.x.com",
-          indicator: "twitterIndicator",
-        },
-        {
-          url: tiktokLink,
-          base: "https://www.tiktok.com",
-          indicator: "tiktokIndicator",
-        },
-      ];
-
-      for (const { url, base, indicator } of linkValidations) {
-        if (url && (!urlRegex.test(url) || (base && !url.startsWith(base)))) {
-          validationErrors.push(
-            `Invalid URL: Please ensure the link starts with ${base}`
-          );
-          newErrorIndicator[indicator] = true;
-        } else {
-          newErrorIndicator[indicator] = false;
-        }
-      }
-
-      // Update error indicators state
-      setErrorIndicator(newErrorIndicator);
-
-      // If there are validation errors, show them and return early
-      if (validationErrors.length > 0) {
-        alert(validationErrors.join("\n"));
-        setLoading(false);
-        return;
-      }
-
-      // Proceed with request if all validations pass
-      const formData = new FormData();
-
-      // Append files
-      coverImageFile && formData.append("cover", coverImageFile);
-      logoImageFile && formData.append("logo", logoImageFile);
-      mp3File && formData.append("mp3[]", mp3File);
-      pdfFile && formData.append("pdfs[]", pdfFile);
-      pdfName && formData.append("type[]", pdfName);
-      menuImageFile && formData.append("pdfs[]", menuImageFile);
-      menuImageFile && formData.append("type[]", "menu");
-
-      // Append basic information
-      formData.append("title", name);
-      formData.append("description", description);
-      formData.append("color", color);
-      formData.append("font", selectedFont);
-      formData.append("package_id", user.pivot.package_id);
-
-      // Append phone numbers
-      formData.append("phones[]", phone1);
-      phone2 && formData.append("phones[]", phone2);
-
-      // Append social links
-      const links = [
-        { url: facebookLink, type: "facebook" },
-        { url: instgramLink, type: "instgram" },
-        { url: youtubeLink, type: "youtube" },
-        { url: beLink, type: "behance" },
-        { url: otherLink, type: `other${otherLinkName}` },
-        { url: portfolioLink, type: "portfolio" },
-        {
-          url: `https://wa.me/${CODES[country]}${whatsappLink}`,
-          type: "whatsapp",
-        },
-        { url: linkedinLink, type: "linkedin" },
-        { url: snapchatLink, type: "snapchat" },
-        { url: twitterLink, type: "twitter" },
-        { url: tiktokLink, type: "tiktok" },
-      ];
-
-      links.forEach((link, index) => {
-        // Skip adding the WhatsApp link if `whatsappLink` is empty or not greater than 0
-        if (link.type === "whatsapp" && (!whatsappLink || whatsappLink <= 0)) {
-          return;
+        if (behanceLink) {
+          setActiveInputs((prevState) => ({
+            ...prevState,
+            behance: !prevState.be,
+          }));
+          setBeLink(behanceLink.url);
         }
 
-        // Check if the link URL is not empty before appending to `formData`
-        if (link.url && link.url.length > 0) {
-          formData.append(`links[${index}][url]`, link.url);
-          formData.append(`links[${index}][type]`, link.type);
-        }
-      });
-
-      // Append branch details
-      branches.forEach((branch, index) => {
-        if (branch.name && branch.name.trim().length > 0) {
-          formData.append(`branches[${index}][name]`, branch.name);
-          formData.append(
-            `branches[${index}][location]`,
-            branch.location || ""
-          );
-          formData.append(`branches[${index}][phones][0]`, branch.phones || "");
-        }
-      });
-
-      const response = await fetch(
-        `${import.meta.env.VITE_API_LINK}/qrcode/smart`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
-        }
-      );
-
-      const data = await response.json();
-      console.log("Response data:", data);
-
-      setOpenModal(true);
-      setImage(`https://backend.ofx-qrcode.com/storage/${data.qr_code}`);
-      setDownloadImage(data.qr_code.split("/")[1]);
-      setLoading(false);
-      // navigate("/admin/my-qrs")
-      return data;
+        
+      }
     } catch (error) {
-      console.error("Error during request:", error);
-      setLoading(false);
+      console.error("error in get profile ", error);
     }
   };
+
+  useEffect(() => {
+    getProfile();
+  }, []);
 
   return (
     <div>
@@ -550,6 +352,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                 portfolio={portfolioLink}
               />
             </div>
+
             {/* ======================================== */}
 
             <div className="flex-1 my-10 order-2 sm:order-1 ">
@@ -1438,7 +1241,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                   (user?.pivot?.package_id === 2 ||
                     user?.pivot?.package_id === 3) && (
                     <button
-                      onClick={getQr}
+                      //   onClick={getQr}
                       disabled={
                         !user ||
                         !user?.pivot?.package_id ||
@@ -1474,17 +1277,9 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
               <Dialog
                 open={openModal}
                 handler={handleOpen}
-                className="px-10 pb-10 pt-5 text-center relative"
+                className="p-10 text-center"
               >
-                <div className="float-right absolute top-2 right-4 cursor-pointer">
-                  <IoCloseCircle
-                    size={30}
-                    onClick={() => navigate("/admin/my-qrs")}
-                  />
-                </div>
-                <div>
-                  <img src={image} alt="qr" className="block mx-auto my-10" />
-                </div>
+                <img src={image} alt="qr" className="block mx-auto my-10" />
                 <a
                   // onClick={() => downloadImageAsPDF(image)}
                   href={`https://backend.ofx-qrcode.com/download-qrcode/${downloadImage}`}
@@ -1506,4 +1301,4 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
   );
 };
 
-export default PackageOneTwo;
+export default UpdateQr;

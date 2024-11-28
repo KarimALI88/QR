@@ -6,14 +6,10 @@ const Table = () => {
 
   const getData = async () => {
     try {
-      const response = await axios({
-        method: "get",
-        url: `${import.meta.env.VITE_API_LINK}/admin/users-with-packages`,
-      });
-      console.log("response of admin ", response);
+      const response = await axios.get(`${import.meta.env.VITE_API_LINK}/admin/users-with-packages`);
       setData(response.data.data);
     } catch (error) {
-      console.error("error in admin data", error);
+      console.error("Error fetching admin data", error);
     }
   };
 
@@ -22,85 +18,64 @@ const Table = () => {
   }, []);
 
   return (
-    <div className="relative flex flex-col min-w-[50%] w-fit h-full overflow-auto mx-auto text-white bg-mainColor shadow-md rounded-lg bg-clip-border">
-      
-      <table className="w-full text-left table-auto min-w-max">
-        <thead>
-          <tr>
-            <th className="p-4 border-b border-slate-300 bg-slate-50 ">
-              <p className="block text-lg font-semibold leading-none text-slate-500">
-                Name
-              </p>
-            </th>
-            <th className="p-4 border-b border-slate-300 bg-slate-50">
-              <p className="block text-lg font-semibold leading-none text-slate-500">
-                Email
-              </p>
-            </th>
-            <th className="p-4 border-b border-slate-300 bg-slate-50">
-              <p className="block text-lg font-semibold leading-none text-slate-500">
-                Package Name
-              </p>
-            </th>
-            <th className="p-4 border-b border-slate-300 bg-slate-50">
-              <p className="block text-lg font-semibold leading-none text-slate-500">
-                Start Date
-              </p>
-            </th>
-            <th className="p-4 border-b border-slate-300 bg-slate-50">
-              <p className="block text-lg font-semibold leading-none text-slate-500">
-                End Date
-              </p>
-            </th>
-            <th className="p-4 border-b border-slate-300 bg-slate-50">
-              <p className="block text-lg font-semibold leading-none text-slate-500">
-                Active
-              </p>
-            </th>
-            <th className="p-4 border-b border-slate-300 bg-slate-50">
-              <p className="block text-lg font-semibold leading-none text-slate-500">
-                QR Numbers
-              </p>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {data?.map((row, index) => (
-            <tr className="hover:bg-slate-50" key={index}>
-              <td className="p-6 border-b border-slate-200">
-                <p className="block text-medium text-slate-800">{row?.user?.name}</p>
-              </td>
-              <td className="p-4 border-b border-slate-200">
-                <p className="block text-medium text-slate-800">{row?.user?.email}</p>
-              </td>
-              <td className="p-4 border-b border-slate-200">
-                {row?.packages && <p className="block text-medium text-slate-800">{row?.packages?.map((pack,index) => (
-                    <p key={index}>{pack?.name}</p>
-                ))}</p>}
-                {row?.message && <p className="text-red-600 text-lg font-bold">Un Subscribe</p>}
-              </td>
-              <td className="p-4 border-b border-slate-200">
-                <p className="block text-medium text-slate-800">{row?.packages?.map((pack,index) => (
-                    <p key={index}>{pack?.start_date}</p> || "NULL"
-                ))}</p>
-              </td>
-              <td className="p-4 border-b border-slate-200">
-                <p className="block text-medium text-slate-800">{row?.packages?.map((pack,index) => (
-                    <p key={index}>{pack?.end_date}</p> || "NULL"
-                ))}</p>
-              </td>
-              <td className="p-4 border-b border-slate-200">
-                <p className="block text-medium text-slate-800">{row?.packages?.map((pack,index) => (
-                    <p key={index}>{pack?.is_enable === 1 ? "Active" : "Disabled"}</p> || "NULL"
-                ))}</p>
-              </td>
-              <td className="p-4 border-b border-slate-200">
-                <p className="block text-medium text-slate-800">{row?.qrcode_count}</p>
-              </td>
+    <div className="relative flex flex-col w-full max-w-7xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+      <div className="p-4 bg-gray-100 border-b">
+        <h2 className="text-xl font-bold text-gray-800">Users with Packages</h2>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="min-w-full table-auto border-collapse">
+          <thead className="bg-gray-50">
+            <tr>
+              {["Name", "Email", "Package Name", "Start Date", "End Date", "Active", "QR Numbers"].map((heading) => (
+                <th key={heading} className="p-4 text-left font-semibold text-gray-600 border-b">
+                  {heading}
+                </th>
+              ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {data?.map((row, index) => (
+              <tr key={index} className="hover:bg-gray-50">
+                <td className="p-4 text-gray-800">{row?.user?.name || "N/A"}</td>
+                <td className="p-4 text-gray-800">{row?.user?.email || "N/A"}</td>
+                <td className="p-4 text-gray-800">
+                  {row?.packages?.map((pack, idx) => (
+                    <span key={idx} className="block">
+                      {pack?.name || "N/A"}
+                    </span>
+                  ))}
+                  {row?.message && <span className="text-red-600 font-bold">Unsubscribe</span>}
+                </td>
+                <td className="p-4 text-gray-800">
+                  {row?.packages?.map((pack, idx) => (
+                    <span key={idx} className="block">
+                      {pack?.start_date || "N/A"}
+                    </span>
+                  ))}
+                </td>
+                <td className="p-4 text-gray-800">
+                  {row?.packages?.map((pack, idx) => (
+                    <span key={idx} className="block">
+                      {pack?.end_date || "N/A"}
+                    </span>
+                  ))}
+                </td>
+                <td className="p-4 text-gray-800">
+                  {row?.packages?.map((pack, idx) => (
+                    <span key={idx} className={`block ${pack?.is_enable === 1 ? "text-green-600" : "text-red-600"}`}>
+                      {pack?.is_enable === 1 ? "Active" : "Disabled"}
+                    </span>
+                  ))}
+                </td>
+                <td className="p-4 text-gray-800">{row?.qrcode_count || 0}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="p-4 bg-gray-100 border-t">
+        <p className="text-gray-600">Showing {data.length} entries</p>
+      </div>
     </div>
   );
 };

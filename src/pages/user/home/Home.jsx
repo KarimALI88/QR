@@ -79,7 +79,7 @@ const Home = ({ country, user }) => {
                 index={index}
                 title={pack?.name}
                 description={pack?.description}
-                price={pack?.price_EGP + "EGP"}
+                price={pack?.price_EGP + " EGP"}
                 savings="SAVE 28%"
                 features={pack?.features}
                 packageZero={index === 0 ? true : false}

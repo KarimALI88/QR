@@ -13,6 +13,7 @@ import Policies from "./user/policies/Policies";
 import ForgetPassword from "./user/forgetPassword/ForgetPassword";
 import ResetPassword from "./user/resetpassword/ResetPassword";
 import VerificationPage from "./user/verificationPage/VerificationPage";
+import UpdateQr from "./user/updateQr/UpdateQr";
 
 const UserLayout = ({ country, user, refresh, setRefresh, valid }) => {
   const { token } = useContext(AppContext);
@@ -30,6 +31,7 @@ const UserLayout = ({ country, user, refresh, setRefresh, valid }) => {
       <Route path="/qr/:id" element={<Profile />} />
       <Route path="/generate-qr" element={<QrForm user={user} refresh={refresh} setRefresh={setRefresh} />} />
       <Route path="/qr" element={<PackageOneTwo valid={valid} user={user} />} />
+      <Route path="/update-qr/:id" element={<UpdateQr valid={valid} user={user} />} />
       {/* Protected Routes */}
       {token ? (
         <>

@@ -11,6 +11,7 @@ const Renew = ({ user }) => {
   const [packages, setPackages] = useState([]);
   const [amount, setAmount] = useState("");
   const [pendingAlertCheck, setPendingAlertCheck] = useState(false);
+  const [period, setPeriod] = useState("monthly");
 
   const getPackages = async () => {
     try {
@@ -124,7 +125,9 @@ const Renew = ({ user }) => {
           {packages.map((pack, index) => (
             <div key={index}>
               <div
-                className={`bg-white shadow-sm rounded-lg my-14 overflow-hidden h-fit w-[250px] mx-auto border-mainColor border-solid border-2 flex flex-col ${
+                className={`bg-white shadow-sm rounded-lg my-14 overflow-hidden ${
+                  index === 0 && "hidden"
+                } h-fit w-[250px] mx-auto border-mainColor border-solid border-2 flex flex-col ${
                   index === 2 ? "scale-110 border-secondColor border-4" : ""
                 } ${index === 1 ? "scale-105" : ""}`}
               >
@@ -136,9 +139,74 @@ const Renew = ({ user }) => {
                     <p className="text-xl font-semibold text-gray-400">
                       {pack?.description}
                     </p>
-                    <p className="text-3xl font-bold text-gray-500">
-                      {pack?.price_EGP}
-                    </p>
+
+                    <div>
+                      {!(pack?.id === 1) && (
+                        <div className="flex gap-3 items-center justify-center">
+                          <button
+                            onClick={() => setPeriod("annually")}
+                            className={`${
+                              period === "annually"
+                                ? "bg-mainColor text-white"
+                                : "bg-gray-400"
+                            } text-black px-3 py-2 font-semibold mb-5`}
+                          >
+                            Annualy
+                          </button>
+                          <button
+                            onClick={() => setPeriod("monthly")}
+                            className={`${
+                              period === "monthly"
+                                ? "bg-mainColor text-white"
+                                : "bg-gray-400"
+                            } text-black px-3 py-2 font-semibold mb-5`}
+                          >
+                            Monthly
+                          </button>
+                        </div>
+                      )}
+                      {/* price based on annually or monthly */}
+                      {period === "annually" && (
+                        <p className="text-3xl font-bold text-gray-500">
+                          {pack?.price_EGP}
+                          {pack?.id === 2 && (
+                            <div>
+                              <h4 className="text-mainColor text-lg">
+                                <del>2400.00 EGP</del>
+                              </h4>
+                            </div>
+                          )}
+                          {pack?.id === 3 && (
+                            <div>
+                              <h4 className="text-mainColor text-lg">
+                                <del>6000.00 EGP</del>
+                              </h4>
+                            </div>
+                          )}
+                        </p>
+                      )}
+                      {period === "monthly" && (
+                        <p className="text-3xl font-bold text-gray-500">
+                          {pack?.id == 2 && (
+                            <div>
+                              <h2>99.00 EGP</h2>
+                              <h4 className="text-mainColor text-lg">
+                                <del>200.00 EGP</del>
+                              </h4>
+                            </div>
+                          )}
+                          {pack?.id == 3 && (
+                            <div>
+                              <h2>150.00 EGP</h2>
+                              <h4 className="text-mainColor text-lg">
+                                <del>300.00 EGP</del>
+                              </h4>
+                            </div>
+                          )}
+                          {pack?.id == 1 && "0.00" + " EGP"}
+                        </p>
+                      )}
+                    </div>
                   </div>
                   <ul className="mt-8 space-y-4 capitalize">
                     {pack?.features?.map((feature, index) => (
@@ -166,12 +234,24 @@ const Renew = ({ user }) => {
                   <button
                     onClick={() => {
                       setPackageNumber(pack?.id);
-                      setAmount(pack?.price_EGP);
+                      setAmount(
+                        period === "annually"
+                          ? pack?.price_EGP
+                          : period === "monthly" && pack?.id === 2
+                          ? 99
+                          : 150
+                      );
                       setPendingAlertCheck(true);
                     }}
                     className="w-full min-w-[90%] mx-auto block text-center bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded"
                   >
-                    Pay {pack?.price_EGP}
+                    {period === "annually"
+                      ? `Pay ${pack?.price_EGP}`
+                      : pack?.id === 2
+                      ? `Pay 99.00`
+                      : pack?.id === 3
+                      ? "Pay 150.00"
+                      : "Pay 0.00"}
                   </button>
                 </div>
               </div>

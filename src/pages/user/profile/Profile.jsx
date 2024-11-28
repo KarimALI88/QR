@@ -278,7 +278,9 @@ const Profile = () => {
                 </a>
               )}
 
-              {profileData?.links?.find((link) => link.type === "portfolio") && (
+              {profileData?.links?.find(
+                (link) => link.type === "portfolio"
+              ) && (
                 <a
                   href={
                     profileData.links.find((link) => link.type === "portfolio")
@@ -360,27 +362,34 @@ const Profile = () => {
                           {branch?.name}
                         </Button>
                         <Collapse open={openBranches[index]}>
-                          <Card className="my-4 mx-auto w-8/12 p-4">
-                            <div className="flex flex-wrap gap-5">
-                              <div className="flex gap-2 items-center cursor-pointer">
-                                <FaLocationDot size={30} color="#053B5C" />
-                                <a
-                                  href={branch?.location}
-                                  className="text-[#053B5C] text-lg font-semibold"
-                                >
-                                  Location
-                                </a>
+                          {(branch.phones || branch.location) && (
+                            <Card className="my-4 mx-auto w-8/12 p-4">
+                              <div className="flex flex-wrap gap-5">
+                                {branch.location && (
+                                  <div className="flex gap-2 items-center cursor-pointer">
+                                    <FaLocationDot size={30} color="#053B5C" />
+                                    <a
+                                      href={branch?.location}
+                                      className="text-[#053B5C] text-lg font-semibold"
+                                    >
+                                      Location
+                                    </a>
+                                  </div>
+                                )}
+
+                                {branch.phones > 0 && (
+                                  <div className="flex gap-2 items-center cursor-pointer">
+                                    <FaPhoneAlt size={30} color="#053B5C" />
+                                    <a href={`tel:${branch?.phones[0]}`}>
+                                      <button className="text-[#053B5C] text-lg font-semibold">
+                                        {branch?.phones[0]}
+                                      </button>
+                                    </a>
+                                  </div>
+                                )}
                               </div>
-                              <div className="flex gap-2 items-center cursor-pointer">
-                                <FaPhoneAlt size={30} color="#053B5C" />
-                                <a href={`tel:${branch?.phones[0]}`}>
-                                  <button className="text-[#053B5C] text-lg font-semibold">
-                                    {branch?.phones[0]}
-                                  </button>
-                                </a>
-                              </div>
-                            </div>
-                          </Card>
+                            </Card>
+                          )}
                         </Collapse>
                       </div>
                     ))}

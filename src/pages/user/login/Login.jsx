@@ -41,13 +41,14 @@ const Login = ({ setRefresh }) => {
       }
 
       const data = await response.json();
-      // console.log("logged in", data);
+      console.log("logged in", data);
+      data.user.role==="admin" ? navigate("/superadmin/analysis") : navigate("/admin/profile");
       setLoading(false);
       localStorage.setItem("tn", data.token);
       setToken(data.token);
       toast.success("Logged in successfully");
       setRefresh((prevState) => !prevState);
-      navigate("/admin/profile");
+      
     } catch (error) {
       console.error("error", error);
       toast.error("wrong answers");
@@ -81,7 +82,7 @@ const Login = ({ setRefresh }) => {
             className="cursor-pointer"
             size={35}
             color="black"
-            onClick={() => navigate("/admin/profile")}
+            onClick={() => navigate("/")}
           />
         </div>
         <div className="text-center my-20 mx-auto">

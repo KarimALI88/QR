@@ -72,7 +72,7 @@ const MyQrs = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("response", response);
+      console.log("response of qrs", response);
       setLoading(false);
       setTableRows(response.data.qr_codes);
     } catch (error) {
@@ -143,9 +143,6 @@ const MyQrs = () => {
                     icon={<FaSearch className="h-5 w-5" />}
                   />
                 </div>
-                {/* <Button className="flex items-center gap-3" size="sm">
-                  <FaDownload className="h-4 w-4" /> Download
-                </Button> */}
               </div>
             </div>
           </CardHeader>
@@ -281,21 +278,26 @@ const MyQrs = () => {
                         </td>
 
                         <td className={classes}>
-                          <div className="w-max flex gap-3">
+                          <div className="w-max flex flex-col gap-2">
                             <a
-                              className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-5 hover:bg-secondColor"
+                              className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-2 hover:bg-secondColor"
                               href={`https://backend.ofx-qrcode.com/download-qrcode/${
                                 row?.qr_code?.qrcode?.split("/")[1]
                               }`}
                             >
                               download
                             </a>
-                            {/* <button className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-5 hover:bg-secondColor">
-                              Update
-                            </button> */}
+
+                            {/* {row?.qr_code?.profile?.title && (
+                              <Link
+                                to={`/update-qr/${row?.qr_code?.profile_id}`}
+                                className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-2 hover:bg-secondColor"
+                              >
+                                Update
+                              </Link>
+                            )} */}
                           </div>
                         </td>
-                        
                       </tr>
                     );
                   })}

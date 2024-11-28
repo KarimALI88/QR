@@ -16,29 +16,30 @@ import {
   Card,
 } from "@material-tailwind/react";
 import {
-  MdOutlineDashboard,
-  MdOutlineShoppingBag,
   MdOutlinePerson,
   MdSettings,
   MdOutlineMailOutline,
   MdPowerSettingsNew,
   MdOutlineSearch,
-  MdOutlineMenu,
   MdOutlineClose,
 } from "react-icons/md";
-import { FiChevronRight, FiChevronDown, FiBox } from "react-icons/fi";
 import { IoMenu } from "react-icons/io5";
+import logo from '../../../assets/imgs/QR-LOGO2.png'
+import { useNavigate } from "react-router-dom";
+import { FaTable } from "react-icons/fa";
+import { SiGoogleanalytics } from "react-icons/si";
 
 function Sidebar() {
   const [open, setOpen] = React.useState(0);
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  const navigate = useNavigate()
   const openDrawer = () => setIsDrawerOpen(true);
   const closeDrawer = () => setIsDrawerOpen(false);
 
   
 
   return (
-    <div className="ml-24 my-10">
+    <div className="ml-24">
       <IconButton variant="text" size="lg" onClick={openDrawer}>
         {isDrawerOpen ? (
           <MdOutlineClose className="h-8 w-8 stroke-2" />
@@ -54,13 +55,12 @@ function Sidebar() {
         >
           <div className="mb-2 flex items-center gap-4 p-4">
             <img
-              src="https://docs.material-tailwind.com/img/logo-ct-dark.png"
+              src={logo}
               alt="brand"
-              className="h-8 w-8"
+              onClick={() => navigate("/")}
+              className="cursor-pointer"
             />
-            <Typography variant="h5" color="blue-gray">
-              Sidebar
-            </Typography>
+            
           </div>
           <div className="p-2">
             <Input
@@ -69,26 +69,17 @@ function Sidebar() {
             />
           </div>
           <List>
-            <ListItem>
+            <ListItem onClick={() => navigate("/superadmin/dashboard")}>
               <ListItemPrefix>
-                <MdOutlineMailOutline className="h-5 w-5" />
+                <FaTable className="h-5 w-5" />
               </ListItemPrefix>
-              Users
-              <ListItemSuffix>
-                <Chip
-                  value="14"
-                  size="sm"
-                  variant="ghost"
-                  color="blue-gray"
-                  className="rounded-full"
-                />
-              </ListItemSuffix>
+              Tables
             </ListItem>
-            <ListItem>
+            <ListItem onClick={() => navigate("/superadmin/analysis")}>
               <ListItemPrefix>
-                <MdOutlinePerson className="h-5 w-5" />
+                <SiGoogleanalytics className="h-5 w-5" />
               </ListItemPrefix>
-              Profile
+              Analysis
             </ListItem>
             <ListItem>
               <ListItemPrefix>

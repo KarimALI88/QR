@@ -19,6 +19,7 @@ const Payment = ({ user, setRefresh }) => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
   const navigate = useNavigate();
   const { token } = useContext(AppContext);
+  const [period, setPeriod] = useState("monthly");
 
   const getPackages = async () => {
     try {
@@ -37,9 +38,9 @@ const Payment = ({ user, setRefresh }) => {
     getPackages();
   }, []);
 
-  const onSuccess = () => {
+  const onSuccess = (selectedPackageId) => {
     console.log("Payment success");
-    createSubscription();
+    createSubscription(selectedPackageId);
     setRefresh((prevState) => !prevState);
     navigate("/qr");
   };
@@ -54,8 +55,12 @@ const Payment = ({ user, setRefresh }) => {
 
   const payment = new GeideaCheckout(onSuccess, onError, onCancel);
 
-  const payHpp = (sessionId) => {
-    payment.startPayment(sessionId);
+  const payHpp = (sessionId, selectedPackageId) => {
+    payment.startPayment(sessionId, {
+      onSuccess: () => onSuccess(selectedPackageId),
+      onError,
+      onCancel,
+    });
   };
 
   const payGeidea = async (selectedAmount, selectedPackageId) => {
@@ -73,7 +78,7 @@ const Payment = ({ user, setRefresh }) => {
       });
       setLoading(false);
       if (response.data.sessionId) {
-        payHpp(response.data.sessionId);
+        payHpp(response.data.sessionId, selectedPackageId); // Pass package ID here
       }
     } catch (error) {
       console.error("error in payment", error);
@@ -81,14 +86,14 @@ const Payment = ({ user, setRefresh }) => {
     }
   };
 
-  const createSubscription = async () => {
+  const createSubscription = async (packageId) => {
     try {
       const response = await axios({
         method: "post",
         url: `${import.meta.env.VITE_API_LINK}/subscriptions`,
         data: {
-          package_id: activeSection,
-          duration: "year",
+          package_id: packageId,
+          duration: period === "annually" ? "year" : "month",
         },
         headers: {
           "Content-Type": "application/json",
@@ -138,11 +143,9 @@ const Payment = ({ user, setRefresh }) => {
                     {packages.map((pack, index) => (
                       <div key={index}>
                         <div
-                          ref={ref}
-                          data-aos="fade-up"
-                          className={`bg-white shadow-sm rounded-lg my-10 overflow-hidden h-fit w-[250px] mx-auto border-mainColor border-solid border-2 flex flex-col transition-opacity duration-700 ${
-                            inView ? "opacity-100" : "opacity-0"
-                          } ${
+                          className={`bg-white shadow-sm rounded-lg ${
+                            index === 0 && "hidden"
+                          } my-10 overflow-hidden h-fit w-[250px] mx-auto border-mainColor border-solid border-2 flex flex-col transition-opacity duration-700  ${
                             index === 2
                               ? "scale-110 border-secondColor border-4"
                               : ""
@@ -156,10 +159,75 @@ const Payment = ({ user, setRefresh }) => {
                               <p className="text-xl font-semibold text-gray-400">
                                 {pack?.description}
                               </p>
-                              <p className="text-3xl font-bold text-gray-500">
-                                {pack?.price_EGP}
-                              </p>
+                              <div>
+                                {!(pack?.id === 1) && (
+                                  <div className="flex gap-3 items-center justify-center">
+                                    <button
+                                      onClick={() => setPeriod("annually")}
+                                      className={`${
+                                        period === "annually"
+                                          ? "bg-mainColor text-white"
+                                          : "bg-gray-400"
+                                      } text-black px-3 py-2 font-semibold mb-5`}
+                                    >
+                                      Annualy
+                                    </button>
+                                    <button
+                                      onClick={() => setPeriod("monthly")}
+                                      className={`${
+                                        period === "monthly"
+                                          ? "bg-mainColor text-white"
+                                          : "bg-gray-400"
+                                      } text-black px-3 py-2 font-semibold mb-5`}
+                                    >
+                                      Monthly
+                                    </button>
+                                  </div>
+                                )}
+                                {/* price based on annually or monthly */}
+                                {period === "annually" && (
+                                  <p className="text-3xl font-bold text-gray-500">
+                                    {pack?.price_EGP}
+                                    {pack?.id === 2 && (
+                                      <div>
+                                        <h4 className="text-mainColor text-lg">
+                                          <del>2400.00 EGP</del>
+                                        </h4>
+                                      </div>
+                                    )}
+                                    {pack?.id === 3 && (
+                                      <div>
+                                        <h4 className="text-mainColor text-lg">
+                                          <del>6000.00 EGP</del>
+                                        </h4>
+                                      </div>
+                                    )}
+                                  </p>
+                                )}
+                                {period === "monthly" && (
+                                  <p className="text-3xl font-bold text-gray-500">
+                                    {pack?.id == 2 && (
+                                      <div>
+                                        <h2>99.00 EGP</h2>
+                                        <h4 className="text-mainColor text-lg">
+                                          <del>200.00 EGP</del>
+                                        </h4>
+                                      </div>
+                                    )}
+                                    {pack?.id == 3 && (
+                                      <div>
+                                        <h2>150.00 EGP</h2>
+                                        <h4 className="text-mainColor text-lg">
+                                          <del>300.00 EGP</del>
+                                        </h4>
+                                      </div>
+                                    )}
+                                    {pack?.id == 1 && "0.00" + " EGP"}
+                                  </p>
+                                )}
+                              </div>
                             </div>
+                            {/* feature */}
                             <ul className="mt-8 space-y-4 capitalize">
                               {pack?.features?.map((feature, idx) => (
                                 <li
@@ -184,12 +252,25 @@ const Payment = ({ user, setRefresh }) => {
                           </div>
                           <div className="bg-gray-100 px-6 py-4">
                             <button
-                              onClick={() =>
-                                payGeidea(pack?.price_EGP, pack?.id)
-                              }
+                              onClick={() => {
+                                period === "annually" &&
+                                  payGeidea(pack?.price_EGP, pack?.id);
+                                period === "monthly" &&
+                                  pack?.id == 2 &&
+                                  payGeidea(99, pack?.id);
+                                period === "monthly" &&
+                                  pack?.id == 3 &&
+                                  payGeidea(150, pack?.id);
+                              }}
                               className="w-full min-w-[90%] mx-auto block text-center bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded"
                             >
-                              Pay {pack?.price_EGP}
+                              {period === "annually"
+                                ? `Pay ${pack?.price_EGP}`
+                                : pack?.id === 2
+                                ? `Pay 99.00`
+                                : pack?.id === 3
+                                ? "Pay 150.00"
+                                : "Pay 0.00"}
                             </button>
                           </div>
                         </div>
