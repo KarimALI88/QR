@@ -30,6 +30,15 @@ module.exports = withMT({
       animation: {
         slideLeftRight: 'slideLeftRight 3s ease-in-out infinite',
       },
+      keyframes: {
+        updown: {
+          '0%, 100%': { transform: 'translateY(-0.25rem)' }, // Move up
+          '50%': { transform: 'translateY(0.25rem)' }        // Move down
+        },
+      },
+      animation: {
+        updown: 'updown 1s ease-in-out infinite',
+      },
     },
   },
   plugins: [],

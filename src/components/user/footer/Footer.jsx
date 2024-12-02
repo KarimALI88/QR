@@ -26,6 +26,10 @@ const Footer = () => {
                 Just let you client choose his preferred path toward you.
               </p>
             </div>
+            <div className="flex gap-4">
+              <Link to={"/contact"} className="text-white underline hover:text-black">Contact</Link>
+              <Link to={"/payment"} className="text-white underline hover:text-black">Payment</Link>
+            </div>
           </div>
         </div>
         <div className="mt-12 flex w-full flex-col items-center justify-center border-t border-blue-gray-50 py-4 md:flex-row md:justify-between">

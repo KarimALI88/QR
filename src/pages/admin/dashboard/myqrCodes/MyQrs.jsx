@@ -16,9 +16,9 @@ import { FaSearch, FaDownload } from "react-icons/fa";
 import axios from "axios";
 import { AppContext } from "./../../../../context/AppContext";
 import { Spinner } from "@material-tailwind/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const MyQrs = () => {
+const MyQrs = ({ user }) => {
   const TABLE_HEAD = [
     "QR",
     "Devices",
@@ -31,6 +31,7 @@ const MyQrs = () => {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const { token } = useContext(AppContext);
+  const navigate = useNavigate();
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -144,6 +145,104 @@ const MyQrs = () => {
                   />
                 </div>
               </div>
+            </div>
+            <div className="my-5 mx-3 flex gap-4 flex-wrap items-center">
+              {!user?.pivot?.package_id && (
+                <>
+                  <button
+                    onClick={() => {
+                      navigate("/generate-qr");
+                    }}
+                    className="bg-black px-5 py-3 font-semibold text-center text-white my-2 hover:bg-secondColor shadow-xl"
+                  >
+                    Free QR
+                  </button>
+                  <button
+                    onClick={() => {
+                      localStorage.setItem("lg", "b2");
+                      navigate("/qr");
+                    }}
+                    className="bg-black px-5 py-3 font-semibold text-center text-white my-2 hover:bg-secondColor shadow-xl"
+                  >
+                    Smart QR
+                  </button>
+                  <button
+                    onClick={() => {
+                      localStorage.setItem("lg", "c3");
+                      navigate("/qr");
+                    }}
+                    className="bg-black px-5 py-3 font-semibold text-center text-white my-2 hover:bg-secondColor shadow-xl"
+                  >
+                    All in one QR
+                  </button>
+                </>
+              )}
+
+              {user?.pivot?.package_id == 3 && (
+                <>
+                  <button
+                    onClick={() => {
+                      navigate("/generate-qr");
+                    }}
+                    className="bg-black px-5 py-3 font-semibold text-center text-white my-2 hover:bg-secondColor shadow-xl"
+                  >
+                    Free QR
+                  </button>
+                  <button
+                    onClick={() => {
+                      localStorage.setItem("lg", "c3");
+                      navigate("/qr");
+                    }}
+                    className="bg-black px-5 py-3 font-semibold text-center text-white my-2 hover:bg-secondColor shadow-xl"
+                  >
+                    ALL in one QR
+                  </button>
+                </>
+              )}
+
+              {user?.pivot?.package_id == 2 && (
+                <>
+                  <button
+                    onClick={() => {
+                      navigate("/generate-qr");
+                    }}
+                    className="bg-black px-5 py-3 font-semibold text-center text-white my-2 hover:bg-secondColor shadow-xl"
+                  >
+                    Free QR
+                  </button>
+                  <button
+                    onClick={() => {
+                      localStorage.setItem("lg", "b2");
+                      navigate("/qr");
+                    }}
+                    className="bg-black px-5 py-3 font-semibold text-center text-white my-2 hover:bg-secondColor shadow-xl"
+                  >
+                    Smart QR
+                  </button>
+                </>
+              )}
+
+              {user?.pivot?.package_id == 1 && (
+                <>
+                  <button
+                    onClick={() => {
+                      navigate("/generate-qr");
+                    }}
+                    className="bg-black px-5 py-3 font-semibold text-center text-white my-2 hover:bg-secondColor shadow-xl"
+                  >
+                    Free QR
+                  </button>
+                  <button
+                    onClick={() => {
+                      localStorage.setItem("lg", "c3");
+                      navigate("/qr");
+                    }}
+                    className="bg-black px-5 py-3 font-semibold text-center text-white my-2 hover:bg-secondColor shadow-xl"
+                  >
+                    Generate QR
+                  </button>
+                </>
+              )}
             </div>
           </CardHeader>
           <CardBody className="scroll-auto px-0">

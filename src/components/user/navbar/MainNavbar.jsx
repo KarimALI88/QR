@@ -95,25 +95,28 @@ const MainNavbar = () => {
       >
         Policies
       </Typography>
-      <Typography
-        as={Link}
-        to="/Contact"
-        variant="small"
-        color="blue-gray"
-        className="p-4 text-md text-gray-600 hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
-      >
-        Contact
-      </Typography>
+
       {token && (
-        <Typography
-          as={Link}
-          to="/admin/my-qrs"
-          variant="small"
-          color="blue-gray"
-          className="p-4 text-md text-gray-600 hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
-        >
-          Dashboard
-        </Typography>
+        <>
+          <Typography
+            as={Link}
+            to="/admin/my-qrs"
+            variant="small"
+            color="blue-gray"
+            className="p-4 text-md text-gray-600 hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
+          >
+            Dashboard
+          </Typography>
+          <Typography
+            as={Link}
+            to="/profile"
+            variant="small"
+            color="blue-gray"
+            className="p-4 text-md text-gray-600 hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
+          >
+            Profile
+          </Typography>
+        </>
       )}
     </ul>
   );
@@ -157,7 +160,7 @@ const MainNavbar = () => {
                 </Button>
               </MenuHandler>
               <MenuList className="p-1">
-                <MenuItem
+                {/* <MenuItem
                   onClick={closeMenu}
                   className="flex items-center gap-2 rounded"
                 >
@@ -167,16 +170,16 @@ const MainNavbar = () => {
                     variant="small"
                     className="font-normal flex items-center gap-2 text-lg"
                   >
-                    <CgProfile /> Profile 
+                    <CgProfile /> Profile
                   </Typography>
-                </MenuItem>
+                </MenuItem> */}
                 <MenuItem
                   onClick={logout}
                   className="flex items-center gap-2 rounded"
                 >
                   <Typography
-                    as={Link}
-                    to="/admin/my-qrs"
+                    // as={Link}
+                    // to="/admin/my-qrs"
                     variant="small"
                     className="font-normal flex items-center gap-2 text-lg"
                     color="red"

@@ -42,8 +42,8 @@ const AdminLayout = ({ setRefresh, user }) => {
 
         <Routes>
           <Route path="/statistics" element={<QrStatistics />} />
-          <Route path="/my-qrs" element={<MyQrs />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/my-qrs" element={<MyQrs user={user}/>} />
+          <Route path="/profile" element={<Profile user={user}/>} />
           <Route path="/upgrade" element={<Renew user={user} />} />
           <Route path="/renew" element={<RenewPackage user={user} />} />
         </Routes>

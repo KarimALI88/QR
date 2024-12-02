@@ -9,8 +9,25 @@ const RenewPackage = ({ user }) => {
   const [check, setCheck] = useState(false);
   const [loading, setLoading] = useState(false);
   const [period, setPeriod] = useState("");
-
+  const [packages, setPackages] = useState([])
   // console.log("user", user);
+
+  const getPackages = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_LINK}/packages`);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      const data = await response.json();
+      setPackages(data);
+    } catch (error) {
+      console.error("error", error);
+    }
+  };
+
+  useEffect(() => {
+    getPackages();
+  }, []);
 
   const onSuccess = () => {
     console.log("pay success");
@@ -176,6 +193,7 @@ const RenewPackage = ({ user }) => {
   return (
     <div>
       <div className="flex flex-wrap justify-start items-center gap-10">
+        {/* renew year */}
         <div>
           <button
             onClick={() => {
@@ -188,6 +206,7 @@ const RenewPackage = ({ user }) => {
           </button>
         </div>
 
+        {/* renew month */}
         <div>
           <button
             onClick={() => {
@@ -200,6 +219,7 @@ const RenewPackage = ({ user }) => {
           </button>
         </div>
 
+        {/* renew qrs */}
         <div>
           <button
             onClick={() => {
@@ -211,6 +231,7 @@ const RenewPackage = ({ user }) => {
             Renew QRs by 3000 EGP
           </button>
         </div>
+
       </div>
     </div>
   );

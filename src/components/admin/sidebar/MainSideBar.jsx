@@ -35,7 +35,7 @@ const MainSideBar = ({ setRefresh, user }) => {
   console.log("user", user)
 
   return (
-    <Card className="h-full p-4 rounded-none bg-mainColor text-white shadow-lg overflow-y-auto">
+    <Card className="h-full p-4 rounded-none bg-mainColor text-white overflow-y-auto shadow-2xl">
       <div className="mb-4">
         <Link to="/" className="block">
           <img src={logo} alt="Logo" className="w-64 mx-auto" />
@@ -73,7 +73,7 @@ const MainSideBar = ({ setRefresh, user }) => {
           My QRs
         </ListItem>
 
-        {user?.pivot?.package_id == 2 && (
+        {/* {user?.pivot?.package_id == 2 && (
           <ListItem
             className="text-white text-xl my-3 cursor-pointer"
             onClick={() => {
@@ -87,9 +87,9 @@ const MainSideBar = ({ setRefresh, user }) => {
             </ListItemPrefix>
             Smart QR
           </ListItem>
-        )}
+        )} */}
 
-        {user?.pivot?.package_id == 3 && (
+        {/* {user?.pivot?.package_id == 3 && (
           <ListItem
             className="text-white text-xl my-3 cursor-pointer"
             onClick={() => {
@@ -103,9 +103,9 @@ const MainSideBar = ({ setRefresh, user }) => {
             </ListItemPrefix>
             All in one QR
           </ListItem>
-        )}
+        )} */}
 
-        {(!user || !user?.id || user?.pivot?.package_id == 1) && (
+        {/* {(!user || !user?.id || user?.pivot?.package_id == 1) && (
           <>
             <ListItem
               className="text-white text-xl my-3 cursor-pointer"
@@ -134,9 +134,9 @@ const MainSideBar = ({ setRefresh, user }) => {
               All in one QR
             </ListItem>
           </>
-        )}
+        )} */}
 
-        <ListItem
+        {/* <ListItem
           className="text-white text-xl my-3 cursor-pointer"
           onClick={() => {
             navigate("/generate-qr");
@@ -147,7 +147,7 @@ const MainSideBar = ({ setRefresh, user }) => {
             <FaPlus className="h-5 w-5" />
           </ListItemPrefix>
           Free QR
-        </ListItem>
+        </ListItem> */}
 
         {user?.pivot?.package_id < 3 && (
           <ListItem

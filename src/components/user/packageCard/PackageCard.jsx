@@ -79,6 +79,7 @@ const PackageCard = ({
       className={`bg-white shadow-sm rounded-lg my-10 overflow-hidden h-fit w-[250px] mx-auto border-mainColor border-solid border-2 flex flex-col transition-opacity duration-700 ${
         index === 2 ? "scale-110 border-secondColor border-4" : ""
       } ${index === 1 ? "scale-105" : ""}`}
+      id={`${index === 0 ? "packageFree" : index === 1 ? "package2" : "package3"}`}
     >
       <div className="px-6 py-8 flex-grow">
         <div className="flex flex-col justify-between gap-4">

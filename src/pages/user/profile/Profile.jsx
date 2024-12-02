@@ -21,11 +21,13 @@ import "aos/dist/aos.css";
 
 const currentYear = new Date().getFullYear();
 
+
 const Profile = () => {
   const [openBranches, setOpenBranches] = useState([]);
   const { id } = useParams();
   const [profileData, setProfileData] = useState({});
 
+  // console.log("today", formattedDate)
   useEffect(() => {
     AOS.init({ duration: 1200, once: true });
   }, []);

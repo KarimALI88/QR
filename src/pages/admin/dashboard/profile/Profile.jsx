@@ -3,12 +3,12 @@ import React, { useContext, useEffect, useState } from "react";
 import { FaAddressCard } from "react-icons/fa";
 import { GoPackageDependencies } from "react-icons/go";
 import { AppContext } from "./../../../../context/AppContext";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
   const [profile, setProfile] = useState({});
+  const [showButton, setShowButton] = useState(false);
   const { token } = useContext(AppContext);
-
-  // console.log("token ", token)
 
   const getUserData = async () => {
     try {
@@ -20,19 +20,34 @@ const Profile = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("response in profile", response)
-      setProfile(response.data.user_data)
+      console.log("response in profile", response);
+      setProfile(response.data.user_data);
     } catch (error) {
-      console.error("error  in profile data", error);
+      console.error("error in profile data", error);
     }
   };
 
   useEffect(() => {
-    token && getUserData()
-  }, [token])
+    token && getUserData();
+  }, [token]);
+
+  useEffect(() => {
+    if (profile?.user_packages?.[0]?.end_date) {
+      const today = new Date();
+      const endDate = new Date(profile.user_packages[0].end_date);
+
+      if (today > endDate) {
+        console.log("Package ended");
+        setShowButton(true);
+      } else {
+        console.log("Package not ended");
+      }
+    }
+  }, [profile]);
+
   return (
     <div>
-      {/* user info */}
+      {/* User Info */}
       <div className="my-10">
         <h4 className="text-mainColor font-black text-2xl my-5 flex gap-3 items-center">
           <FaAddressCard size={30} />
@@ -41,17 +56,21 @@ const Profile = () => {
         <div className="flex gap-3 justify-start flex-wrap">
           <div className="flex gap-3 my-3 px-5">
             <h5 className="text-xl font-semibold">Name: </h5>
-            <h6 className="text-lg font-medium text-gray-800">{profile?.name}</h6>
+            <h6 className="text-lg font-medium text-gray-800">
+              {profile?.name}
+            </h6>
           </div>
           <div className="flex gap-3 my-3 px-5">
             <h5 className="text-xl font-semibold">Email: </h5>
             <h6 className="text-lg font-medium text-gray-800">
-              {profile?.email}{" "}
+              {profile?.email}
             </h6>
           </div>
           <div className="flex gap-3 my-3 px-5">
             <h5 className="text-xl font-semibold">Phone: </h5>
-            <h6 className="text-lg font-medium text-gray-800">{profile?.phone}</h6>
+            <h6 className="text-lg font-medium text-gray-800">
+              {profile?.phone}
+            </h6>
           </div>
           <div className="flex gap-3 my-3 px-5">
             <h5 className="text-xl font-semibold">Address: </h5>
@@ -59,32 +78,46 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      {/* --------------------------------------------------------------- */}
-      {/* Subscribtion info */}
+
+      {/* Subscription Info */}
       <div className="my-10">
         <h4 className="text-mainColor font-black text-2xl my-5 flex gap-3 items-center">
           <GoPackageDependencies size={30} />
-          Subscribtion Info
+          Subscription Info
         </h4>
         <div className="flex gap-3 justify-start flex-wrap">
           <div className="flex gap-3 my-3 px-5">
             <h5 className="text-xl font-semibold">Package Name: </h5>
             <h6 className="text-lg font-medium text-gray-800">
-              {profile?.name && profile?.user_packages[0]?.name}
+              {profile?.user_packages?.[0]?.name}
             </h6>
           </div>
           <div className="flex gap-3 my-3 px-5">
             <h5 className="text-xl font-semibold">Qr Limit: </h5>
-            <h6 className="text-lg font-medium text-gray-800">{profile?.name && profile?.user_packages[0]?.qrcode_limit}</h6>
+            <h6 className="text-lg font-medium text-gray-800">
+              {profile?.user_packages?.[0]?.qrcode_limit}
+            </h6>
           </div>
           <div className="flex gap-3 my-3 px-5">
             <h5 className="text-xl font-semibold">Start Date: </h5>
-            <h6 className="text-lg font-medium text-gray-800">{profile?.name && profile?.user_packages[0]?.start_date}</h6>
+            <h6 className="text-lg font-medium text-gray-800">
+              {profile?.user_packages?.[0]?.start_date}
+            </h6>
           </div>
           <div className="flex gap-3 my-3 px-5">
             <h5 className="text-xl font-semibold">End Date: </h5>
-            <h6 className="text-lg font-medium text-gray-800">{profile?.name && profile?.user_packages[0]?.end_date}</h6>
+            <h6 className="text-lg font-medium text-gray-800">
+              {profile?.user_packages?.[0]?.end_date}
+            </h6>
           </div>
+          {showButton && (
+            <div
+              role="alert"
+              class="mb-4 relative flex w-1/2 p-3  text-black bg-orange-600 rounded-md text-lg"
+            >
+              You should renew now <Link to={"/admin/renew"} className="ml-2 text-mainColor">Renew</Link>
+            </div>
+          )}
         </div>
       </div>
     </div>
