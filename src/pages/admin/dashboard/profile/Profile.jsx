@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 const Profile = () => {
   const [profile, setProfile] = useState({});
   const [showButton, setShowButton] = useState(false);
+  const [showWarning, setShowWarning] = useState(false)
   const { token } = useContext(AppContext);
 
   const getUserData = async () => {
@@ -35,15 +36,25 @@ const Profile = () => {
     if (profile?.user_packages?.[0]?.end_date) {
       const today = new Date();
       const endDate = new Date(profile.user_packages[0].end_date);
-
-      if (today > endDate) {
+  
+      // Calculate the difference in time between the dates
+      const timeDifference = endDate.getTime() - today.getTime();
+      
+      // Convert time difference to days
+      const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+  
+      if (daysDifference <= 0) {
         console.log("Package ended");
         setShowButton(true);
+      } else if (daysDifference <= 5) {
+        console.log("Package near ended");
+        setShowWarning(true)
       } else {
         console.log("Package not ended");
       }
     }
   }, [profile]);
+  
 
   return (
     <div>
@@ -91,6 +102,7 @@ const Profile = () => {
             <h6 className="text-lg font-medium text-gray-800">
               {profile?.user_packages?.[0]?.name}
             </h6>
+            {profile?.user_packages?.[0]?.name != "All in one" && <Link to={"/admin/upgrade"} className="text-xl text-mainColor">Upgrade</Link>}
           </div>
           <div className="flex gap-3 my-3 px-5">
             <h5 className="text-xl font-semibold">Qr Limit: </h5>
@@ -113,9 +125,17 @@ const Profile = () => {
           {showButton && (
             <div
               role="alert"
-              class="mb-4 relative flex w-1/2 p-3  text-black bg-orange-600 rounded-md text-lg"
+              class="mb-4 relative flex w-1/2 p-3  text-black bg-red-900 rounded-md text-lg"
             >
-              You should renew now <Link to={"/admin/renew"} className="ml-2 text-mainColor">Renew</Link>
+              You should renew now <Link to={"/admin/renew"} className="ml-2 text-white">Renew</Link>
+            </div>
+          )}
+          {showWarning && (
+            <div
+              role="alert"
+              class="mb-4 relative flex w-1/2 p-3  text-black bg-yellow-900 rounded-md text-lg"
+            >
+              Your package will be end in 5 days 
             </div>
           )}
         </div>

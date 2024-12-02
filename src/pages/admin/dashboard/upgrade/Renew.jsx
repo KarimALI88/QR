@@ -17,12 +17,16 @@ const Renew = ({ user }) => {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_LINK}/packages`);
       if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
+        throw new Error(`Error: ${response.statusText}`);
       }
       const data = await response.json();
+      if (!Array.isArray(data)) {
+        throw new Error("Invalid data format");
+      }
       setPackages(data);
     } catch (error) {
-      console.error("error", error);
+      console.error("Error fetching packages:", error);
+      toast.error("Failed to load packages.");
     }
   };
 
@@ -30,47 +34,76 @@ const Renew = ({ user }) => {
     getPackages();
   }, []);
 
+  const getUpgradePrice = async (packageId) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_LINK}/new_price`,
+        { package_id: packageId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setAmount(response.data?.price_to_pay || "N/A");
+    } catch (error) {
+      console.error("Error fetching upgrade price:", error);
+    }
+  };
+
+  const handlePackageSelection = async (packId, period) => {
+    setPeriod(period);
+    setPackageNumber(packId);
+
+    if (period === "annually") {
+      await getUpgradePrice(packId); // Annual uses fetched amount
+    } else {
+      if (packId === 2) setAmount(99); // Monthly Package 2
+      else if (packId === 3) setAmount(150); // Monthly Package 3
+    }
+
+    setPendingAlertCheck(true);
+  };
+
   useEffect(() => {
     if (pendingAlertCheck) {
       alertCheck();
       setPendingAlertCheck(false);
     }
-  }, [packageNumber, amount, pendingAlertCheck]);
+  }, [pendingAlertCheck]);
 
   const alertCheck = () => {
-    if (packageNumber <= user?.pivot?.package_id) {
-      toast.error("The package must be more");
-    } else {
-      Swal.fire({
-        title: "Do you want to upgrade?",
-        text: "You will upgrade to a higher package",
-        showCancelButton: true,
-        confirmButtonText: "Renew",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          payGeidea();
-        } else if (result.isDenied) {
-          Swal.fire("Changes are not saved", "", "info");
-        }
-      });
+    if (!user?.pivot?.package_id || packageNumber <= user?.pivot?.package_id) {
+      toast.error("Select a higher package to upgrade.");
+      return;
     }
+    Swal.fire({
+      title: `Do you want to upgrade by ${amount}?`,
+      text: "You will upgrade to a higher package.",
+      showCancelButton: true,
+      confirmButtonText: "Upgrade",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        payGeidea();
+      } else {
+        Swal.fire("Upgrade cancelled", "", "info");
+      }
+    });
   };
 
   const payGeidea = async () => {
     setLoading(true);
     try {
-      const response = await axios({
-        method: "post",
-        url: `${import.meta.env.VITE_API_LINK}/payment/initiate`,
-        data: { amount },
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setLoading(false);
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_LINK}/payment/initiate`,
+        { amount },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       if (response.data.sessionId) {
         payHpp(response.data.sessionId);
+      } else {
+        toast.error("Payment session failed to initialize.");
       }
     } catch (error) {
-      console.error("error in pay", error);
+      console.error("Error in payment initialization:", error);
+      toast.error("Payment error.");
+    } finally {
       setLoading(false);
     }
   };
@@ -81,35 +114,32 @@ const Renew = ({ user }) => {
   };
 
   const onSuccess = () => {
-    console.log("pay success");
+    console.log("Payment successful");
     renew();
   };
 
   const onError = () => {
-    console.log("pay error");
+    console.error("Payment error");
+    toast.error("Payment failed.");
   };
 
   const onCancel = () => {
-    console.log("pay cancel");
+    console.log("Payment cancelled");
   };
 
   const renew = async () => {
     setLoading(true);
     try {
-      const response = await axios({
-        method: "post",
-        url: `${import.meta.env.VITE_API_LINK}/Upgrade-package`,
-        data: { package_id: packageNumber },
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      toast.success("Renewed successfully");
-      setLoading(false);
+      await axios.post(
+        `${import.meta.env.VITE_API_LINK}/Upgrade-package`,
+        { package_id: packageNumber },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast.success("Upgraded successfully!");
     } catch (error) {
-      console.error("error in renewing", error);
-      toast.error("Error in renewing");
+      console.error("Error during upgrade:", error);
+      toast.error("Upgrade failed.");
+    } finally {
       setLoading(false);
     }
   };
@@ -117,148 +147,72 @@ const Renew = ({ user }) => {
   return (
     <div>
       <h1 className="text-center font-black text-5xl text-mainColor">
-        Upgrade Packages by {amount}
+        Upgrade Packages
       </h1>
-
       <div className="w-full">
         <div className="flex flex-wrap justify-center items-center gap-10 sm:flex-col lg:flex-row w-full">
-          {packages.map((pack, index) => (
-            <div key={index}>
-              <div
-                className={`bg-white shadow-sm rounded-lg my-14 overflow-hidden ${
-                  index === 0 && "hidden"
-                } h-fit w-[250px] mx-auto border-mainColor border-solid border-2 flex flex-col ${
-                  index === 2 ? "scale-110 border-secondColor border-4" : ""
-                } ${index === 1 ? "scale-105" : ""}`}
-              >
-                <div className="px-6 py-8 flex-grow">
-                  <div className="flex flex-col justify-between gap-4">
-                    <h2 className="text-2xl font-bold text-mainColor capitalize">
-                      {pack?.name}
-                    </h2>
-                    <p className="text-xl font-semibold text-gray-400">
-                      {pack?.description}
-                    </p>
-
-                    <div>
-                      {!(pack?.id === 1) && (
-                        <div className="flex gap-3 items-center justify-center">
-                          <button
-                            onClick={() => setPeriod("annually")}
-                            className={`${
-                              period === "annually"
-                                ? "bg-mainColor text-white"
-                                : "bg-gray-400"
-                            } text-black px-3 py-2 font-semibold mb-5`}
-                          >
-                            Annualy
-                          </button>
-                          <button
-                            onClick={() => setPeriod("monthly")}
-                            className={`${
-                              period === "monthly"
-                                ? "bg-mainColor text-white"
-                                : "bg-gray-400"
-                            } text-black px-3 py-2 font-semibold mb-5`}
-                          >
-                            Monthly
-                          </button>
-                        </div>
-                      )}
-                      {/* price based on annually or monthly */}
-                      {period === "annually" && (
-                        <p className="text-3xl font-bold text-gray-500">
-                          {pack?.price_EGP}
-                          {pack?.id === 2 && (
-                            <div>
-                              <h4 className="text-mainColor text-lg">
-                                <del>2400.00 EGP</del>
-                              </h4>
-                            </div>
-                          )}
-                          {pack?.id === 3 && (
-                            <div>
-                              <h4 className="text-mainColor text-lg">
-                                <del>6000.00 EGP</del>
-                              </h4>
-                            </div>
-                          )}
-                        </p>
-                      )}
-                      {period === "monthly" && (
-                        <p className="text-3xl font-bold text-gray-500">
-                          {pack?.id == 2 && (
-                            <div>
-                              <h2>99.00 EGP</h2>
-                              <h4 className="text-mainColor text-lg">
-                                <del>200.00 EGP</del>
-                              </h4>
-                            </div>
-                          )}
-                          {pack?.id == 3 && (
-                            <div>
-                              <h2>150.00 EGP</h2>
-                              <h4 className="text-mainColor text-lg">
-                                <del>300.00 EGP</del>
-                              </h4>
-                            </div>
-                          )}
-                          {pack?.id == 1 && "0.00" + " EGP"}
-                        </p>
-                      )}
+          {packages.length === 0 ? (
+            <p className="text-center text-gray-500">No packages available.</p>
+          ) : (
+            packages.map((pack, index) => (
+              <div key={index}>
+                <div
+                  className={`bg-white shadow-sm rounded-lg my-14 overflow-hidden h-fit w-[250px] mx-auto border-mainColor border-solid border-2 flex flex-col ${
+                    index === 2 ? "scale-110 border-secondColor border-4" : ""
+                  } ${index === 1 ? "scale-105" : ""} ${index === 0 ? "hidden" : ""}`}
+                >
+                  <div className="px-6 py-8 flex-grow">
+                    <div className="flex flex-col justify-between gap-4">
+                      <h2 className="text-2xl font-bold text-mainColor capitalize">
+                        {pack?.name}
+                      </h2>
+                      <p className="text-xl font-semibold text-gray-400">
+                        {pack?.description}
+                      </p>
                     </div>
-                  </div>
-                  <ul className="mt-8 space-y-4 capitalize">
-                    {pack?.features?.map((feature, index) => (
-                      <li
-                        key={index}
-                        className="flex items-center text-lg font-semibold"
-                      >
-                        <svg
-                          className="h-5 w-5 text-secondColor mr-2"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
+                    <ul className="mt-8 space-y-4 capitalize">
+                      {pack?.features?.map((feature, featureIndex) => (
+                        <li
+                          key={featureIndex}
+                          className="flex items-center text-lg font-semibold"
                         >
-                          <path
-                            fillRule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="bg-gray-100 px-6 py-4">
-                  <button
-                    onClick={() => {
-                      setPackageNumber(pack?.id);
-                      setAmount(
-                        period === "annually"
-                          ? pack?.price_EGP
-                          : period === "monthly" && pack?.id === 2
-                          ? 99
-                          : 150
-                      );
-                      setPendingAlertCheck(true);
-                    }}
-                    className="w-full min-w-[90%] mx-auto block text-center bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded"
-                  >
-                    {period === "annually"
-                      ? `Pay ${pack?.price_EGP}`
-                      : pack?.id === 2
-                      ? `Pay 99.00`
-                      : pack?.id === 3
-                      ? "Pay 150.00"
-                      : "Pay 0.00"}
-                  </button>
+                          <svg
+                            className="h-5 w-5 text-secondColor mr-2"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="bg-gray-100 px-6 py-4">
+                    <button
+                      onClick={() => handlePackageSelection(pack?.id, "monthly")}
+                      className="w-full my-2 min-w-[90%] mx-auto block text-center bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded"
+                    >
+                      Upgrade Month
+                    </button>
+                    <button
+                      onClick={() => handlePackageSelection(pack?.id, "annually")}
+                      className="w-full my-2 min-w-[90%] mx-auto block text-center bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded"
+                    >
+                      Upgrade Year
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
+      {loading && <p className="text-center text-blue-500">Processing...</p>}
     </div>
   );
 };

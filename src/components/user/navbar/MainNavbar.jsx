@@ -20,11 +20,12 @@ import {
 import axios from "axios";
 import { AppContext } from "../../../context/AppContext";
 import { CgProfile } from "react-icons/cg";
+import Translate from "../translate/Translate";
 
 const MainNavbar = () => {
   const [openNav, setOpenNav] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const { token, setToken } = useContext(AppContext);
+  const { token, setToken, language } = useContext(AppContext);
 
   const navigate = useNavigate();
 
@@ -74,7 +75,7 @@ const MainNavbar = () => {
         color="blue-gray"
         className="p-4 text-md text-gray-600 hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
       >
-        Home
+        {language == "en" ? "Home" : "الرئيسية"}
       </Typography>
       <Typography
         as={Link}
@@ -83,10 +84,10 @@ const MainNavbar = () => {
         color="blue-gray"
         className="p-4 text-md text-gray-600 hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
       >
-        Payment
+        {language == "en" ? "Payment" : "الدفع"}
       </Typography>
 
-      <Typography
+      {/* <Typography
         as={Link}
         to="/policies"
         variant="small"
@@ -94,7 +95,7 @@ const MainNavbar = () => {
         className="p-4 text-md text-gray-600 hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
       >
         Policies
-      </Typography>
+      </Typography> */}
 
       {token && (
         <>
@@ -105,19 +106,21 @@ const MainNavbar = () => {
             color="blue-gray"
             className="p-4 text-md text-gray-600 hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
           >
-            Dashboard
+            {language == "en" ? "Dashboard" : "صفحة التحكم"}
           </Typography>
           <Typography
             as={Link}
-            to="/profile"
+            to="/admin/profile"
             variant="small"
             color="blue-gray"
             className="p-4 text-md text-gray-600 hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
           >
-            Profile
+            {language == "en" ? "Profile" : "الصفحة الشخصية"}
           </Typography>
         </>
       )}
+
+      <Translate />
     </ul>
   );
 
@@ -160,19 +163,6 @@ const MainNavbar = () => {
                 </Button>
               </MenuHandler>
               <MenuList className="p-1">
-                {/* <MenuItem
-                  onClick={closeMenu}
-                  className="flex items-center gap-2 rounded"
-                >
-                  <Typography
-                    as={Link}
-                    to="/admin/profile"
-                    variant="small"
-                    className="font-normal flex items-center gap-2 text-lg"
-                  >
-                    <CgProfile /> Profile
-                  </Typography>
-                </MenuItem> */}
                 <MenuItem
                   onClick={logout}
                   className="flex items-center gap-2 rounded"
@@ -184,7 +174,7 @@ const MainNavbar = () => {
                     className="font-normal flex items-center gap-2 text-lg"
                     color="red"
                   >
-                    <FaPowerOff /> Sign Out
+                    <FaPowerOff /> {language == "en" ? "Sign Out" : "تسجيل الخروج"}
                   </Typography>
                 </MenuItem>
               </MenuList>
@@ -196,7 +186,7 @@ const MainNavbar = () => {
                   size="lg"
                   className="rounded-none bg-mainColor hover:bg-secondColor text-white font-[600]"
                 >
-                  Sign in
+                  {language == "en" ? "Sign in" : "تسجيل الدخول"}
                 </Button>
               </Link>
             </div>

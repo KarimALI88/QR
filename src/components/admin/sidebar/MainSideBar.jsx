@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Card, List, ListItem, ListItemPrefix } from "@material-tailwind/react";
-import { FaQrcode, FaPlus, FaHome  } from "react-icons/fa";
+import { FaQrcode, FaPlus, FaHome } from "react-icons/fa";
 import { IoMdLogOut } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 import logo from "../../../assets/imgs/QR-LOGO1.png";
@@ -32,7 +32,7 @@ const MainSideBar = ({ setRefresh, user }) => {
     window.location.reload();
   };
 
-  console.log("user", user)
+  console.log("user", user);
 
   return (
     <Card className="h-full p-4 rounded-none bg-mainColor text-white overflow-y-auto shadow-2xl">
@@ -42,7 +42,7 @@ const MainSideBar = ({ setRefresh, user }) => {
         </Link>
       </div>
       <List>
-      <ListItem
+        <ListItem
           className="text-white text-xl my-3 cursor-pointer"
           onClick={() => navigate("/")}
         >
@@ -52,7 +52,6 @@ const MainSideBar = ({ setRefresh, user }) => {
           Home
         </ListItem>
 
-        
         <ListItem
           className="text-white text-xl my-3 cursor-pointer"
           onClick={() => navigate("/admin/profile")}
@@ -149,7 +148,7 @@ const MainSideBar = ({ setRefresh, user }) => {
           Free QR
         </ListItem> */}
 
-        {user?.pivot?.package_id < 3 && (
+        {user?.pivot?.package_id == 1 || user?.pivot?.package_id == 2 && (
           <ListItem
             className="text-white text-xl my-3 cursor-pointer"
             onClick={() => navigate("/admin/upgrade")}

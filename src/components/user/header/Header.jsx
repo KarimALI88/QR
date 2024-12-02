@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { FaUserAlt, FaUserCheck, FaQrcode } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
 import axios from "axios";
 import CountUp from "react-countup"; // Import CountUp
 import HomeVideo from "../homeVideo/HomeVideo";
+import { AppContext } from "../../../context/AppContext";
 
 const Header = () => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
   const [counters, setCounters] = useState({ total_user: 0, total_qr: 0 });
+  const { language } = useContext(AppContext);
 
   const getUsersAndQrs = async () => {
     try {
@@ -29,6 +31,10 @@ const Header = () => {
     getUsersAndQrs();
   }, []);
 
+  useEffect(() => {
+    document.body.style.direction = language === "ar" ? "rtl" : "ltr";
+  }, [language]);
+
   return (
     <div
       ref={ref}
@@ -37,20 +43,42 @@ const Header = () => {
       }`}
     >
       <div className="w-full">
-        <h1 className="text-black text-5xl w-full my-10 mb-5 font-black leading-tight">
-          Easily connect with your customers Generate your custom{" "}
-          <strong className="text-mainColor">QR code</strong> with one simple
-          click.
-        </h1>
+        {language == "en" ? (
+          <h1 className="text-black text-5xl w-full my-10 mb-5 font-black leading-tight">
+            Easily connect with your customers Generate your custom{" "}
+            <strong className="text-mainColor">QR code</strong> with one simple
+            click.
+          </h1>
+        ) : (
+          <h1 className="text-black text-2xl w-full my-10 mb-5 font-medium leading-tight">
+            حول كل تفاعل إلى فرصة للاتصال بفضل OFX QR Code. صمم QR كود ذكي
+            لشركتك بضغطة واحدة، واجعل التواصل مع عملائك أسهل الآن. صمم صفحة
+            مميزة تعكس هويتك وتدفع عملائك لاكتشاف المزيد عنك يجعل تجربة عملائك
+            أكثر سلاسة من خلال توفير وصول سريع إلى كل الروابط المهمة في QR code
+            واحد شارك جميع المعلومات التي يحتاجها عملائك في QR code واحد. صفحاتك
+            على مواقع التواصل الاجتماعي المنيو الخاص بمطعمك كل الملفات المختلفة
+            <strong className="text-mainColor">QR code</strong> بضغطة
+          </h1>
+        )}
+
         {/* create buttons */}
         <div className="flex flex-wrap gap-3 items-center my-10">
-          <a href="#packageFree" className="bg-black px-10 py-5 font-semibold text-white hover:bg-secondColor shadow-2xl flex gap-3 items-center cursor-pointer">
+          <a
+            href="#packageFree"
+            className="bg-black px-10 py-5 font-semibold text-white hover:bg-secondColor shadow-2xl flex gap-3 items-center cursor-pointer"
+          >
             Free QR <IoIosArrowDown size={24} className="animate-updown" />
           </a>
-          <a href="#package2" className="bg-black px-10 py-5 font-semibold text-white hover:bg-secondColor shadow-2xl flex gap-3 items-center cursor-pointer">
+          <a
+            href="#package2"
+            className="bg-black px-10 py-5 font-semibold text-white hover:bg-secondColor shadow-2xl flex gap-3 items-center cursor-pointer"
+          >
             Smart QR <IoIosArrowDown size={24} className="animate-updown" />
           </a>
-          <a href="#package3" className="bg-black px-10 py-5 font-semibold text-white hover:bg-secondColor shadow-2xl flex gap-3 items-center cursor-pointer">
+          <a
+            href="#package3"
+            className="bg-black px-10 py-5 font-semibold text-white hover:bg-secondColor shadow-2xl flex gap-3 items-center cursor-pointer"
+          >
             All in one QR{" "}
             <IoIosArrowDown size={24} className="animate-updown" />
           </a>
@@ -68,7 +96,7 @@ const Header = () => {
                 separator=","
               />
             </h3>
-            <h4 className="text-4xl font-black text-mainColor">User</h4>
+            <h4 className="text-4xl font-black text-mainColor">{language == "en" ? "User" : "مستخدم"}</h4>
           </div>
 
           {/* Number of QRs */}
@@ -91,7 +119,7 @@ const Header = () => {
             <h3 className="text-4xl font-black text-mainColor">
               <CountUp start={0} end={6000} duration={10} separator="," />
             </h3>
-            <h4 className="text-4xl font-black text-mainColor">Visitors</h4>
+            <h4 className="text-4xl font-black text-mainColor">{language == "en" ? "Visitors" : "زائر"}</h4>
           </div>
         </div>
       </div>

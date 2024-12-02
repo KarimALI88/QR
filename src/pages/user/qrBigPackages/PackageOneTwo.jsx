@@ -685,7 +685,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                   </Typography>
                   <Input
                     maxLength={16}
-                    placeholder="01061472185"
+                    placeholder="010000000000"
                     value={phone1}
                     type="number"
                     error={errorIndicator.phone1Indicator}
@@ -705,7 +705,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                   </Typography>
                   <Input
                     maxLength={16}
-                    placeholder="01100942108"
+                    placeholder="0100000000"
                     value={phone2}
                     type="number"
                     onChange={(e) => setPhone2(e.target.value)}

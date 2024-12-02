@@ -3,7 +3,7 @@ import logo from "../../../assets/imgs/QR-LOGO2.PNG";
 import { Input } from "@material-tailwind/react";
 import { BiLogoGmail } from "react-icons/bi";
 import { MdKey } from "react-icons/md";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Spinner } from "@material-tailwind/react";
 import { AppContext } from "./../../../context/AppContext";
@@ -19,6 +19,7 @@ const Login = ({ setRefresh }) => {
   const [view, setView] = useState(false);
   const { setToken } = useContext(AppContext);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const userLogin = async () => {
     try {
@@ -42,42 +43,60 @@ const Login = ({ setRefresh }) => {
 
       const data = await response.json();
       console.log("logged in", data);
-      data.user.role==="admin" ? navigate("/superadmin/analysis") : navigate("/admin/profile");
+
+      const previousRoute = location.state?.from;
+      let targetRoute = "/";
+
+      if (previousRoute === "/payment") {
+        targetRoute = "/payment";
+      } else if (previousRoute === "/generate-qr") {
+        targetRoute = "/generate-qr";
+      } else {
+        targetRoute = "/";
+      }
+
+      data.user.role === "admin"
+        ? navigate("/superadmin/analysis")
+        : navigate(targetRoute);
       setLoading(false);
       localStorage.setItem("tn", data.token);
       setToken(data.token);
       toast.success("Logged in successfully");
       setRefresh((prevState) => !prevState);
-      
     } catch (error) {
       console.error("error", error);
       toast.error("wrong answers");
       setLoading(false);
     }
   };
-  
+
   const googleAuth = async () => {
     try {
       const response = await axios({
-        method:"get",
-        url:`${import.meta.env.VITE_API_LINK}/auth/google`,
-        headers:{
-          "Content-Type":"application/json"
-        }
-      })
-      console.log("google response", response)
-      response.token && localStorage.setItem("tn", response.token)
-      response.token && navigate("/admin/profile")
+        method: "get",
+        url: `${import.meta.env.VITE_API_LINK}/auth/google`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log("google response", response);
+      response.token && localStorage.setItem("tn", response.token);
+      response.token && navigate("/admin/profile");
     } catch (error) {
-      console.log("error in google auth ", error)
+      console.log("error in google auth ", error);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col md:flex-row">
       <div className="flex-1 p-4 min-h-[100%] flex-col">
         <div className="flex justify-between items-center">
-          <img src={logo} alt="OFX QR CODE" className="w-52 lg:w-72" onClick={() => navigate("/")}/>
+          <img
+            src={logo}
+            alt="OFX QR CODE"
+            className="w-52 lg:w-72"
+            onClick={() => navigate("/")}
+          />
           <IoMdClose
             className="cursor-pointer"
             size={35}
@@ -140,7 +159,10 @@ const Login = ({ setRefresh }) => {
           {/* forget password */}
           <p className="mt-2">
             if you forget your password{" "}
-            <Link to={"/forget-password"} className="text-mainColor underline text-lg">
+            <Link
+              to={"/forget-password"}
+              className="text-mainColor underline text-lg"
+            >
               forget password
             </Link>
           </p>

@@ -76,7 +76,7 @@ const QrForm = ({ user, refresh, setRefresh }) => {
               createSubscribtion();
             }
           })
-        : navigate("/login");
+        : navigate("/login", { state: { from: location.pathname } })
     }
   };
 

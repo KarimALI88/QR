@@ -29,6 +29,7 @@ const Footer = () => {
             <div className="flex gap-4">
               <Link to={"/contact"} className="text-white underline hover:text-black">Contact</Link>
               <Link to={"/payment"} className="text-white underline hover:text-black">Payment</Link>
+              <Link to={"/policies"} className="text-white underline hover:text-black">Policies</Link>
             </div>
           </div>
         </div>

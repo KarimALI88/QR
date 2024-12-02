@@ -243,6 +243,14 @@ const MyQrs = ({ user }) => {
                   </button>
                 </>
               )}
+              <button
+                onClick={() => {
+                  navigate("/admin/renew");
+                }}
+                className="bg-black px-5 py-3 font-semibold text-center text-white my-2 hover:bg-secondColor shadow-xl"
+              >
+                Extra QRs
+              </button>
             </div>
           </CardHeader>
           <CardBody className="scroll-auto px-0">

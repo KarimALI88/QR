@@ -94,7 +94,7 @@ const Home = ({ country, user }) => {
         </div>
       )}
       {/* features */}
-      <div className="my-10 mx-auto">
+      {/* <div className="my-10 mx-auto">
         <h3 className="text-5xl w-fit mx-auto font-black text-center p-4 rounded-tl-3xl rounded-br-3xl border-4 border-mainColor text-mainColor">
           FEATURES
         </h3>
@@ -112,7 +112,7 @@ const Home = ({ country, user }) => {
             <h4 className="text-lg font-semibold">Customize Your Profile</h4>
           </div>
         </div>
-      </div>
+      </div> */}
       {/* ---------------------------------------------------------------- */}
       <Footer />
     </div>

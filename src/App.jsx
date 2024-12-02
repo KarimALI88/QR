@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { AppContext } from "./context/AppContext";
 import SuperAdmin from "./pages/SuperAdmin";
+import Support from "./components/user/support/Support";
 
 function App() {
   const [ip, setIp] = useState("");
@@ -65,7 +66,7 @@ function App() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("user data", response)
+      console.log("user data", response);
       setUser(response.data[0]);
       // console.log("user ", user)
     } catch (error) {
@@ -87,8 +88,16 @@ function App() {
     }
   }, [token, refresh]);
 
+  useEffect(() => {
+    let lang = localStorage.getItem("language")
+    !lang && localStorage.setItem("language", "en")
+  }, [])
+
+  
+
   return (
     <>
+      <Support />
       <ToastContainer />
       <Routes>
         <Route
@@ -103,10 +112,16 @@ function App() {
             />
           }
         />
-        <Route
-          path="/admin/*"
-          element={<AdminLayout setRefresh={setRefresh} user={user} />}
-        />
+        {token ? (
+          <>
+            <Route
+              path="/admin/*"
+              element={<AdminLayout setRefresh={setRefresh} user={user} />}
+            />
+          </>
+        ) : (
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        )}
         {token ? (
           <>
             <Route
@@ -118,6 +133,7 @@ function App() {
           <Route path="*" element={<Navigate to="/login" replace />} />
         )}
       </Routes>
+      
     </>
   );
 }
