@@ -21,7 +21,7 @@ const PackageCard = ({
   user,
 }) => {
   const navigate = useNavigate();
-  const { token, setPackageId, packageId } = useContext(AppContext);
+  const { token, setPackageId, packageId, language } = useContext(AppContext);
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
   const [period, setPeriod] = useState("monthly");
 
@@ -79,7 +79,9 @@ const PackageCard = ({
       className={`bg-white shadow-sm rounded-lg my-10 overflow-hidden h-fit w-[250px] mx-auto border-mainColor border-solid border-2 flex flex-col transition-opacity duration-700 ${
         index === 2 ? "scale-110 border-secondColor border-4" : ""
       } ${index === 1 ? "scale-105" : ""}`}
-      id={`${index === 0 ? "packageFree" : index === 1 ? "package2" : "package3"}`}
+      id={`${
+        index === 0 ? "packageFree" : index === 1 ? "package2" : "package3"
+      }`}
     >
       <div className="px-6 py-8 flex-grow">
         <div className="flex flex-col justify-between gap-4">
@@ -88,7 +90,7 @@ const PackageCard = ({
             {title}
           </h2>
           {/* descrption */}
-          <p className="text-xl font-semibold text-gray-400">{description}</p>
+          {/* <p className="text-xl font-semibold text-gray-400">{description}</p> */}
           {/* anually or monthly */}
           <div>
             {!packageZero && (
@@ -101,7 +103,7 @@ const PackageCard = ({
                       : "bg-gray-400"
                   } text-black px-3 py-2 font-semibold`}
                 >
-                  Annualy
+                  {language == "en" ? "Annualy" : "سنويا"}
                 </button>
                 <button
                   onClick={() => setPeriod("monthly")}
@@ -111,7 +113,7 @@ const PackageCard = ({
                       : "bg-gray-400"
                   } text-black px-3 py-2 font-semibold`}
                 >
-                  Monthly
+                  {language == "en" ? "Monthly" : "شهريا"}
                 </button>
               </div>
             )}
@@ -123,14 +125,14 @@ const PackageCard = ({
                 {index === 1 && (
                   <div>
                     <h4 className="text-mainColor text-lg">
-                      <del>2400.00 EGP</del> 
+                      <del>2400.00 EGP</del>
                     </h4>
                   </div>
                 )}
                 {index === 2 && (
                   <div>
                     <h4 className="text-mainColor text-lg">
-                      <del>6000.00 EGP</del> 
+                      <del>6000.00 EGP</del>
                     </h4>
                   </div>
                 )}
@@ -142,7 +144,7 @@ const PackageCard = ({
                   <div>
                     <h2>99.00 EGP</h2>
                     <h4 className="text-mainColor text-lg">
-                      <del>200.00 EGP</del> 
+                      <del>200.00 EGP</del>
                     </h4>
                   </div>
                 )}
@@ -150,7 +152,7 @@ const PackageCard = ({
                   <div>
                     <h2>150.00 EGP</h2>
                     <h4 className="text-mainColor text-lg">
-                      <del>300.00 EGP</del> 
+                      <del>300.00 EGP</del>
                     </h4>
                   </div>
                 )}
@@ -162,7 +164,7 @@ const PackageCard = ({
           <span className="text-green-500 font-bold">{savings}</span> SAVE
         </p> */}
         <ul className="mt-8 space-y-4 capitalize">
-          {features.map((feature, index) => (
+          {features?.map((feature, index) => (
             <li key={index} className="flex items-center text-lg font-semibold">
               <svg
                 className="h-5 w-5 text-secondColor mr-2"
@@ -193,7 +195,7 @@ const PackageCard = ({
             }}
             className="w-full min-w-[90%] mx-auto block text-center bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded"
           >
-            View
+            {language == "en" ? "View" : "مشاهدة"}
           </Link>
         )}
 

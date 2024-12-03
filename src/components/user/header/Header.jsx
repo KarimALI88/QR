@@ -31,18 +31,18 @@ const Header = () => {
     getUsersAndQrs();
   }, []);
 
-  useEffect(() => {
-    document.body.style.direction = language === "ar" ? "rtl" : "ltr";
-  }, [language]);
+  // useEffect(() => {
+  //   document.body.style.direction = language === "ar" ? "rtl" : "ltr";
+  // }, [language]);
 
   return (
     <div
       ref={ref}
       className={`py-20 flex gap-8 justify-center items-start mx-auto w-[100%] px-10 flex-wrap md:flex-nowrap transition-opacity duration-700 ${
         inView ? "opacity-100" : "opacity-0"
-      }`}
+      } `}
     >
-      <div className="w-full">
+      <div className={`${language == "en" ? "ltr" : "rtl"} w-full`}>
         {language == "en" ? (
           <h1 className="text-black text-5xl w-full my-10 mb-5 font-black leading-tight">
             Easily connect with your customers Generate your custom{" "}
@@ -50,7 +50,7 @@ const Header = () => {
             click.
           </h1>
         ) : (
-          <h1 className="text-black text-2xl w-full my-10 mb-5 font-medium leading-tight">
+          <h1 className="text-black text-2xl w-full my-10 mb-5 font-medium leading-9 tracking-wider font-cairo">
             حول كل تفاعل إلى فرصة للاتصال بفضل OFX QR Code. صمم QR كود ذكي
             لشركتك بضغطة واحدة، واجعل التواصل مع عملائك أسهل الآن. صمم صفحة
             مميزة تعكس هويتك وتدفع عملائك لاكتشاف المزيد عنك يجعل تجربة عملائك
@@ -62,29 +62,35 @@ const Header = () => {
         )}
 
         {/* create buttons */}
-        <div className="flex flex-wrap gap-3 items-center my-10">
+        <div
+          className={`flex flex-wrap gap-2 items-center my-10 mx-auto`}
+        >
           <a
             href="#packageFree"
-            className="bg-black px-10 py-5 font-semibold text-white hover:bg-secondColor shadow-2xl flex gap-3 items-center cursor-pointer"
+            className="bg-black mx-auto px-10 py-5 font-semibold text-white hover:bg-secondColor shadow-2xl flex gap-3 items-center cursor-pointer w-[250px]"
           >
-            Free QR <IoIosArrowDown size={24} className="animate-updown" />
+            {language == "en" ? "Free QR" : "فري QR"}{" "}
+            <IoIosArrowDown size={24} className="animate-updown" />
           </a>
           <a
             href="#package2"
-            className="bg-black px-10 py-5 font-semibold text-white hover:bg-secondColor shadow-2xl flex gap-3 items-center cursor-pointer"
+            className="bg-black px-10 mx-auto py-5 font-semibold text-white hover:bg-secondColor shadow-2xl flex gap-3 items-center cursor-pointer w-[250px]"
           >
-            Smart QR <IoIosArrowDown size={24} className="animate-updown" />
+            {language == "en" ? "Smart QR" : "ذكي QR"}{" "}
+            <IoIosArrowDown size={24} className="animate-updown" />
           </a>
           <a
             href="#package3"
-            className="bg-black px-10 py-5 font-semibold text-white hover:bg-secondColor shadow-2xl flex gap-3 items-center cursor-pointer"
+            className="bg-black px-10 mx-auto py-5 font-semibold text-white hover:bg-secondColor shadow-2xl flex gap-3 items-center cursor-pointer w-[250px]"
           >
-            All in one QR{" "}
+            {language == "en" ? "All in one QR" : "كله في واحد QR"}
             <IoIosArrowDown size={24} className="animate-updown" />
           </a>
         </div>
         {/* numbers */}
-        <div className="flex items-center justify-center sm:justify-start my-24 gap-10 flex-wrap text-center">
+        <div
+          className={`flex items-center justify-center sm:justify-start my-24 gap-10 flex-wrap text-center`}
+        >
           {/* Number of Users */}
           <div className="pr-11 flex flex-col items-center justify-center gap-3">
             <FaUserCheck size={60} />
@@ -96,7 +102,9 @@ const Header = () => {
                 separator=","
               />
             </h3>
-            <h4 className="text-4xl font-black text-mainColor">{language == "en" ? "User" : "مستخدم"}</h4>
+            <h4 className="text-4xl font-black text-mainColor">
+              {language == "en" ? "User" : "مستخدم"}
+            </h4>
           </div>
 
           {/* Number of QRs */}
@@ -119,7 +127,9 @@ const Header = () => {
             <h3 className="text-4xl font-black text-mainColor">
               <CountUp start={0} end={6000} duration={10} separator="," />
             </h3>
-            <h4 className="text-4xl font-black text-mainColor">{language == "en" ? "Visitors" : "زائر"}</h4>
+            <h4 className="text-4xl font-black text-mainColor">
+              {language == "en" ? "Visitors" : "زائر"}
+            </h4>
           </div>
         </div>
       </div>

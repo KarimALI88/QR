@@ -29,11 +29,6 @@ const MainNavbar = () => {
 
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const tn = localStorage.tn;
-  //   tn ? setToken(tn) : "";
-  // }, []);
-
   const closeMenu = () => setIsMenuOpen(false);
 
   React.useEffect(() => {
@@ -120,7 +115,7 @@ const MainNavbar = () => {
         </>
       )}
 
-      <Translate />
+      <Translate closeNavbar={() => setOpenNav(false)} />
     </ul>
   );
 
@@ -157,7 +152,7 @@ const MainNavbar = () => {
                     variant="circular"
                     size="md"
                     alt="User Avatar"
-                    className="border border-gray-900 p-0.5"
+                    className="border border-gray-900 p-0.5 mx-3"
                     src="https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?t=st=1730811104~exp=1730814704~hmac=26dcf6457601716f625358c7a18d2ee382f6d63c5e4700b68fecefb7df237aed&w=740"
                   />
                 </Button>
@@ -174,7 +169,8 @@ const MainNavbar = () => {
                     className="font-normal flex items-center gap-2 text-lg"
                     color="red"
                   >
-                    <FaPowerOff /> {language == "en" ? "Sign Out" : "تسجيل الخروج"}
+                    <FaPowerOff />{" "}
+                    {language == "en" ? "Sign Out" : "تسجيل الخروج"}
                   </Typography>
                 </MenuItem>
               </MenuList>

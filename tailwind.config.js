@@ -39,6 +39,9 @@ module.exports = withMT({
       animation: {
         updown: 'updown 1s ease-in-out infinite',
       },
+      fontFamily: {
+        cairo: ['Cairo', 'sans-serif'], // Add Cairo font
+      },
     },
   },
   plugins: [],

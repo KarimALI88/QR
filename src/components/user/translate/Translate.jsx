@@ -1,15 +1,18 @@
 import React, { useContext, useState } from "react";
 import { AppContext } from "../../../context/AppContext";
 
-const Translate = () => {
+const Translate = ({ closeNavbar }) => {
   const {language, setLanguage} = useContext(AppContext)
 
   const changeLang = () => {
     language == "ar" ? setLanguage("en") : setLanguage("ar");
     // localStorage.setItem("language", language)
+    if (closeNavbar) {
+      closeNavbar(); // Close the navbar
+    }
   };
   return (
-    <div>
+    <div className="p-4">
       {language == "en" && (
         <button onClick={changeLang}>
           <img

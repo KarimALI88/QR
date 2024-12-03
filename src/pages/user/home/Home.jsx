@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import MainNavbar from "../../../components/user/navbar/MainNavbar";
 import Header from "../../../components/user/header/Header";
 import PackageCard from "../../../components/user/packageCard/PackageCard";
@@ -7,9 +7,11 @@ import Footer from "../../../components/user/footer/Footer";
 import goal from "../../../assets/imgs/goal-img.png";
 import { FaMicrophoneAlt } from "react-icons/fa";
 import { IoMdPhonePortrait } from "react-icons/io";
+import { AppContext } from "../../../context/AppContext";
 
 const Home = ({ country, user }) => {
   const [packages, setPackages] = useState([]);
+  const {language} =useContext(AppContext)
 
   const getPackages = async () => {
     try {
@@ -19,7 +21,7 @@ const Home = ({ country, user }) => {
       }
 
       const data = await response.json();
-      // console.log("packages", data);
+      console.log("packages", data);
       setPackages(data);
     } catch (error) {
       console.error("error", error);
@@ -31,13 +33,13 @@ const Home = ({ country, user }) => {
   }, []);
 
   return (
-    <div>
+    <div className={`${language == "en" ? "ltr" : "rtl"}`} style={{direction: language === "en" ? "ltr" : "rtl"}}>
       <MainNavbar />
       <div
         style={{
-          background: "rgb(255,255,255)",
-          background:
-            "linear-gradient(152deg, rgba(255,255,255,1) 0%, rgba(5,59,92,1) 100%)",
+          // background: "rgb(255,255,255)",
+          // background:
+          //   "linear-gradient(152deg, rgba(255,255,255,1) 0%, rgba(5,59,92,1) 100%)",
         }}
       >
         <Header />
@@ -69,7 +71,7 @@ const Home = ({ country, user }) => {
       ) : (
         <div className="my-10 mx-auto">
           <h3 className="text-5xl w-fit mx-auto font-black text-center p-4 rounded-tl-3xl rounded-br-3xl border-4 border-mainColor text-mainColor">
-            PACKAGES
+            {language == "en" ? "PACKAGES" : "العروض"}
           </h3>
           <div
             className="my-10 px-10 flex justify-center items-center flex-wrap gap-5 "
@@ -79,11 +81,11 @@ const Home = ({ country, user }) => {
               <PackageCard
                 key={index}
                 index={index}
-                title={pack?.name}
-                description={pack?.description}
+                title={language == "en" ? pack?.name : pack?.name_ar}
+                description={language == "en" ? pack?.description : pack?.description_ar}
                 price={pack?.price_EGP + " EGP"}
                 savings="SAVE 28%"
-                features={pack?.features}
+                features={language == "en" ? pack?.features : pack?.features_ar}
                 packageZero={index === 0 ? true : false}
                 country={country}
                 price_dollar={pack?.price_dollar}
