@@ -1,19 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
 import MainNavbar from "../../../components/user/navbar/MainNavbar";
-import { Dialog } from "@material-tailwind/react";
-import { Input } from "@material-tailwind/react";
+import { Dialog, Input, Spinner, Select, Option } from "@material-tailwind/react";
 import axios from "axios";
-import { AppContext } from "./../../../context/AppContext";
-import { Spinner } from "@material-tailwind/react";
+import { AppContext } from "../../../context/AppContext";
 import { useNavigate } from "react-router-dom";
-import { Select, Option } from "@material-tailwind/react";
 import geidea from "../../../assets/imgs/geidea.png";
 import { useInView } from "react-intersection-observer";
 import Footer from "../../../components/user/footer/Footer";
 
 const Payment = ({ user, setRefresh }) => {
   const [activeSection, setActiveSection] = useState("geidea");
-  const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [packages, setPackages] = useState([]);
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -38,55 +34,9 @@ const Payment = ({ user, setRefresh }) => {
     getPackages();
   }, []);
 
-  const onSuccess = (selectedPackageId) => {
-    console.log("Payment success");
-    createSubscription(selectedPackageId);
-    setRefresh((prevState) => !prevState);
-    navigate("/qr");
-  };
-
-  const onError = () => {
-    console.log("Payment error");
-  };
-
-  const onCancel = () => {
-    console.log("Payment canceled");
-  };
-
-  const payment = new GeideaCheckout(onSuccess, onError, onCancel);
-
-  const payHpp = (sessionId, selectedPackageId) => {
-    payment.startPayment(sessionId, {
-      onSuccess: () => onSuccess(selectedPackageId),
-      onError,
-      onCancel,
-    });
-  };
-
-  const payGeidea = async (selectedAmount, selectedPackageId) => {
-    setLoading(true);
-    try {
-      const response = await axios({
-        method: "post",
-        url: `${import.meta.env.VITE_API_LINK}/payment/initiate`,
-        data: {
-          amount: selectedAmount,
-        },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setLoading(false);
-      if (response.data.sessionId) {
-        payHpp(response.data.sessionId, selectedPackageId); // Pass package ID here
-      }
-    } catch (error) {
-      console.error("error in payment", error);
-      setLoading(false);
-    }
-  };
-
   const createSubscription = async (packageId) => {
+    console.log("selected package ", packageId);
+
     try {
       const response = await axios({
         method: "post",
@@ -107,6 +57,48 @@ const Payment = ({ user, setRefresh }) => {
     }
   };
 
+  const payGeidea = async (selectedAmount, selectedPackageId) => {
+    console.log("selected package in payGeidea", selectedPackageId);
+
+    setLoading(true);
+    try {
+      const response = await axios({
+        method: "post",
+        url: `${import.meta.env.VITE_API_LINK}/payment/initiate`,
+        data: {
+          amount: selectedAmount,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setLoading(false);
+      if (response.data.sessionId) {
+        const onSuccess = () => {
+          console.log("Payment success");
+          console.log("selected package ", selectedPackageId);
+          createSubscription(selectedPackageId);
+          setRefresh((prevState) => !prevState);
+          navigate("/qr");
+        };
+
+        const onError = () => {
+          console.log("Payment error");
+        };
+
+        const onCancel = () => {
+          console.log("Payment canceled");
+        };
+
+        const payment = new GeideaCheckout(onSuccess, onError, onCancel);
+        payment.startPayment(response.data.sessionId);
+      }
+    } catch (error) {
+      console.error("error in payment", error);
+      setLoading(false);
+    }
+  };
+
   return (
     <div>
       <MainNavbar />
@@ -118,7 +110,7 @@ const Payment = ({ user, setRefresh }) => {
         {/* Payment Methods */}
         <div className="flex justify-center gap-8 items-center my-10 mx-auto flex-wrap">
           <button
-            className={`py-2 px-5 text-center text-2xl font-black`}
+            className="py-2 px-5 text-center text-2xl font-black"
             onClick={() => setActiveSection("geidea")}
           >
             <img
@@ -170,7 +162,7 @@ const Payment = ({ user, setRefresh }) => {
                                           : "bg-gray-400"
                                       } text-black px-3 py-2 font-semibold mb-5`}
                                     >
-                                      Annualy
+                                      Annually
                                     </button>
                                     <button
                                       onClick={() => setPeriod("monthly")}
@@ -206,7 +198,7 @@ const Payment = ({ user, setRefresh }) => {
                                 )}
                                 {period === "monthly" && (
                                   <p className="text-3xl font-bold text-gray-500">
-                                    {pack?.id == 2 && (
+                                    {pack?.id === 2 && (
                                       <div>
                                         <h2>99.00 EGP</h2>
                                         <h4 className="text-mainColor text-lg">
@@ -214,7 +206,7 @@ const Payment = ({ user, setRefresh }) => {
                                         </h4>
                                       </div>
                                     )}
-                                    {pack?.id == 3 && (
+                                    {pack?.id === 3 && (
                                       <div>
                                         <h2>150.00 EGP</h2>
                                         <h4 className="text-mainColor text-lg">
@@ -222,7 +214,7 @@ const Payment = ({ user, setRefresh }) => {
                                         </h4>
                                       </div>
                                     )}
-                                    {pack?.id == 1 && "0.00" + " EGP"}
+                                    {pack?.id === 1 && "0.00" + " EGP"}
                                   </p>
                                 )}
                               </div>
@@ -253,24 +245,28 @@ const Payment = ({ user, setRefresh }) => {
                           <div className="bg-gray-100 px-6 py-4">
                             <button
                               onClick={() => {
-                                period === "annually" &&
+                                if (period === "annually") {
                                   payGeidea(pack?.price_EGP, pack?.id);
-                                period === "monthly" &&
-                                  pack?.id == 2 &&
-                                  payGeidea(99, pack?.id);
-                                period === "monthly" &&
-                                  pack?.id == 3 &&
-                                  payGeidea(150, pack?.id);
+                                } else if (period === "monthly") {
+                                  if (pack?.id === 2) {
+                                    payGeidea(99.0, pack?.id);
+                                  } else if (pack?.id === 3) {
+                                    payGeidea(150.0, pack?.id);
+                                  } else if (pack?.id === 1) {
+                                    createSubscription(pack?.id);
+                                  }
+                                }
                               }}
-                              className="w-full min-w-[90%] mx-auto block text-center bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded"
+                              className="flex items-center justify-center gap-3 text-xl font-semibold bg-mainColor hover:bg-secondColor text-white px-6 py-2 rounded-md w-full transition-all duration-300"
                             >
-                              {period === "annually"
-                                ? `Pay ${pack?.price_EGP}`
-                                : pack?.id === 2
-                                ? `Pay 99.00`
-                                : pack?.id === 3
-                                ? "Pay 150.00"
-                                : "Pay 0.00"}
+                              {loading && (
+                                <Spinner
+                                  className="h-5 w-5 mx-auto text-center"
+                                  color="amber"
+                                  aria-label="Amber spinner example"
+                                />
+                              )}
+                              {pack?.id === 1 ? "Subscribe Now" : "Buy Now"}
                             </button>
                           </div>
                         </div>

@@ -7,11 +7,11 @@ import { BrowserRouter } from "react-router-dom";
 import ContextProvider from "./context/AppContext.jsx";
 
 createRoot(document.getElementById("root")).render(
+  <BrowserRouter>
   <ContextProvider>
-    <BrowserRouter>
       <ThemeProvider>
         <App />
       </ThemeProvider>
-    </BrowserRouter>
   </ContextProvider>
+    </BrowserRouter>
 );

@@ -238,11 +238,11 @@ const MainNavbar = () => {
             {!token && (
               <Button
                 fullWidth
-                variant="gradient"
+                // variant="gradient"
                 size="lg"
                 className="bg-mainColor hover:bg-secondColor text-white font-[600]"
               >
-                <Link to="/login">Sign in</Link>
+                <Link to="/login">{language == "en" ? "Sign in" : "تسجيل الدخول"}</Link>
               </Button>
             )}
           </div>

@@ -11,7 +11,43 @@ const RenewPackage = ({ user }) => {
   const [period, setPeriod] = useState("");
   const [packages, setPackages] = useState([]);
   const [packageNum, setPackageNum] = useState(0);
+  const [renewPrice, setRenewPrice] = useState();
   // console.log("user", user);
+
+  const getRenewPrice = async () => {
+    try {
+      const response = await axios({
+        method: "post",
+        url: `${import.meta.env.VITE_API_LINK}/new_price/maxqr`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        data: {
+          price_qr:
+            user?.pivot?.package_id == 2
+              ? 50
+              : user?.pivot?.package_id == 3
+              ? 75
+              : 0,
+          price_monthly:
+            period === "anually"
+              ? 0
+              : period === "monthly"
+              ? user?.pivot?.package_id == 2 && 100
+              : user?.pivot?.package_id == 3 && 150,
+        },
+      });
+      console.log("response of renew price", response);
+      response.data && setRenewPrice(response.data.new_price);
+    } catch (error) {
+      console.error("error in getting renew price");
+    }
+  };
+
+  useEffect(() => {
+    user?.pivot?.package_id && getRenewPrice();
+  }, [user]);
 
   const getPackages = async () => {
     try {
@@ -128,7 +164,7 @@ const RenewPackage = ({ user }) => {
 
   const renewQrLimits = async () => {
     Swal.fire({
-      title: "Do you want to renew 20 QR?",
+      title: "Do you want to renew 2 QR through same period of your subscribe?",
       text: "You will renew number of QRs only",
       showCancelButton: true,
       confirmButtonText: "Renew",
@@ -136,7 +172,13 @@ const RenewPackage = ({ user }) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
         setCheck(false);
-        payGeidea(3000);
+        payGeidea(
+          user?.pivot?.package_id == 2
+            ? 50
+            : user?.pivot?.package_id == 3
+            ? 75
+            : 0
+        );
       } else if (result.isDenied) {
         Swal.fire("Changes are not saved", "", "info");
       }
@@ -191,7 +233,7 @@ const RenewPackage = ({ user }) => {
 
   return (
     <div>
-      <div className="flex flex-wrap justify-center items-center gap-10 sm:flex-col lg:flex-row w-full">
+      <div className="flex flex-wrap justify-center items-start gap-5 sm:flex-col lg:flex-row w-full">
         {/* {packages.map((pack, index) => ( */}
         <div>
           <div
@@ -332,53 +374,17 @@ const RenewPackage = ({ user }) => {
             }}
             className="bg-mainColor px-5 py-3 font-semibold text-white hover:bg-secondColor block my-10"
           >
-            Renew QRs by 3000 EGP
+            Renew QRs by{" "}
+            {user?.pivot?.package_id == 2
+              ? 50
+              : user?.pivot?.package_id == 3
+              ? 75
+              : 0}{" "}
+            EGP
           </button>
         </div>
         {/* ))} */}
       </div>
-      {/* <div className="flex flex-wrap justify-start items-center gap-10"> */}
-      {/* renew year */}
-      {/* <div>
-          <button
-            onClick={() => {
-              setCheck(true);
-              setPeriod("annually");
-            }}
-            className="bg-mainColor px-5 py-3 font-semibold text-white hover:bg-secondColor block my-10"
-          >
-            Renew Year by {`${user?.price_EGP}`} EGP
-          </button>
-          
-        </div> */}
-
-      {/* renew month */}
-      {/* <div>
-          <button
-            onClick={() => {
-              setCheck(true);
-              setPeriod("monthly");
-            }}
-            className="bg-mainColor px-5 py-3 font-semibold text-white hover:bg-secondColor block my-10"
-          >
-            Renew Month by {user?.pivot?.package_id === 2 ? "99" : "150"} EGP
-          </button>
-        </div> */}
-
-      {/* renew qrs */}
-      {/* <div>
-          <button
-            onClick={() => {
-              setCheck(false);
-              renewQrLimits();
-            }}
-            className="bg-mainColor px-5 py-3 font-semibold text-white hover:bg-secondColor block my-10"
-          >
-            Renew QRs by 3000 EGP
-          </button>
-        </div> */}
-
-      {/* </div> */}
     </div>
   );
 };
