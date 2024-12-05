@@ -89,11 +89,9 @@ function App() {
   }, [token, refresh]);
 
   useEffect(() => {
-    let lang = localStorage.getItem("language")
-    !lang && localStorage.setItem("language", "en")
-  }, [])
-
-  
+    let lang = localStorage.getItem("language");
+    !lang && localStorage.setItem("language", "en");
+  }, []);
 
   return (
     <>
@@ -111,6 +109,10 @@ function App() {
               setRefresh={setRefresh}
             />
           }
+        />
+        <Route
+          path="/admin/*"
+          element={<AdminLayout setRefresh={setRefresh} user={user} />}
         />
         {token ? (
           <>
@@ -133,7 +135,6 @@ function App() {
           <Route path="*" element={<Navigate to="/login" replace />} />
         )}
       </Routes>
-      
     </>
   );
 }

@@ -69,21 +69,21 @@ const Header = () => {
             href="#packageFree"
             className="bg-black mx-auto px-10 py-5 font-semibold text-white hover:bg-secondColor shadow-2xl flex gap-3 items-center cursor-pointer w-[250px]"
           >
-            {language == "en" ? "Free QR" : "فري QR"}{" "}
+            {language == "en" ? "Free QR" : "مجاني QR"}{" "}
             <IoIosArrowDown size={24} className="animate-updown" />
           </a>
           <a
             href="#package2"
             className="bg-black px-10 mx-auto py-5 font-semibold text-white hover:bg-secondColor shadow-2xl flex gap-3 items-center cursor-pointer w-[250px]"
           >
-            {language == "en" ? "Smart QR" : "ذكي QR"}{" "}
+            {language == "en" ? "Smart QR" : "احترافي للشركات QR"}{" "}
             <IoIosArrowDown size={24} className="animate-updown" />
           </a>
           <a
             href="#package3"
             className="bg-black px-10 mx-auto py-5 font-semibold text-white hover:bg-secondColor shadow-2xl flex gap-3 items-center cursor-pointer w-[250px]"
           >
-            {language == "en" ? "All in one QR" : "كله في واحد QR"}
+            {language == "en" ? "All in one QR" : "  احترافي للمطاعم QR"}
             <IoIosArrowDown size={24} className="animate-updown" />
           </a>
         </div>

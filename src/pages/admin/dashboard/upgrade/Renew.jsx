@@ -3,16 +3,17 @@ import { AppContext } from "../../../../context/AppContext";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Renew = ({ user }) => {
   const { token } = useContext(AppContext);
-  const [packageNumber, setPackageNumber] = useState("1");
+  const [packageNumber, setPackageNumber] = useState(1);
   const [loading, setLoading] = useState(false);
   const [packages, setPackages] = useState([]);
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState(0);
   const [pendingAlertCheck, setPendingAlertCheck] = useState(false);
   const [period, setPeriod] = useState("monthly");
-
+  const navigate = useNavigate()
   const getPackages = async () => {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_LINK}/packages`);
@@ -38,10 +39,14 @@ const Renew = ({ user }) => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_LINK}/new_price`,
-        { package_id: packageId },
+        {
+          package_id: packageId,
+        },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      console.log("upgrade price", response);
       setAmount(response.data?.price_to_pay || "N/A");
+      // setAmount(1);
     } catch (error) {
       console.error("Error fetching upgrade price:", error);
     }
@@ -74,7 +79,7 @@ const Renew = ({ user }) => {
       return;
     }
     Swal.fire({
-      title: `Do you want to upgrade by ${amount}?`,
+      title: `Do you want to upgrade by ${amount} EGP?`,
       text: "You will upgrade to a higher package.",
       showCancelButton: true,
       confirmButtonText: "Upgrade",
@@ -132,7 +137,10 @@ const Renew = ({ user }) => {
     try {
       await axios.post(
         `${import.meta.env.VITE_API_LINK}/Upgrade-package`,
-        { package_id: packageNumber },
+        {
+          package_id: packageNumber,
+          duration: period === "annually" ? "year" : "month",
+        },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       toast.success("Upgraded successfully!");
@@ -159,7 +167,9 @@ const Renew = ({ user }) => {
                 <div
                   className={`bg-white shadow-sm rounded-lg my-14 overflow-hidden h-fit w-[250px] mx-auto border-mainColor border-solid border-2 flex flex-col ${
                     index === 2 ? "scale-110 border-secondColor border-4" : ""
-                  } ${index === 1 ? "scale-105" : ""} ${index === 0 ? "hidden" : ""}`}
+                  } ${index === 1 ? "scale-105" : ""} ${
+                    index === 0 ? "hidden" : ""
+                  }`}
                 >
                   <div className="px-6 py-8 flex-grow">
                     <div className="flex flex-col justify-between gap-4">
@@ -194,13 +204,17 @@ const Renew = ({ user }) => {
                   </div>
                   <div className="bg-gray-100 px-6 py-4">
                     <button
-                      onClick={() => handlePackageSelection(pack?.id, "monthly")}
+                      onClick={() =>
+                        handlePackageSelection(pack?.id, "monthly")
+                      }
                       className="w-full my-2 min-w-[90%] mx-auto block text-center bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded"
                     >
                       Upgrade Month
                     </button>
                     <button
-                      onClick={() => handlePackageSelection(pack?.id, "annually")}
+                      onClick={() =>
+                        handlePackageSelection(pack?.id, "annually")
+                      }
                       className="w-full my-2 min-w-[90%] mx-auto block text-center bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded"
                     >
                       Upgrade Year

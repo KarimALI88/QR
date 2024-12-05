@@ -259,13 +259,13 @@ const Payment = ({ user, setRefresh }) => {
                               }}
                               className="flex items-center justify-center gap-3 text-xl font-semibold bg-mainColor hover:bg-secondColor text-white px-6 py-2 rounded-md w-full transition-all duration-300"
                             >
-                              {loading && (
+                              {/* {loading && (
                                 <Spinner
                                   className="h-5 w-5 mx-auto text-center"
                                   color="amber"
                                   aria-label="Amber spinner example"
                                 />
-                              )}
+                              )} */}
                               {pack?.id === 1 ? "Subscribe Now" : "Buy Now"}
                             </button>
                           </div>

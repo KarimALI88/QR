@@ -3,15 +3,18 @@ import React, { useContext, useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { AppContext } from "../../../../context/AppContext";
 import { toast } from "react-toastify";
+import extraQr from "../../../../assets/imgs/extraqr.jpg";
+import { useNavigate } from "react-router-dom";
 
 const RenewPackage = ({ user }) => {
   const { token } = useContext(AppContext);
   const [check, setCheck] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [period, setPeriod] = useState("");
+  const [period, setPeriod] = useState("annually");
   const [packages, setPackages] = useState([]);
   const [packageNum, setPackageNum] = useState(0);
-  const [renewPrice, setRenewPrice] = useState();
+  const [renewPrice, setRenewPrice] = useState(0);
+  const navigate = useNavigate();
   // console.log("user", user);
 
   const getRenewPrice = async () => {
@@ -31,23 +34,27 @@ const RenewPackage = ({ user }) => {
               ? 75
               : 0,
           price_monthly:
-            period === "anually"
+            period === "annually"
               ? 0
               : period === "monthly"
-              ? user?.pivot?.package_id == 2 && 100
-              : user?.pivot?.package_id == 3 && 150,
+              ? user?.pivot?.package_id == 2
+                ? 100
+                : user?.pivot?.package_id == 3
+                ? 150
+                : 0 // Default to 0 if none match
+              : 0, // Default to 0 if period isn't "annually" or "monthly"
         },
       });
       console.log("response of renew price", response);
       response.data && setRenewPrice(response.data.new_price);
     } catch (error) {
-      console.error("error in getting renew price");
+      console.error("error in getting renew price", error);
     }
   };
 
   useEffect(() => {
     user?.pivot?.package_id && getRenewPrice();
-  }, [user]);
+  }, [user, period]);
 
   const getPackages = async () => {
     try {
@@ -74,9 +81,8 @@ const RenewPackage = ({ user }) => {
 
   const onSuccess = () => {
     console.log("pay success");
-    check && renewDurationApi();
-    !check && renewQRLimitsApi();
-    navigate("/admin/renew");
+    check === true ? renewDurationApi() : renewQRLimitsApi();
+    navigate("/admin/profile");
   };
 
   const onError = () => {
@@ -130,7 +136,7 @@ const RenewPackage = ({ user }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("response of renew", response);
+      console.log("response of renew duration", response);
       Swal.fire("Renewe!", "", "success");
     } catch (error) {
       console.error("error in duration api", error);
@@ -147,15 +153,7 @@ const RenewPackage = ({ user }) => {
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-        // payGeidea(user?.price_EGP);
-        user?.pivot?.package_id == 3 &&
-          period === "annually" &&
-          payGeidea(user?.price_EGP);
-        user?.pivot?.package_id == 2 &&
-          period === "annually" &&
-          payGeidea(user?.price_EGP);
-        user?.pivot?.package_id == 3 && period === "monthly" && payGeidea(150);
-        user?.pivot?.package_id == 2 && period === "monthly" && payGeidea(99);
+        payGeidea(1);
       } else if (result.isDenied) {
         Swal.fire("Changes are not saved", "", "info");
       }
@@ -174,9 +172,9 @@ const RenewPackage = ({ user }) => {
         setCheck(false);
         payGeidea(
           user?.pivot?.package_id == 2
-            ? 50
+            ? 1
             : user?.pivot?.package_id == 3
-            ? 75
+            ? 1
             : 0
         );
       } else if (result.isDenied) {
@@ -191,7 +189,7 @@ const RenewPackage = ({ user }) => {
         method: "post",
         url: `${import.meta.env.VITE_API_LINK}/Upgrade-QRlimit`,
         data: {
-          qrcode_limit: "20",
+          qrcode_limit: 2,
         },
         headers: {
           "Content-Type": "application/json",
@@ -218,18 +216,21 @@ const RenewPackage = ({ user }) => {
       });
       console.log("response of check", response);
       // response.data.message === 200 && !check && renewQrLimits()
-      response.data.message && check && renewDuration();
+      if (response.data.message) {
+        setCheck(true);
+        renewDuration();
+      }
     } catch (error) {
       console.error("error in check subscribtion", error);
       toast.error(error.response.data.message);
     }
   };
 
-  useEffect(() => {
-    if (check && period) {
-      checkSubscribtion(check, period);
-    }
-  }, [check, period]);
+  // useEffect(() => {
+  //   if (check && period) {
+  //     checkSubscribtion(check, period);
+  //   }
+  // }, [check]);
 
   return (
     <div>
@@ -273,46 +274,11 @@ const RenewPackage = ({ user }) => {
                     </div>
                   )}
                   {/* price based on annually or monthly */}
-                  {period === "annually" && (
-                    <p className="text-3xl font-bold text-gray-500">
-                      {packages[packageNum]?.price_EGP}
-                      {packages[packageNum]?.id === 2 && (
-                        <div>
-                          <h4 className="text-mainColor text-lg">
-                            <del>2400.00 EGP</del>
-                          </h4>
-                        </div>
-                      )}
-                      {packages[packageNum]?.id === 3 && (
-                        <div>
-                          <h4 className="text-mainColor text-lg">
-                            <del>6000.00 EGP</del>
-                          </h4>
-                        </div>
-                      )}
-                    </p>
-                  )}
-                  {period === "monthly" && (
-                    <p className="text-3xl font-bold text-gray-500">
-                      {packages[packageNum]?.id == 2 && (
-                        <div>
-                          <h2>99.00 EGP</h2>
-                          <h4 className="text-mainColor text-lg">
-                            <del>200.00 EGP</del>
-                          </h4>
-                        </div>
-                      )}
-                      {packages[packageNum]?.id == 3 && (
-                        <div>
-                          <h2>150.00 EGP</h2>
-                          <h4 className="text-mainColor text-lg">
-                            <del>300.00 EGP</del>
-                          </h4>
-                        </div>
-                      )}
-                      {packages[packageNum]?.id == 1 && "0.00" + " EGP"}
-                    </p>
-                  )}
+
+                  <p className="text-3xl font-bold text-gray-500">
+                    {/* {packages[packageNum]?.price_EGP} */}
+                    {renewPrice} EGP
+                  </p>
                 </div>
               </div>
               {/* feature */}
@@ -339,50 +305,43 @@ const RenewPackage = ({ user }) => {
               </ul>
             </div>
             <div className="bg-gray-100 px-6 py-4">
-              <div className="my-3">
-                <button
-                  onClick={() => {
-                    setCheck(true);
-                    setPeriod("annually");
-                  }}
-                  className="w-full min-w-[90%] mx-auto block text-center bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded"
-                >
-                  Renew Year by {`${user?.price_EGP}`} EGP
-                </button>
-              </div>
-              <div>
-                <button
-                  onClick={() => {
-                    setCheck(true);
-                    setPeriod("monthly");
-                  }}
-                  className="w-full min-w-[90%] mx-auto block text-center bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded"
-                >
-                  Renew Month by {user?.pivot?.package_id === 2 ? "99" : "150"}{" "}
-                  EGP
-                </button>
-              </div>
+              <button
+                onClick={() => {
+                  setCheck(true);
+                  // setPeriod("annually");
+                  checkSubscribtion()
+                }}
+                className="w-full min-w-[90%] mx-auto block text-center bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded"
+              >
+                Renew
+              </button>
             </div>
           </div>
         </div>
         {/* ---------------------------------------------------------------------- */}
         <div className="bg-white px-5 shadow-sm rounded-lg my-10 overflow-hidden h-fit w-[250px] mx-auto border-mainColor border-solid border-2 flex flex-col">
+          <img
+            src={extraQr}
+            alt="qr image"
+            className="my-5 mx-auto w-[90%] h-52"
+          />
           <button
             onClick={() => {
               setCheck(false);
-              renewQrLimits();
+              renewQrLimits()
             }}
-            className="bg-mainColor px-5 py-3 font-semibold text-white hover:bg-secondColor block my-10"
+            className="w-full min-w-[90%] mx-auto block text-center bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded my-3"
           >
-            Renew QRs by{" "}
+            increas 2 QRs by {" "}
             {user?.pivot?.package_id == 2
               ? 50
               : user?.pivot?.package_id == 3
               ? 75
-              : 0}{" "}
+              : 0} {" "}
             EGP
           </button>
         </div>
+        {/* <button onClick={getRenewPrice}>test </button> */}
         {/* ))} */}
       </div>
     </div>

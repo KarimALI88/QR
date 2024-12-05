@@ -207,7 +207,7 @@ const PackageCard = ({
                 to={packageZero ? "/generate-qr" : "qr"}
                 className="w-full min-w-[90%] mx-auto block text-center bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded"
               >
-                View
+                {language == "en" ? "View" : "مشاهدة"}
               </Link>
             );
           })()}
@@ -220,7 +220,7 @@ const PackageCard = ({
                 to={packageZero ? "/generate-qr" : "qr"}
                 className="w-full min-w-[90%] mx-auto block text-center bg-mainColor hover:bg-secondColor text-white font-bold py-3 px-6 rounded"
               >
-                View
+                {language == "en" ? "View" : "مشاهدة"}
               </Link>
             );
           })()}

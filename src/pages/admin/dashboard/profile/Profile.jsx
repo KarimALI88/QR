@@ -100,26 +100,27 @@ const Profile = () => {
           <div className="flex gap-3 my-3 px-5">
             <h5 className="text-xl font-semibold">Package Name: </h5>
             <h6 className="text-lg font-medium text-gray-800">
-              {profile?.user_packages?.[0]?.name}
+              {profile?.user_packages?.[0]?.name || "N/A"}
             </h6>
-            {profile?.user_packages?.[0]?.name != "All in one" && <Link to={"/admin/upgrade"} className="text-xl text-mainColor">Upgrade</Link>}
+            {(profile?.user_packages?.[0]?.name != "All in one link" || "N/A") && <Link to={"/admin/upgrade"} className="text-xl text-mainColor">Upgrade</Link>}
           </div>
           <div className="flex gap-3 my-3 px-5">
             <h5 className="text-xl font-semibold">Qr Limit: </h5>
             <h6 className="text-lg font-medium text-gray-800">
-              {profile?.user_packages?.[0]?.qrcode_limit}
+              {profile?.user_packages?.[0]?.qrcode_limit || "N/A"}
             </h6>
           </div>
           <div className="flex gap-3 my-3 px-5">
             <h5 className="text-xl font-semibold">Start Date: </h5>
             <h6 className="text-lg font-medium text-gray-800">
-              {profile?.user_packages?.[0]?.start_date}
+              {profile?.user_packages?.[0]?.start_date || "N/A"}
             </h6>
           </div>
           <div className="flex gap-3 my-3 px-5">
             <h5 className="text-xl font-semibold">End Date: </h5>
             <h6 className="text-lg font-medium text-gray-800">
-              {profile?.user_packages?.[0]?.end_date}
+              {profile?.user_packages?.[0]?.end_date || "N/A"}
+              <Link to={"/admin/renew"} className="text-xl text-mainColor"> Renew & Extra QRs</Link>
             </h6>
           </div>
           {showButton && (
