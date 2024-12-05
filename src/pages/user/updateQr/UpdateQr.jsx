@@ -291,10 +291,16 @@ const UpdateQr = ({ valid, user, refresh }) => {
         setColor(response.data.background_color);
         setDescription(response.data.description);
         setName(response.data.title);
+        setCoverImage(
+          `https://backend.ofx-qrcode.com/storage/${response.data.cover}`
+        );
+        setLogoImage(
+          `https://backend.ofx-qrcode.com/storage/${response.data.logo}`
+        );
         response.data.phones[0] && setPhone1(response.data.phones[0]);
         response.data.phones[1] && setPhone2(response.data.phones[1]);
         response.data.font && setSelectedFont(response.data.font);
-
+        // behance link
         const behanceLink = response.data.links.find(
           (link) => link.type === "behance"
         );
@@ -306,7 +312,126 @@ const UpdateQr = ({ valid, user, refresh }) => {
           setBeLink(behanceLink.url);
         }
 
-        
+        // facebook link
+        const facebookLink = response.data.links.find(
+          (link) => link.type === "facebook"
+        );
+        if (facebookLink) {
+          setActiveInputs((prevState) => ({
+            ...prevState,
+            facebook: !prevState.facebook,
+          }));
+          setFacebookLink(facebookLink.url);
+        }
+
+        // instgram link
+        const instgramLink = response.data.links.find(
+          (link) => link.type === "instgram"
+        );
+        if (instgramLink) {
+          setActiveInputs((prevState) => ({
+            ...prevState,
+            instgram: !prevState.instgram,
+          }));
+          setInstgramLink(instgramLink.url);
+        }
+
+        // youtube link
+        const youtubeLink = response.data.links.find(
+          (link) => link.type === "youtube"
+        );
+        if (youtubeLink) {
+          setActiveInputs((prevState) => ({
+            ...prevState,
+            youtube: !prevState.youtube,
+          }));
+          setYoutubeLink(youtubeLink.url);
+        }
+
+        // tiktok link
+        const tiktokLink = response.data.links.find(
+          (link) => link.type === "tiktok"
+        );
+        if (tiktokLink) {
+          setActiveInputs((prevState) => ({
+            ...prevState,
+            tiktok: !prevState.tiktok,
+          }));
+          setTiktokLink(tiktokLink.url);
+        }
+
+        // snapchat link
+        const snapchatLink = response.data.links.find(
+          (link) => link.type === "snapchat"
+        );
+        if (snapchatLink) {
+          setActiveInputs((prevState) => ({
+            ...prevState,
+            snapchat: !prevState.snapchat,
+          }));
+          setSnapchatLink(snapchatLink.url);
+        }
+
+        // portfolio link
+        const portfolioLink = response.data.links.find(
+          (link) => link.type === "snapchat"
+        );
+        if (portfolioLink) {
+          setActiveInputs((prevState) => ({
+            ...prevState,
+            portfolio: !prevState.portfolio,
+          }));
+          setPortfolioLink(portfolioLink.url);
+        }
+
+        // linkedin link
+        const linkedinLink = response.data.links.find(
+          (link) => link.type === "linkedin"
+        );
+        if (linkedinLink) {
+          setActiveInputs((prevState) => ({
+            ...prevState,
+            linkedin: !prevState.linkedin,
+          }));
+          setLinkedinLink(linkedinLink.url);
+        }
+
+        // twitter link
+        const twitterLink = response.data.links.find(
+          (link) => link.type === "twitter"
+        );
+        if (twitterLink) {
+          setActiveInputs((prevState) => ({
+            ...prevState,
+            twitter: !prevState.twitter,
+          }));
+          setTwitterLink(twitterLink.url);
+        }
+
+        // pdfs
+        response.data.pdfs.some(
+          (pdf) =>
+            pdf.type === "menu" &&
+            setMenuImage(
+              `https://backend.ofx-qrcode.com/storage/${pdf.pdf_path}`
+            )
+        );
+        response.data.pdfs.some((pdf) => {
+          if (pdf.type != "menu") {
+            setPDF(`https://backend.ofx-qrcode.com/storage/${pdf.pdf_path}`);
+            setPdfName(pdf.type);
+          }
+        });
+
+        // branches
+        response.data.branches &&
+          setBranches(
+            response.data.branches.map((branch) => ({
+              name: branch.name,
+              phones: branch.phones[0], // Get the first phone
+              location: branch.location,
+            }))
+          );
       }
     } catch (error) {
       console.error("error in get profile ", error);

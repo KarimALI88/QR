@@ -1,4 +1,4 @@
-import { FaFilePdf } from "react-icons/fa6";
+import { FaFilePdf, FaGlobe } from "react-icons/fa6";
 import {
   FaFacebook,
   FaInstagramSquare,
@@ -291,7 +291,7 @@ const Profile = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <FaGlobe size={60} className="" />
+                  {/* <FaGlobe size={60} className="" /> */}
                 </a>
               )}
             </div>
