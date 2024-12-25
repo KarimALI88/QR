@@ -395,14 +395,14 @@ const MyQrs = ({ user }) => {
                               download
                             </a>
 
-                            {/* {row?.qr_code?.profile?.title && (
+                            {row?.qr_code?.profile?.title && (
                               <Link
                                 to={`/update-qr/${row?.qr_code?.profile_id}`}
                                 className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-2 hover:bg-secondColor"
                               >
                                 Update
                               </Link>
-                            )} */}
+                            )}
                           </div>
                         </td>
                       </tr>

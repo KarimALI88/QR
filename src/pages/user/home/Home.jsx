@@ -8,6 +8,7 @@ import goal from "../../../assets/imgs/goal-img.png";
 import { FaMicrophoneAlt } from "react-icons/fa";
 import { IoMdPhonePortrait } from "react-icons/io";
 import { AppContext } from "../../../context/AppContext";
+import Support from "../../../components/user/support/Support";
 
 const Home = ({ country, user }) => {
   const [packages, setPackages] = useState([]);
@@ -34,6 +35,7 @@ const Home = ({ country, user }) => {
 
   return (
     <div className={`${language == "en" ? "ltr" : "rtl"}`} style={{direction: language === "en" ? "ltr" : "rtl"}}>
+      <Support />
       <MainNavbar />
       <div
         style={{

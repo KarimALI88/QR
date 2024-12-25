@@ -1,12 +1,19 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { AppContext } from "../../../context/AppContext";
 
 const Table = () => {
   const [data, setData] = useState([]);
-
+  const {token} = useContext(AppContext)
+  
   const getData = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_LINK}/admin/users-with-packages`);
+      const response = await axios.get(`${import.meta.env.VITE_API_LINK}/admin/users-with-packages`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        }
+      });
       setData(response.data.data);
     } catch (error) {
       console.error("Error fetching admin data", error);

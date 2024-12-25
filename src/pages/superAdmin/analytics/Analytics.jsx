@@ -1,17 +1,24 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FaUserAlt, FaQrcode, FaCheck } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
+import { AppContext } from './../../../context/AppContext';
 
 const Analytics = () => {
   const [data, setData] = useState({});
+  const {token} = useContext(AppContext)
 
   const getData = async () => {
     try {
       const response = await axios({
         method: "get",
         url: `${import.meta.env.VITE_API_LINK}/qrcode-stats`,
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`
+        }
       });
+
       console.log("response", response);
       response.data && setData(response.data);
     } catch (error) {

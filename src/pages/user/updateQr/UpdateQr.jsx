@@ -59,17 +59,17 @@ const UpdateQr = ({ valid, user, refresh }) => {
   const [phone1, setPhone1] = useState("");
   const [phone2, setPhone2] = useState("");
   const [activeInputs, setActiveInputs] = useState({
-    facebook: true,
-    instgram: true,
-    linkedin: true,
-    youtube: true,
-    be: true,
-    whatsapp: true,
-    portfolio: true,
-    tiktok: true,
-    snapchat: true,
-    twitter: true,
-    other: true,
+    facebook: false,
+    instgram: false,
+    linkedin: false,
+    youtube: false,
+    be: false,
+    whatsapp: false,
+    portfolio: false,
+    tiktok: false,
+    snapchat: false,
+    twitter: false,
+    other: false,
   });
   const { token, setPackageId } = useContext(AppContext);
   const [packageCheck, setPackageCheck] = useState("c3");
@@ -89,7 +89,7 @@ const UpdateQr = ({ valid, user, refresh }) => {
   const [selectedFont, setSelectedFont] = useState("Roboto");
   const [otherLinkName, setOtherLinkName] = useState("");
   const [branches, setBranches] = useState([
-    { name: "", location: "", phones: "" }, // Initial branch
+    { id: "", name: "", location: "", phones: "" }, // Initial branch
   ]);
   const [errorIndicator, setErrorIndicator] = useState({
     nameIndicator: false,
@@ -123,6 +123,9 @@ const UpdateQr = ({ valid, user, refresh }) => {
   ];
   const navigate = useNavigate();
   const [downloadImage, setDownloadImage] = useState("");
+  const [links, setLinks] = useState([]);
+  const [pdfs, setPdfs] = useState([]);
+  const [records, setRecords] = useState([]);
 
   // console.log("country", country)
   const handleOpen = () => setOpenModal(!openModal);
@@ -300,6 +303,8 @@ const UpdateQr = ({ valid, user, refresh }) => {
         response.data.phones[0] && setPhone1(response.data.phones[0]);
         response.data.phones[1] && setPhone2(response.data.phones[1]);
         response.data.font && setSelectedFont(response.data.font);
+        response.data.links && setLinks(response.data.links);
+
         // behance link
         const behanceLink = response.data.links.find(
           (link) => link.type === "behance"
@@ -374,7 +379,7 @@ const UpdateQr = ({ valid, user, refresh }) => {
 
         // portfolio link
         const portfolioLink = response.data.links.find(
-          (link) => link.type === "snapchat"
+          (link) => link.type === "portfolio"
         );
         if (portfolioLink) {
           setActiveInputs((prevState) => ({
@@ -423,10 +428,21 @@ const UpdateQr = ({ valid, user, refresh }) => {
           }
         });
 
+        response.data.pdfs && setPdfs(response.data.pdfs);
+        response.data.records &&
+          setRecords(
+            Array.isArray(response.data.records) ? response.data.records : []
+          );
+        response.data.records.length > 0 &&
+          setMp3(
+            `https://backend.ofx-qrcode.com/storage/${response.data.records[0]?.mp3_path}`
+          );
+
         // branches
         response.data.branches &&
           setBranches(
             response.data.branches.map((branch) => ({
+              id: branch.id, // Retain the branch ID
               name: branch.name,
               phones: branch.phones[0], // Get the first phone
               location: branch.location,
@@ -441,6 +457,130 @@ const UpdateQr = ({ valid, user, refresh }) => {
   useEffect(() => {
     getProfile();
   }, []);
+
+  const updateQrData = async () => {
+    setLoading(true);
+  
+    try {
+      const formData = new FormData();
+  
+      // Append basic fields
+      formData.append("title", name || "");
+      formData.append("description", description || "");
+      formData.append("color", color || "");
+      formData.append("font", selectedFont || "");
+  
+      // Append phones
+      if (phone1) formData.append("phones[]", phone1);
+      if (phone2) formData.append("phones[]", phone2);
+  
+      // Append logo and cover files
+      if (logoImageFile) formData.append("logo", logoImageFile);
+      if (coverImageFile) formData.append("cover", coverImageFile);
+  
+      // Handle MP3 files
+      let mp3Appended = false;
+      (records || []).forEach((record) => {
+        if (record.id) {
+          formData.append("mp3_id[]", record.id); // Existing MP3 ID
+          mp3Appended = true;
+        }
+      });
+      if (mp3File) {
+        formData.append("mp3[]", mp3File); // New MP3 file
+        mp3Appended = true;
+      }
+      if (!mp3Appended) {
+        formData.append("mp3[]", new File([""], "placeholder.mp3", { type: "audio/mpeg" })); // Ensure at least one file
+      }
+  
+      // Handle PDF files
+      let pdfAppended = false;
+      pdfs.forEach((pdf) => {
+        if (pdf.id) {
+          formData.append("pdfs_id", pdf.id); // Existing PDF ID
+          pdfAppended = true;
+        } else if (pdf.file) {
+          formData.append("pdfs[]", pdf.file); // New PDF file
+          pdfAppended = true;
+        }
+      });
+      if (pdfFile) {
+        formData.append("pdfs[]", pdfFile); // Handle additional new PDF file
+        pdfAppended = true;
+      }
+      if (!pdfAppended) {
+        formData.append("pdfs[]", new File([""], "placeholder.pdf", { type: "application/pdf" })); // Ensure at least one file
+      }
+  
+      // Handle links (existing and new)
+      links.forEach((link) => {
+        if (link.id) {
+          formData.append("links[]", JSON.stringify({
+            id: link.id,
+            url: link.url,
+            type: link.type,
+          }));
+        } else {
+          formData.append("links[]", JSON.stringify({
+            url: link.url,
+            type: link.type,
+          }));
+        }
+      });
+  
+      // Handle branches (existing and new)
+      branches.forEach((branch) => {
+        if (branch.id) {
+          formData.append("branches[]", JSON.stringify({
+            id: branch.id,
+            name: branch.name,
+            location: branch.location,
+            phones: branch.phones,
+          }));
+        } else {
+          formData.append("branches[]", JSON.stringify({
+            name: branch.name,
+            location: branch.location,
+            phones: branch.phones,
+          }));
+        }
+      });
+  
+      // Make the API request
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_LINK}/profile/${id}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+  
+      console.log("Update response:", response.data);
+      alert("Profile updated successfully!");
+    } catch (error) {
+      console.error("Error updating profile:", error.response?.data || error);
+      alert("Failed to update profile. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  
+
+  const handleLinkChange = (linkId, newUrl) => {
+    setLinks((prevLinks) =>
+      prevLinks.map((link) => {
+        if (link.id === linkId) {
+          return { ...link, url: newUrl };
+        }
+        return link;
+      })
+    );
+  };
 
   return (
     <div>
@@ -664,13 +804,13 @@ const UpdateQr = ({ valid, user, refresh }) => {
                             src={mp3}
                             className="w-full h-[100px] mt-4 rounded-lg"
                           />
-                          <IoIosCloseCircle
+                          {/* <IoIosCloseCircle
                             size={30}
                             onClick={() => {
                               setMp3(null);
                               setMp3File(null);
                             }}
-                          />
+                          /> */}
                         </div>
                       ) : (
                         <p>Drag & drop an MP3 here, or click to select one</p>
@@ -698,13 +838,13 @@ const UpdateQr = ({ valid, user, refresh }) => {
                       {pdf ? (
                         <div className="flex justify-between items-center">
                           <p>uploaded</p>
-                          <IoIosCloseCircle
+                          {/* <IoIosCloseCircle
                             size={30}
                             onClick={() => {
                               setPDF(null);
                               setPdfFile(null);
                             }}
-                          />
+                          /> */}
                         </div>
                       ) : (
                         <p>Drag & drop an PDF here, or click to select one</p>
@@ -927,6 +1067,29 @@ const UpdateQr = ({ valid, user, refresh }) => {
 
               {/* social inputs */}
               <div className="flex flex-wrap gap-5">
+                {links
+                  .filter((link) => !activeInputs[link.type])
+                  .map((link) => (
+                    <div key={link.id} className="w-[300px]">
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="mb-1 mt-5 font-semibold text-lg"
+                      >
+                        {link.type}
+                      </Typography>
+                      <Input
+                        type="text"
+                        variant="small"
+                        color="blue-gray"
+                        className="mb-1 mt-5 font-semibold text-lg"
+                        value={link.url}
+                        onChange={(e) =>
+                          handleLinkChange(link.id, e.target.value)
+                        }
+                      />
+                    </div>
+                  ))}
                 {/* facebook */}
                 {activeInputs.facebook && (
                   <div className="w-[300px]  ">
@@ -1234,13 +1397,13 @@ const UpdateQr = ({ valid, user, refresh }) => {
                             {menuImage ? (
                               <div className="flex justify-between items-center">
                                 <p>uploaded</p>
-                                <IoIosCloseCircle
+                                {/* <IoIosCloseCircle
                                   size={30}
                                   onClick={() => {
                                     setMenuImage(null);
                                     setMenuImageFile(null);
                                   }}
-                                />
+                                /> */}
                               </div>
                             ) : (
                               <p>
@@ -1366,7 +1529,7 @@ const UpdateQr = ({ valid, user, refresh }) => {
                   (user?.pivot?.package_id === 2 ||
                     user?.pivot?.package_id === 3) && (
                     <button
-                      //   onClick={getQr}
+                      onClick={updateQrData}
                       disabled={
                         !user ||
                         !user?.pivot?.package_id ||

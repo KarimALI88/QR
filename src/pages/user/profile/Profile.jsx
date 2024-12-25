@@ -291,7 +291,7 @@ const Profile = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {/* <FaGlobe size={60} className="" /> */}
+                  <FaGlobe size={60} className="" />
                 </a>
               )}
             </div>

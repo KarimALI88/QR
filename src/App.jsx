@@ -3,7 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import UserLayout from "./pages/UserLayout";
 import AdminLayout from "./pages/AdminLayout";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import "react-toastify/dist/ReactToastify.css"; 
 import axios from "axios";
 import { AppContext } from "./context/AppContext";
 import SuperAdmin from "./pages/SuperAdmin";
@@ -95,7 +95,7 @@ function App() {
 
   return (
     <>
-      <Support />
+      {/* <Support /> */}
       <ToastContainer />
       <Routes>
         <Route

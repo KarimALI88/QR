@@ -1,14 +1,20 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { AppContext } from "../../../context/AppContext";
 
 const QrsTable = () => {
   const [data, setData] = useState([]);
+  const {token} = useContext(AppContext)
 
   const getData = async () => {
     try {
       const response = await axios({
         method: "get",
         url: `${import.meta.env.VITE_API_LINK}/admin/users-with-qrcodes`,
+        headers: {
+          "Content-Type":"application/json",
+          Authorization: `Bearer ${token}`
+        }
       });
       console.log("response of admin qrs ", response);
       setData(response.data.data);
