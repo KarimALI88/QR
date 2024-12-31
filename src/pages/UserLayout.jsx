@@ -15,6 +15,7 @@ import ResetPassword from "./user/resetpassword/ResetPassword";
 import VerificationPage from "./user/verificationPage/VerificationPage";
 import UpdateQr from "./user/updateQr/UpdateQr";
 import Seo from "./superAdmin/seo/Seo";
+import NewsTable from "./superAdmin/seo-table/NewsTable";
 
 const UserLayout = ({ country, user, refresh, setRefresh, valid }) => {
   const { token } = useContext(AppContext);
@@ -41,6 +42,7 @@ const UserLayout = ({ country, user, refresh, setRefresh, valid }) => {
       />
       <Route path="/qr" element={<PackageOneTwo valid={valid} user={user} />} />
       <Route path="/seo-form" element={<Seo user={user}/>} />
+      <Route path="/seo-table" element={<NewsTable user={user}/>} />
       <Route
         path="/update-qr/:id"
         element={<UpdateQr valid={valid} user={user} />}

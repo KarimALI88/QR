@@ -1,10 +1,11 @@
 import React, { useContext, useState } from "react";
-import { Input } from "@material-tailwind/react";
+import { Input, Button } from "@material-tailwind/react";
 import { Textarea } from "@material-tailwind/react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Spinner } from "@material-tailwind/react";
 import { AppContext } from "../../../context/AppContext";
+import { useNavigate } from 'react-router-dom';
 
 const Seo = () => {
   const [title, setTitle] = useState("");
@@ -13,15 +14,16 @@ const Seo = () => {
   const [mainImage, setMainImage] = useState(null);
   const [loading, setLoading] = useState(null);
   const { token } = useContext(AppContext);
+  const navigate = useNavigate()
 
   const addNews = async () => {
     setLoading(true);
-    const formData = new FormData()
+    const formData = new FormData();
 
-    formData.append("title", title)
-    formData.append("description2", subTitle)
-    formData.append("description1", description)
-    formData.append("feature", mainImage)
+    formData.append("title", title);
+    formData.append("description2", subTitle);
+    formData.append("description1", description);
+    formData.append("feature", mainImage);
 
     try {
       const response = await axios({
@@ -32,17 +34,26 @@ const Seo = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      setLoading(false)
+      setLoading(false);
       console.log("response of add news", response);
-      response.data && toast.success("Added Successfully")
+      response.data && toast.success("Added Successfully");
     } catch (error) {
       console.error("error on add news", error);
-      setLoading(false)
+      setLoading(false);
     }
   };
   return (
     <div>
       <div className="my-10 px-10">
+        {/* add news */}
+        <div className="my-10 mx-auto text-center">
+          <Button
+            className="bg-black text-white px-3"
+            onClick={() => navigate("/seo-table")}
+          >
+            View News
+          </Button>
+        </div>
         {/* title */}
         <h1 className="text-center font-black text-5xl text-mainColor my-5 mx-auto">
           Add News
