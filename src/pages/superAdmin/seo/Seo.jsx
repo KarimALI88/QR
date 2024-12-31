@@ -16,22 +16,25 @@ const Seo = () => {
 
   const addNews = async () => {
     setLoading(true);
+    const formData = new FormData()
+
+    formData.append("title", title)
+    formData.append("description2", subTitle)
+    formData.append("description1", description)
+    formData.append("feature", mainImage)
+
     try {
       const response = await axios({
         method: "post",
-        url: `${import.meta.env.VITE_API_LINK}/add-news`,
-        data: {
-            title: title,
-            feature: subTitle,
-            image1: mainImage,
-            description: description
-        },
+        url: `${import.meta.env.VITE_API_LINK}/blogs`,
+        data: formData,
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       setLoading(false)
       console.log("response of add news", response);
+      response.data && toast.success("Added Successfully")
     } catch (error) {
       console.error("error on add news", error);
       setLoading(false)
