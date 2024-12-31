@@ -57,6 +57,8 @@ const Login = ({ setRefresh }) => {
 
       data.user.role === "admin"
         ? navigate("/superadmin/analysis")
+        : data.user.role === "seo"
+        ? navigate("/seo-form")
         : navigate(targetRoute);
       setLoading(false);
       localStorage.setItem("tn", data.token);
