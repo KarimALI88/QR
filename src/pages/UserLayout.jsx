@@ -41,8 +41,7 @@ const UserLayout = ({ country, user, refresh, setRefresh, valid }) => {
         }
       />
       <Route path="/qr" element={<PackageOneTwo valid={valid} user={user} />} />
-      <Route path="/seo-form" element={<Seo user={user}/>} />
-      <Route path="/seo-table" element={<NewsTable user={user}/>} />
+      
       <Route
         path="/update-qr/:id"
         element={<UpdateQr valid={valid} user={user} />}
@@ -54,6 +53,8 @@ const UserLayout = ({ country, user, refresh, setRefresh, valid }) => {
             path="/payment"
             element={<Payment user={user} setRefresh={setRefresh} />}
           />
+          <Route path="/seo-form" element={<Seo user={user}/>} />
+          <Route path="/seo-table" element={<NewsTable user={user}/>} />
         </>
       ) : (
         <Route
