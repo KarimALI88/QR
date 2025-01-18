@@ -69,6 +69,7 @@ const Blogs = () => {
                   src={blog?.feature}
                   alt={blog?.title}
                   onClick={() => navigate(`/blogs/${blog?.id}`)}
+                  loading="lazy"
                 />
               </CardHeader>
               <CardBody>
