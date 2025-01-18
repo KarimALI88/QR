@@ -74,6 +74,15 @@ const MainNavbar = () => {
       </Typography>
       <Typography
         as={Link}
+        to="/blogs"
+        variant="small"
+        color="blue-gray"
+        className="p-4 text-md text-gray-600 hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
+      >
+        {language == "en" ? "News" : "الأخبار"}
+      </Typography>
+      <Typography
+        as={Link}
         to="/payment"
         variant="small"
         color="blue-gray"

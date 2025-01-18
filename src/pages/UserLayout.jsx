@@ -16,6 +16,7 @@ import VerificationPage from "./user/verificationPage/VerificationPage";
 import UpdateQr from "./user/updateQr/UpdateQr";
 import Seo from "./superAdmin/seo/Seo";
 import NewsTable from "./superAdmin/seo-table/NewsTable";
+import Blogs from "./user/blogs/Blogs";
 
 const UserLayout = ({ country, user, refresh, setRefresh, valid }) => {
   const { token } = useContext(AppContext);
@@ -32,6 +33,7 @@ const UserLayout = ({ country, user, refresh, setRefresh, valid }) => {
       <Route path="/register" element={<Register />} />
       <Route path="/resetpassword" element={<ResetPassword />} />
       <Route path="/contact" element={<Contact />} />
+      <Route path="/blogs" element={<Blogs />} />
       <Route path="/policies" element={<Policies />} />
       <Route path="/qr/:id" element={<Profile />} />
       <Route
@@ -41,29 +43,29 @@ const UserLayout = ({ country, user, refresh, setRefresh, valid }) => {
         }
       />
       <Route path="/qr" element={<PackageOneTwo valid={valid} user={user} />} />
-      
+
       <Route
         path="/update-qr/:id"
         element={<UpdateQr valid={valid} user={user} />}
       />
       {/* Protected Routes */}
-      {token ? (
+      {/* {token ? ( */}
         <>
           <Route
             path="/payment"
             element={<Payment user={user} setRefresh={setRefresh} />}
           />
-          <Route path="/seo-form" element={<Seo user={user}/>} />
-          <Route path="/seo-table" element={<NewsTable user={user}/>} />
+          <Route path="/seo-form" element={<Seo user={user} />} />
+          <Route path="/seo-table" element={<NewsTable user={user} />} />
         </>
-      ) : (
+      {/* ) : (
         <Route
           path="*"
           element={
             <Navigate to="/login" replace state={{ from: location.pathname }} />
           }
         />
-      )}
+      )} */}
     </Routes>
   );
 };
