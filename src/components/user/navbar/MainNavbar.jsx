@@ -8,7 +8,7 @@ import {
 } from "@material-tailwind/react";
 import { FaChartSimple, FaPowerOff } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../../../assets/imgs/QR-LOGO2.png";
+import logo from "./../../../assets/imgs/QRLOGO2.png";
 import {
   Menu,
   MenuHandler,
@@ -90,16 +90,6 @@ const MainNavbar = () => {
       >
         {language == "en" ? "Payment" : "الدفع"}
       </Typography>
-
-      {/* <Typography
-        as={Link}
-        to="/policies"
-        variant="small"
-        color="blue-gray"
-        className="p-4 text-md text-gray-600 hover:text-white hover:bg-mainColor transition duration-300 ease-in-out"
-      >
-        Policies
-      </Typography> */}
 
       {token && (
         <>

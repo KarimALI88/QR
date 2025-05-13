@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import logo from "../../../assets/imgs/QR-LOGO2.PNG";
+import logo from "../../../assets/imgs/QRLOGO2.PNG";
 import { Input } from "@material-tailwind/react";
 import { BiLogoGmail } from "react-icons/bi";
 import { MdKey } from "react-icons/md";
@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Spinner } from "@material-tailwind/react";
 import { AppContext } from "./../../../context/AppContext";
-import loginImage from "../../../assets/imgs/loginImage.jpg";
+import loginImage from "./../../../assets/imgs/loginImage.jpg";
 import { IoMdClose } from "react-icons/io";
 import { FcGoogle } from "react-icons/fc";
 import axios from "axios";

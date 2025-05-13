@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import logo from "../../../assets/imgs/QR-LOGO2.PNG";
+import logo from "../../../assets/imgs/QRLOGO2.PNG";
 import { useNavigate } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 import { Input } from "@material-tailwind/react";

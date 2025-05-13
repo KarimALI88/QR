@@ -24,7 +24,7 @@ import {
   MdOutlineClose,
 } from "react-icons/md";
 import { IoMenu } from "react-icons/io5";
-import logo from '../../../assets/imgs/QR-LOGO2.png'
+import logo from '../../../assets/imgs/QRLOGO2.png'
 import { useNavigate } from "react-router-dom";
 import { FaTable } from "react-icons/fa";
 import { SiGoogleanalytics } from "react-icons/si";

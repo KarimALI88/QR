@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import logo from "./../../../assets/imgs/QR-LOGO2.png";
+import logo from "./../../../assets/imgs/QRLOGO2.png";
 import { Input } from "@material-tailwind/react";
 import { BiLogoGmail } from "react-icons/bi";
 import { MdKey } from "react-icons/md";
