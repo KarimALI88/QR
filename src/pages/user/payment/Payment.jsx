@@ -1,12 +1,19 @@
 import React, { useContext, useEffect, useState } from "react";
 import MainNavbar from "../../../components/user/navbar/MainNavbar";
-import { Dialog, Input, Spinner, Select, Option } from "@material-tailwind/react";
+import {
+  Dialog,
+  Input,
+  Spinner,
+  Select,
+  Option,
+} from "@material-tailwind/react";
 import axios from "axios";
 import { AppContext } from "../../../context/AppContext";
 import { useNavigate } from "react-router-dom";
 import geidea from "../../../assets/imgs/geidea.png";
 import { useInView } from "react-intersection-observer";
 import Footer from "../../../components/user/footer/Footer";
+import { useTranslation } from "react-i18next";
 
 const Payment = ({ user, setRefresh }) => {
   const [activeSection, setActiveSection] = useState("geidea");
@@ -16,6 +23,7 @@ const Payment = ({ user, setRefresh }) => {
   const navigate = useNavigate();
   const { token } = useContext(AppContext);
   const [period, setPeriod] = useState("monthly");
+  const { t, i18n } = useTranslation();
 
   const getPackages = async () => {
     try {
@@ -24,6 +32,7 @@ const Payment = ({ user, setRefresh }) => {
         throw new Error(`Error: ${response.status}`);
       }
       const data = await response.json();
+      // console.log("data of packages", data)
       setPackages(data);
     } catch (error) {
       console.error("error fetching packages", error);
@@ -104,27 +113,13 @@ const Payment = ({ user, setRefresh }) => {
       <MainNavbar />
       <div className="py-5 px-10 w-full">
         <h1 className="text-center text-4xl text-mainColor font-black my-5">
-          Payment Methods
+          {t("paymentPageTitle")}
         </h1>
-
-        {/* Payment Methods */}
-        <div className="flex justify-center gap-8 items-center my-10 mx-auto flex-wrap">
-          <button
-            className="py-2 px-5 text-center text-2xl font-black"
-            onClick={() => setActiveSection("geidea")}
-          >
-            <img
-              src={geidea}
-              alt="geidea"
-              className="w-[200px] h-[100px] object-center"
-            />
-          </button>
-        </div>
 
         {user &&
         (user?.pivot?.package_id === 2 || user?.pivot?.package_id === 3) ? (
           <h2 className="text-center my-5 mx-auto text-xl font-semibold">
-            You already have an account
+            {t("alreadyHaveAcc")}
           </h2>
         ) : (
           activeSection === "geidea" && (
@@ -146,10 +141,14 @@ const Payment = ({ user, setRefresh }) => {
                           <div className="px-6 py-8 flex-grow">
                             <div className="flex flex-col justify-between gap-4">
                               <h2 className="text-2xl font-bold text-mainColor capitalize">
-                                {pack?.name}
+                                {i18n.language == "en"
+                                  ? pack?.name
+                                  : pack?.name_ar}
                               </h2>
-                              <p className="text-xl font-semibold text-gray-400">
-                                {pack?.description}
+                              <p className="text-xl font-semibold text-gray-400 hidden">
+                                {i18n.language == "en"
+                                  ? pack?.description
+                                  : pack?.description_ar}
                               </p>
                               <div>
                                 {!(pack?.id === 1) && (
@@ -162,7 +161,7 @@ const Payment = ({ user, setRefresh }) => {
                                           : "bg-gray-400"
                                       } text-black px-3 py-2 font-semibold mb-5`}
                                     >
-                                      Annually
+                                      {t("annually")}
                                     </button>
                                     <button
                                       onClick={() => setPeriod("monthly")}
@@ -172,7 +171,7 @@ const Payment = ({ user, setRefresh }) => {
                                           : "bg-gray-400"
                                       } text-black px-3 py-2 font-semibold mb-5`}
                                     >
-                                      Monthly
+                                      {t("monthly")}
                                     </button>
                                   </div>
                                 )}
@@ -183,14 +182,14 @@ const Payment = ({ user, setRefresh }) => {
                                     {pack?.id === 2 && (
                                       <div>
                                         <h4 className="text-mainColor text-lg">
-                                          <del>2400.00 EGP</del>
+                                          <del>2400.00 {t("egp")}</del>
                                         </h4>
                                       </div>
                                     )}
                                     {pack?.id === 3 && (
                                       <div>
                                         <h4 className="text-mainColor text-lg">
-                                          <del>6000.00 EGP</del>
+                                          <del>6000.00 {t("egp")}</del>
                                         </h4>
                                       </div>
                                     )}
@@ -200,28 +199,31 @@ const Payment = ({ user, setRefresh }) => {
                                   <p className="text-3xl font-bold text-gray-500">
                                     {pack?.id === 2 && (
                                       <div>
-                                        <h2>99.00 EGP</h2>
+                                        <h2>99.00 {t("egp")}</h2>
                                         <h4 className="text-mainColor text-lg">
-                                          <del>200.00 EGP</del>
+                                          <del>200.00 {t("egp")}</del>
                                         </h4>
                                       </div>
                                     )}
                                     {pack?.id === 3 && (
                                       <div>
-                                        <h2>150.00 EGP</h2>
+                                        <h2>150.00 {t("egp")}</h2>
                                         <h4 className="text-mainColor text-lg">
-                                          <del>300.00 EGP</del>
+                                          <del>300.00 {t("egp")}</del>
                                         </h4>
                                       </div>
                                     )}
-                                    {pack?.id === 1 && "0.00" + " EGP"}
+                                    {pack?.id === 1 && "0.00" + t("egp")}
                                   </p>
                                 )}
                               </div>
                             </div>
                             {/* feature */}
                             <ul className="mt-8 space-y-4 capitalize">
-                              {pack?.features?.map((feature, idx) => (
+                              {(i18n.language === "en"
+                                ? pack.features
+                                : pack.features_ar
+                              )?.map((feature, idx) => (
                                 <li
                                   key={idx}
                                   className="flex items-center text-lg font-semibold"
@@ -259,14 +261,7 @@ const Payment = ({ user, setRefresh }) => {
                               }}
                               className="flex items-center justify-center gap-3 text-xl font-semibold bg-mainColor hover:bg-secondColor text-white px-6 py-2 rounded-md w-full transition-all duration-300"
                             >
-                              {/* {loading && (
-                                <Spinner
-                                  className="h-5 w-5 mx-auto text-center"
-                                  color="amber"
-                                  aria-label="Amber spinner example"
-                                />
-                              )} */}
-                              {pack?.id === 1 ? "Subscribe Now" : "Buy Now"}
+                              {pack?.id === 1 ? t("subscribeNow") : t("buyNow")}
                             </button>
                           </div>
                         </div>

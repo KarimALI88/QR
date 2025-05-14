@@ -26,10 +26,12 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Snapchat from "../../../components/user/snapchatForm/Snapchat";
 import TikTok from "../../../components/user/tiktok/TiktokForm";
+import { useTranslation } from "react-i18next";
 
 const QrForm = ({ user, refresh, setRefresh }) => {
   const [feature, setFeature] = useState("whatsapp");
   const { token } = useContext(AppContext);
+  const { t } = useTranslation()
   const navigate = useNavigate();
 
   const createSubscribtion = async () => {
@@ -86,67 +88,67 @@ const QrForm = ({ user, refresh, setRefresh }) => {
       <MainNavbar />
       {/* features */}
       <div className="p-10 shadow-sm m-10 bg-[#f5f5f5] flex flex-wrap gap-5 items-center ">
-        <button onClick={() => setFeature("whatsapp")}>
+        <button onClick={() => setFeature(t("whatsapp"))}>
           <QrGoal
             icon={<FaWhatsapp size={30} />}
-            feature={"whatsapp"}
-            selected={feature === "whatsapp" ? true : false}
+            feature={t("whatsapp")}
+            selected={feature === t("whatsapp") ? true : false}
           />
         </button>
-        <button onClick={() => setFeature("facebook")}>
+        <button onClick={() => setFeature(t("facebook"))}>
           <QrGoal
             icon={<FaFacebook size={30} />}
-            feature={"facebook"}
-            selected={feature === "facebook" ? true : false}
+            feature={t("facebook")}
+            selected={feature === t("facebook") ? true : false}
           />
         </button>
-        <button onClick={() => setFeature("youtube")}>
+        <button onClick={() => setFeature(t("youtube"))}>
           <QrGoal
             icon={<FaYoutube size={30} />}
-            feature={"youtube"}
-            selected={feature === "youtube" ? true : false}
+            feature={t("youtube")}
+            selected={feature === t("youtube") ? true : false}
           />
         </button>
-        <button onClick={() => setFeature("twitter")}>
+        <button onClick={() => setFeature(t("twitter"))}>
           <QrGoal
             icon={<FaXTwitter size={30} />}
-            feature={"twitter"}
-            selected={feature === "twitter" ? true : false}
+            feature={t("twitter")}
+            selected={feature === t("twitter") ? true : false}
           />
         </button>
-        <button onClick={() => setFeature("instgram")}>
+        <button onClick={() => setFeature(t("instgram"))}>
           <QrGoal
             icon={<FaInstagramSquare size={30} />}
-            feature={"instgram"}
-            selected={feature === "instgram" ? true : false}
+            feature={t("instgram")}
+            selected={feature === t("instgram") ? true : false}
           />
         </button>
-        <button onClick={() => setFeature("website")}>
+        <button onClick={() => setFeature(t("website"))}>
           <QrGoal
             icon={<FaLaptop size={30} />}
-            feature={"website"}
-            selected={feature === "website" ? true : false}
+            feature={t("website")}
+            selected={feature === t("website") ? true : false}
           />
         </button>
-        <button onClick={() => setFeature("email")}>
+        <button onClick={() => setFeature(t("email"))}>
           <QrGoal
             icon={<SiGmail size={30} />}
-            feature={"email"}
-            selected={feature === "email" ? true : false}
+            feature={t("email")}
+            selected={feature === t("email") ? true : false}
           />
         </button>
-        <button onClick={() => setFeature("Snapchat")}>
+        <button onClick={() => setFeature(t("Snapchat"))}>
           <QrGoal
             icon={<FaSnapchat size={30} />}
-            feature={"Snapchat"}
-            selected={feature === "Snapchat" ? true : false}
+            feature={t("Snapchat")}
+            selected={feature === t("Snapchat") ? true : false}
           />
         </button>
-        <button onClick={() => setFeature("tiktok")}>
+        <button onClick={() => setFeature(t("tiktok"))}>
           <QrGoal
             icon={<FaTiktok size={30} />}
-            feature={"tiktok"}
-            selected={feature === "tiktok" ? true : false}
+            feature={t("tiktok")}
+            selected={feature === t("tiktok") ? true : false}
           />
         </button>
       </div>
@@ -157,21 +159,21 @@ const QrForm = ({ user, refresh, setRefresh }) => {
               onClick={subscribePackageZero}
               className="bg-mainColor block mx-auto px-10 py-3 font-semibold text-white hover:bg-secondColor"
             >
-              Subscribe
+              {t("subscribeNow")}
             </button>
           </div>
         ))}
       {/* =============================================================================== */}
       <div className="py-5 px-10 max-w-[80%]">
-        {feature === "whatsapp" && <WhatsappForm user={user} />}
-        {feature === "facebook" && <FaceForm user={user} />}
-        {feature === "youtube" && <YoutubeForm user={user} />}
-        {feature === "twitter" && <XForm user={user} />}
-        {feature === "instgram" && <InstgramForm user={user} />}
-        {feature === "website" && <WebsiteForm user={user} />}
-        {feature === "email" && <GmailForm user={user} />}
-        {feature === "Snapchat" && <Snapchat user={user} />}
-        {feature === "tiktok" && <TikTok user={user} />}
+        {feature === t("whatsapp") && <WhatsappForm user={user} />}
+        {feature === t("facebook") && <FaceForm user={user} />}
+        {feature === t("youtube") && <YoutubeForm user={user} />}
+        {feature === t("twitter") && <XForm user={user} />}
+        {feature === t("instgram") && <InstgramForm user={user} />}
+        {feature === t("website") && <WebsiteForm user={user} />}
+        {feature === t("email") && <GmailForm user={user} />}
+        {feature === t("Snapchat") && <Snapchat user={user} />}
+        {feature === t("tiktok") && <TikTok user={user} />}
       </div>
     </div>
   );

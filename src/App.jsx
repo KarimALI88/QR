@@ -88,11 +88,6 @@ function App() {
     }
   }, [token, refresh]);
 
-  useEffect(() => {
-    let lang = localStorage.getItem("language");
-    !lang && localStorage.setItem("language", "en");
-  }, []);
-
   return (
     <>
       {/* <Support /> */}

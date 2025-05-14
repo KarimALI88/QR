@@ -6,6 +6,7 @@ import axios from "axios";
 import { AppContext } from "../../../context/AppContext";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const TikTok = ({ user }) => {
   const [link, setLink] = useState("");
@@ -14,6 +15,7 @@ const TikTok = ({ user }) => {
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [downloadImage, setDownloadImage] = useState("");
+  const { t } = useTranslation()
 
   const handleOpen = () => setOpenModal(!openModal);
 
@@ -61,10 +63,10 @@ const TikTok = ({ user }) => {
           color="blue-gray"
           className="mb-1 font-semibold text-lg"
         >
-          Tiktok URL
+          {t("url")}
         </Typography>
         <Input
-          placeholder="Tiktok URL"
+          placeholder={t("url")}
           value={link}
           onChange={(e) => setLink(e.target.value)}
           className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
@@ -75,31 +77,6 @@ const TikTok = ({ user }) => {
       </div>
       {/* ======================================================= */}
       <div className="mt-10">
-        {/* {user?.pivot?.package_id && (
-          <button
-            onClick={getQR}
-            disabled={link.length === 0}
-            className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
-          >
-            {loading ? <Spinner className="mx-auto" /> : "Submit"}
-          </button>
-        )} */}
-        {/* {token ? (
-          <button
-            onClick={getQR}
-            disabled={link.length === 0}
-            className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
-          >
-            {loading ? <Spinner className="mx-auto" /> : "Submit"}
-          </button>
-        ) : (
-          <Link
-            to={"/login"}
-            className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
-          >
-            Submit
-          </Link>
-        )} */}
         {user && user?.pivot?.package_id && (
           <>
             {token ? (
@@ -115,7 +92,7 @@ const TikTok = ({ user }) => {
                 to={"/login"}
                 className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
               >
-                Submit
+                {t("submit")}
               </Link>
             )}
           </>
@@ -132,7 +109,7 @@ const TikTok = ({ user }) => {
             href={`https://backend.ofx-qrcode.com/download-qrcode/${downloadImage}`}
             className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor w-full"
           >
-            Download
+            {t("download")}
           </a>
         </Dialog>
       </div>

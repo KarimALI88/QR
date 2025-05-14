@@ -6,6 +6,7 @@ import { Spinner } from "@material-tailwind/react";
 import { Link, useNavigate } from "react-router-dom";
 import { AppContext } from "../../../context/AppContext";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const WhatsappForm = ({ user }) => {
   const [number, setNumber] = useState("");
@@ -15,12 +16,8 @@ const WhatsappForm = ({ user }) => {
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [downloadImage, setDownloadImage] = useState("");
+  const { t } = useTranslation()
   const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   const tn = localStorage.getItem("tn");
-  //   setToken(tn);
-  // }, []);
 
   const handleOpen = () => setOpenModal(!openModal);
 
@@ -60,15 +57,6 @@ const WhatsappForm = ({ user }) => {
     }
   };
 
-  // const downloadImage = (imageSrc) => {
-  //   const link = document.createElement("a");
-  //   link.href = imageSrc;
-  //   link.download = "qr-code.png"; // Set the default filename here
-  //   document.body.appendChild(link);
-  //   link.click();
-  //   document.body.removeChild(link);
-  // };
-
   return (
     <div>
       <div className="my-5">
@@ -77,10 +65,10 @@ const WhatsappForm = ({ user }) => {
           color="blue-gray"
           className="mb-1 font-semibold text-lg"
         >
-          Whatsapp Number
+          {t("whatsapp")}{t("number")}
         </Typography>
         <Input
-          placeholder="whatsapp number"
+          placeholder={`${t("number")}} `}
           value={number}
           type="number"
           onChange={(e) => setNumber(e.target.value)}
@@ -97,10 +85,10 @@ const WhatsappForm = ({ user }) => {
           color="blue-gray"
           className="mb-1 mt-10 font-semibold text-lg"
         >
-          Message
+          {t("message")}
         </Typography>
         <Input
-          placeholder="whatsapp Message"
+          placeholder={t("message")}
           value={text}
           onChange={(e) => setText(e.target.value)}
           className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
@@ -111,15 +99,6 @@ const WhatsappForm = ({ user }) => {
       </div>
       {/* ======================================================= */}
       <div className="mt-10">
-        {/* {user?.pivot?.package_id && (
-          <button
-            onClick={getQR}
-            disabled={number.length === 0 && text.length === 0}
-            className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
-          >
-            {loading ? <Spinner className="mx-auto" /> : "Submit"}
-          </button>
-        )} */}
 
         {user && user?.pivot?.package_id && (
           <>
@@ -136,7 +115,7 @@ const WhatsappForm = ({ user }) => {
                 to={"/login"}
                 className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
               >
-                Submit
+                {t("submit")}
               </Link>
             )}
           </>
@@ -154,7 +133,7 @@ const WhatsappForm = ({ user }) => {
           href={`https://backend.ofx-qrcode.com/download-qrcode/${downloadImage}`}
           className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor w-full"
         >
-          Download
+          {t("download")}
         </a>
       </Dialog>
     </div>

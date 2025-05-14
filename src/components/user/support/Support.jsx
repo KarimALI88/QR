@@ -6,7 +6,7 @@ const Support = () => {
   const navigate = useNavigate();
   return (
     <div
-      className="w-16 h-16 rounded-full bg-mainColor text-white fixed bottom-10 right-10 flex justify-center items-center shadow-2xl cursor-pointer z-50"
+      className="p-2 rounded-full bg-mainColor animate-pulse text-white fixed bottom-6 right-6 flex justify-center items-center shadow-2xl cursor-pointer z-50 text-center"
       onClick={() => navigate("/contact")}
     >
       <FaRocketchat size={40} />

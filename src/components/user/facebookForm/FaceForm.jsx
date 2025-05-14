@@ -6,6 +6,7 @@ import axios from "axios";
 import { AppContext } from "../../../context/AppContext";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const FaceForm = ({ user }) => {
   const [link, setLink] = useState("");
@@ -14,11 +15,7 @@ const FaceForm = ({ user }) => {
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [downloadImage, setDownloadImage] = useState("");
-
-  // useEffect(() => {
-  //   const tn = localStorage.getItem("tn");
-  //   setToken(tn);
-  // }, []);
+  const { t } = useTranslation();
 
   const handleOpen = () => setOpenModal(!openModal);
 
@@ -53,20 +50,10 @@ const FaceForm = ({ user }) => {
         toast.error(error.response.data.message);
       }
     } else {
-      setLoading(false)
+      setLoading(false);
       toast.error("link must contain facebook.com");
     }
   };
-
-  //   const downloadImage = (imageSrc) => {
-  //     const link = document.createElement("a");
-  //     link.href = imageSrc;
-  //     link.target="_blank"
-  //     link.download = "qr-code.png"; // Set the default filename here
-  //     document.body.appendChild(link);
-  //     link.click();
-  //     document.body.removeChild(link);
-  // };
 
   return (
     <div>
@@ -76,10 +63,10 @@ const FaceForm = ({ user }) => {
           color="blue-gray"
           className="mb-1 font-semibold text-lg"
         >
-          facebook URL
+          {t("facebookLink")}
         </Typography>
         <Input
-          placeholder="facebook URL"
+          placeholder={t("facebookLink")}
           value={link}
           onChange={(e) => setLink(e.target.value)}
           className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
@@ -90,15 +77,6 @@ const FaceForm = ({ user }) => {
       </div>
       {/* ======================================================= */}
       <div className="mt-10">
-        {/* {user?.pivot?.package_id && (
-          <button
-            onClick={getQR}
-            disabled={link.length === 0}
-            className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
-          >
-            {loading ? <Spinner className="mx-auto" /> : "Submit"}
-          </button>
-        )} */}
         {user && user?.pivot?.package_id && (
           <>
             {token ? (
@@ -114,7 +92,7 @@ const FaceForm = ({ user }) => {
                 to={"/login"}
                 className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
               >
-                Submit
+                {t("submit")}
               </Link>
             )}
           </>
@@ -132,7 +110,7 @@ const FaceForm = ({ user }) => {
           href={`https://backend.ofx-qrcode.com/download-qrcode/${downloadImage}`}
           className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor w-full"
         >
-          Download
+          {t("download")}
         </a>
       </Dialog>
     </div>

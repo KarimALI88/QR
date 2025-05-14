@@ -6,6 +6,7 @@ import axios from "axios";
 import { AppContext } from "../../../context/AppContext";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const Snapchat = ({ user }) => {
   const [link, setLink] = useState("");
@@ -14,7 +15,7 @@ const Snapchat = ({ user }) => {
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [downloadImage, setDownloadImage] = useState("");
-
+  const { t } = useTranslation();
   const handleOpen = () => setOpenModal(!openModal);
 
   const getQR = async () => {
@@ -49,7 +50,7 @@ const Snapchat = ({ user }) => {
       }
     } else {
       toast.error("link must contain snapchat.com");
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -61,10 +62,10 @@ const Snapchat = ({ user }) => {
           color="blue-gray"
           className="mb-1 font-semibold text-lg"
         >
-          Snapchat URL
+          {t("url")}
         </Typography>
         <Input
-          placeholder="Snapchat URL"
+          placeholder={t("url")}
           value={link}
           onChange={(e) => setLink(e.target.value)}
           className="appearance-none min-h-[60px] !border-t-blue-gray-200 placeholder:text-blue-gray-300 placeholder:opacity-100 focus:!border-t-gray-900 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
@@ -75,15 +76,6 @@ const Snapchat = ({ user }) => {
       </div>
       {/* ======================================================= */}
       <div className="mt-10">
-        {/* {user?.pivot?.package_id && (
-          <button
-            onClick={getQR}
-            disabled={link.length === 0}
-            className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
-          >
-            {loading ? <Spinner className="mx-auto" /> : "Submit"}
-          </button>
-        )} */}
         {user && user?.pivot?.package_id && (
           <>
             {token ? (
@@ -99,7 +91,7 @@ const Snapchat = ({ user }) => {
                 to={"/login"}
                 className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor"
               >
-                Submit
+                {t("submit")}
               </Link>
             )}
           </>
@@ -116,7 +108,7 @@ const Snapchat = ({ user }) => {
             href={`https://backend.ofx-qrcode.com/download-qrcode/${downloadImage}`}
             className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor w-full"
           >
-            Download
+            {t("download")}
           </a>
         </Dialog>
       </div>
