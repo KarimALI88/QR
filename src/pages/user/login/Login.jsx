@@ -82,10 +82,10 @@ const Login = ({ setRefresh }) => {
         },
       });
       console.log("google response", response);
-      response.token && localStorage.setItem("tn", response.token);
-      response.token && navigate("/admin/profile");
+      // response.token && localStorage.setItem("tn", response.token);
+      // response.token && navigate("/admin/profile");
     } catch (error) {
-      console.log("error in google auth ", error);
+      console.error("error in google auth ", error);
     }
   };
 
@@ -111,12 +111,15 @@ const Login = ({ setRefresh }) => {
             Welcome to OFX Login
           </h3>
 
-          {/* <div className="w-fit mx-auto px-5 my-5">
-            <button onClick={googleAuth} className="flex justify-start items-center text-xl gap-3 border-2 border-gray-500 rounded-xl px-3 py-2">
+          <div className="w-fit mx-auto px-5 my-5">
+            <button
+              onClick={googleAuth}
+              className="flex justify-start items-center text-xl gap-3 border-2 border-gray-500 rounded-xl px-3 py-2"
+            >
               <FcGoogle size={35} />
               Sign in with google
             </button>
-          </div> */}
+          </div>
 
           {/* email */}
           <div className="w-[80%] md:w-[70%] lg:w-[60%] mx-auto my-10">
