@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import logo from "../../../assets/imgs/QRLOGO2.PNG";
+// import logo from "../../../assets/imgs/QRLOGO2.PNG";
 import { useNavigate } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 import { Input } from "@material-tailwind/react";
@@ -41,7 +41,7 @@ const ForgetPassword = () => {
     <div className="flex flex-col md:flex-row">
       <div className="flex-1 p-4 min-h-[100%] flex-col">
         <div className="flex justify-between items-center">
-          <img src={logo} alt="OFX QR CODE" className="w-52 lg:w-72" onClick={() => navigate("/")}/>
+          {/*<img src={logo} alt="OFX QR CODE" className="w-52 lg:w-72" onClick={() => navigate("/")}/>*/}
           <IoMdClose
             className="cursor-pointer"
             size={35}
