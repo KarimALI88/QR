@@ -10,7 +10,7 @@ const Auth = () => {
     const token = searchParams.get("token");
 
     if (token) {
-      console.log("Token:", token);
+      // console.log("Token:", token);
       // Store the token or handle authentication
       localStorage.setItem("tn", token)
       setTimeout(() => {
