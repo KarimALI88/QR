@@ -8,6 +8,7 @@ import axios from "axios";
 import { AppContext } from "./context/AppContext";
 import SuperAdmin from "./pages/SuperAdmin";
 import Support from "./components/user/support/Support";
+import Auth from "./pages/user/auth/Auth";
 
 function App() {
   const [ip, setIp] = useState("");
@@ -108,6 +109,14 @@ function App() {
         <Route
           path="/admin/*"
           element={<AdminLayout setRefresh={setRefresh} user={user} />}
+        />
+        <Route
+          path="/admin/*"
+          element={<AdminLayout setRefresh={setRefresh} user={user} />}
+        />
+        <Route
+          path="/auth/callback"
+          element={<Auth />}
         />
         {token ? (
           <>

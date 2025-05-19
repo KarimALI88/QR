@@ -129,9 +129,9 @@ const MainNavbar = () => {
               to="/"
               className="cursor-pointer w-52 lg:w-72 transition-transform hover:scale-105"
             >
-              <img src={logo} alt="OFX QR Logo" className="h-auto" />
+              <img src={logo} alt="OFX QR Logo" className="h-auto " />
             </Typography>
-            <div className="hidden lg:block lg:ml-8">{navList}</div>
+            <div className="hidden lg:block lg:ms-8">{navList}</div>
           </div>
 
           {/* Spacer to push buttons to the end */}
@@ -156,12 +156,12 @@ const MainNavbar = () => {
                     className="border-2 border-mainColor p-0.5 mx-3 hover:scale-110 transition-transform"
                     src="https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?t=st=1730811104~exp=1730814704~hmac=26dcf6457601716f625358c7a18d2ee382f6d63c5e4700b68fecefb7df237aed&w=740"
                   />
-                  <ChevronDownIcon
+                  {/* <ChevronDownIcon
                     strokeWidth={2.5}
                     className={`h-3 w-3 transition-transform ${
                       isMenuOpen ? "rotate-180" : ""
                     }`}
-                  />
+                  /> */}
                 </Button>
               </MenuHandler>
               <MenuList className="p-1.5 min-w-[180px] shadow-xl rounded-lg border border-gray-200">

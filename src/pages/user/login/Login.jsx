@@ -21,7 +21,7 @@ const Login = ({ setRefresh }) => {
   const { setToken } = useContext(AppContext);
   const navigate = useNavigate();
   const location = useLocation();
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   const userLogin = async () => {
     try {
@@ -74,20 +74,12 @@ const Login = ({ setRefresh }) => {
     }
   };
 
-  const googleAuth = async () => {
+  const googleAuth = () => {
     try {
-      const response = await axios({
-        method: "get",
-        url: `${import.meta.env.VITE_API_LINK}/auth/google`,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      console.log("google response", response);
-      // response.token && localStorage.setItem("tn", response.token);
-      // response.token && navigate("/admin/profile");
+      window.location.href = `${import.meta.env.VITE_API_LINK}/auth/google`;
     } catch (error) {
-      console.error("error in google auth ", error);
+      console.error("error in google auth", error);
+      
     }
   };
 

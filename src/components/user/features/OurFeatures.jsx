@@ -7,14 +7,16 @@ import {
   Typography,
   Button,
 } from "@material-tailwind/react";
+import { FaFingerprint, FaShareAlt, FaTrademark, FaGlobe, FaUtensils, FaHashtag  } from "react-icons/fa";
 
 const OurFeatures = () => {
   const { t } = useTranslation();
   const features = [
-    { name: t("feature1"), descroption: "description feature 1"},
-    { name: t("feature2"), descroption: "description feature 2" },
-    { name: t("feature3"), descroption: "description feature 3" },
-    { name: t("feature4"), descroption: "description feature 4" },
+    { name: t("identity"), descroption: t("identityDesc"), icon: <FaFingerprint size={50}/> },
+    { name: t("socialMediaAccs"), descroption: t("socialMediaAccsDesc"), icon: <FaShareAlt size={50}/>},
+    { name: t("branding"), descroption: t("brandingDesc"), icon: <FaHashtag size={50}/> },
+    { name: t("makeYourOwnWebsite"), descroption: t("makeYourOwnWebsiteDesc"), icon: <FaGlobe size={50}/>},
+    { name: t("uploadYourMenu"), descroption: t("uploadYourMenuDesc"), icon: <FaUtensils  size={50}/> },
   ];
   return (
     <div>
@@ -22,7 +24,19 @@ const OurFeatures = () => {
         {t("features")}
       </h3>
       <div className="my-12 px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        ff
+        {features.map((feature, index) => (
+          <Card className="mt-6 w-[90%] mx-auto" key={index}>
+            <CardBody>
+              <span className="mb-6 block text-mainColor">
+                {feature.icon}
+              </span>
+              <Typography variant="h5" className="mb-2 text-mainColor">
+                {feature.name}
+              </Typography>
+              <Typography>{feature.descroption}</Typography>
+            </CardBody>
+          </Card>
+        ))}
       </div>
     </div>
   );

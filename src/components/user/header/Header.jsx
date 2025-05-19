@@ -33,10 +33,6 @@ const Header = () => {
     getUsersAndQrs();
   }, []);
 
-  // useEffect(() => {
-  //   document.body.style.direction = language === "ar" ? "rtl" : "ltr";
-  // }, [language]);
-
   return (
     <div
       ref={ref}

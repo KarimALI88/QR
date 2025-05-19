@@ -65,5 +65,15 @@
   "address": "Address",
   "password": "Password",
   "haveAnAccount": "Already Have An Account",
-  "features": "Features"
+  "features": "Features",
+  "identity": "Identity",
+  "socialMediaAccs": "Social Media Accounts",
+  "branding": "Branding",
+  "makeYourOwnWebsite": "Make Your Own Website",
+  "uploadYourMenu": "Upload Menu",
+  "identityDesc": "Make Your Own Identity in one QR",
+  "socialMediaAccsDesc":"All Social Media Accounts in One QR",
+  "brandingDesc": "Enhance your Brand By Provide all Your Info in One  QR",
+  "makeYourOwnWebsiteDesc": "Show Your Info Like an Attractive Website",
+  "uploadYourMenuDesc": "You Can Provide your Menu or List for Your Users"
 }

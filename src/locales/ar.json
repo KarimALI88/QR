@@ -73,5 +73,15 @@
   "address": "العنوان",
   "password": "كلمة المرور",
   "haveAnAccount": "لديك اكونت بالفعل",
-  "features": "المميزات"
+  "features": "المميزات",
+  "identity": "تحقيق الهوية",
+  "socialMediaAccs": "توفير حسابات السوشيال ميديا",
+  "branding": "العلامة التجارية",
+  "makeYourOwnWebsite": "اصنع موقعك الخاص",
+  "uploadYourMenu": "رفع القائمة",
+  "identityDesc": "اصنع هويتك الخاصة في رمز QR واحد",
+  "socialMediaAccsDesc": "جميع حسابات التواصل الاجتماعي في رمز QR واحد",
+  "brandingDesc": "عزز علامتك التجارية من خلال توفير جميع معلوماتك في رمز QR واحد",
+  "makeYourOwnWebsiteDesc": "اعرض معلوماتك كموقع جذاب",
+  "uploadYourMenuDesc": "يمكنك توفير قائمتك أو قوائمك للمستخدمين"
 }
