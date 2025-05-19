@@ -11,6 +11,7 @@ import loginImage from "../../../assets/imgs/loginImage.jpg";
 import { IoMdClose } from "react-icons/io";
 import { FcGoogle } from "react-icons/fc";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const Login = ({ setRefresh }) => {
   const [email, setEmail] = useState("");
@@ -20,6 +21,7 @@ const Login = ({ setRefresh }) => {
   const { setToken } = useContext(AppContext);
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation()
 
   const userLogin = async () => {
     try {
@@ -108,7 +110,7 @@ const Login = ({ setRefresh }) => {
         </div>
         <div className="text-center my-20 mx-auto">
           <h3 className="text-mainColor font-semibold text-3xl">
-            Welcome to OFX Login
+            {t("welcome")}
           </h3>
 
           <div className="w-fit mx-auto px-5 my-5">
@@ -117,14 +119,14 @@ const Login = ({ setRefresh }) => {
               className="flex justify-start items-center text-xl gap-3 border-2 border-gray-500 rounded-xl px-3 py-2"
             >
               <FcGoogle size={35} />
-              Sign in with google
+              {t("googleAuth")}
             </button>
           </div>
 
           {/* email */}
           <div className="w-[80%] md:w-[70%] lg:w-[60%] mx-auto my-10">
+            <h6 className="text-start my-4 font-semibold">{t("email")}</h6>
             <Input
-              label="email"
               placeholder="e.g., your-email@gmail.com"
               value={email}
               size="lg"
@@ -136,8 +138,8 @@ const Login = ({ setRefresh }) => {
 
           {/* password */}
           <div className="w-[80%] md:w-[70%] lg:w-[60%] mx-auto mb-5">
+            <h6 className="text-start my-4 font-semibold">{t("password")}</h6>
             <Input
-              label="password"
               placeholder="****************"
               type={view ? "text" : "password"}
               value={password}
@@ -155,20 +157,20 @@ const Login = ({ setRefresh }) => {
 
           {/* register */}
           <p className="mt-5 text-center">
-            if you don't have an account{" "}
+            {t("haven'tAcc")}{" "}
             <Link to={"/register"} className="text-mainColor underline text-lg">
-              signup
+              {t("signup")}
             </Link>
           </p>
 
           {/* forget password */}
           <p className="mt-2">
-            if you forget your password{" "}
+            {t("forgetPassStat")}{" "}
             <Link
               to={"/forget-password"}
               className="text-mainColor underline text-lg"
             >
-              forget password
+              {t("forgetPass")}
             </Link>
           </p>
 
@@ -178,7 +180,7 @@ const Login = ({ setRefresh }) => {
               onClick={userLogin}
               className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-white hover:bg-secondColor"
             >
-              {loading ? <Spinner className="mx-auto" /> : "Login"}
+              {loading ? <Spinner className="mx-auto" /> : t("loginLink")}
             </button>
           </div>
         </div>

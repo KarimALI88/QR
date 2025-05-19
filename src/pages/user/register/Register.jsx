@@ -12,6 +12,7 @@ import { Spinner } from "@material-tailwind/react";
 import { FaUserAlt } from "react-icons/fa";
 import { FaAddressCard } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { useTranslation } from "react-i18next";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -24,7 +25,7 @@ const Register = () => {
   const [openModal, setOpenModal] = useState(false);
   const [VerfiationCode, setVerficationCode] = useState("");
   const navigate = useNavigate();
-
+  const { t } = useTranslation()
   console.log(view);
 
   const userRegister = async () => {
@@ -137,23 +138,13 @@ const Register = () => {
         </div>
         <div className="text-center my-20 mx-auto">
           <h3 className="text-mainColor font-semibold text-3xl">
-            Welcome to OFX Signup
+            {t("welcome")}
           </h3>
-
-          {/* <div className="w-fit mx-auto px-5 my-5">
-            <button
-              onClick={googleAuth}
-              className="flex justify-start items-center text-xl gap-3 border-2 border-gray-500 rounded-xl px-3 py-2"
-            >
-              <FcGoogle size={35} />
-              Sign up with google
-            </button>
-          </div> */}
 
           {/* email */}
           <div className="w-[80%] md:w-[70%] lg:w-[60%] mx-auto my-10">
+            <h6 className="text-start my-4 font-semibold">{t("email")}</h6>
             <Input
-              label="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="e.g., your-email@gmail.com"
@@ -165,8 +156,8 @@ const Register = () => {
 
           {/* name */}
           <div className="w-[80%] md:w-[70%] lg:w-[60%] mx-auto my-10">
+            <h6 className="text-start my-4 font-semibold">{t("username")}</h6>
             <Input
-              label="Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="karim"
@@ -178,8 +169,8 @@ const Register = () => {
 
           {/* phone */}
           <div className="w-[80%] md:w-[70%] lg:w-[60%] mx-auto my-10">
+            <h6 className="text-start my-4 font-semibold">{t("phone")}</h6>
             <Input
-              label="phone"
               placeholder="01061472185"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
@@ -191,8 +182,8 @@ const Register = () => {
 
           {/* address */}
           <div className="w-[80%] md:w-[70%] lg:w-[60%] mx-auto my-10">
+            <h6 className="text-start my-4 font-semibold">{t("address")}</h6>
             <Input
-              label="address"
               placeholder="Cairo"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
@@ -204,8 +195,8 @@ const Register = () => {
 
           {/* password */}
           <div className="w-[80%] md:w-[70%] lg:w-[60%] mx-auto mb-5">
+            <h6 className="text-start my-4 font-semibold">{t("password")}</h6>
             <Input
-              label="password"
               placeholder="**********************"
               value={password}
               type={view ? "text" : "password"}
@@ -223,9 +214,9 @@ const Register = () => {
 
           {/* register */}
           <h5 className="mt-11 block">
-            already have an account{" "}
+            {t("haveAnAccount")}{" "}
             <Link to={"/login"} className="text-mainColor underline text-lg">
-              login
+              {t("loginLink")}
             </Link>
           </h5>
 
@@ -235,7 +226,7 @@ const Register = () => {
               onClick={userRegister}
               className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white hover:bg-secondColor"
             >
-              {loading ? <Spinner className="mx-auto" /> : "Register"}
+              {loading ? <Spinner className="mx-auto" /> : t("signup")}
             </button>
           </div>
         </div>

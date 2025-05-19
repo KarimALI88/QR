@@ -30,6 +30,7 @@ import {
   Button,
 } from "@material-tailwind/react";
 import { IoCloseCircle } from "react-icons/io5";
+import { useTranslation } from "react-i18next";
 
 const PackageOneTwo = ({ user, refresh, valid }) => {
   const COUNTRIES = [
@@ -119,6 +120,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
     { name: "Almarai", style: "Almarai, sans-serif" },
     { name: "IBM Plex Sans", style: "IBM Plex Sans, sans-serif" },
   ];
+  const { t } = useTranslation()
   const navigate = useNavigate();
   const [downloadImage, setDownloadImage] = useState("");
 
@@ -557,7 +559,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                 <span className="text-white flex justify-center items-center w-10 h-10 text-center rounded-full bg-mainColor">
                   1
                 </span>{" "}
-                Company Info
+                {t("companyInfo")}
               </h1>
 
               <br />
@@ -570,11 +572,9 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                     color="blue-gray"
                     className="mb-1 mt-10 font-semibold text-lg"
                   >
-                    Identity Color
+                    {t("identityColor")}
                   </Typography>
                   <Input
-                    maxLength={16}
-                    placeholder="OFX"
                     type="color"
                     value={color}
                     onChange={(e) => setColor(e.target.value)}
@@ -589,7 +589,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                     color="blue-gray"
                     className="mb-1 mt-10 font-semibold text-lg"
                   >
-                    Cover Background
+                    {t("coverBg")}
                   </Typography>
                   <div
                     {...getRootPropsCover()}
@@ -603,7 +603,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                         className="w-[100px] h-[100px] mt-4 rounded-lg"
                       />
                     ) : (
-                      <p>Drag & drop an image here, or click to select one</p>
+                      <p>{t("drag")}</p>
                     )}
                   </div>
                   {/* <Input type="file" onChange={(e) => setCoverImageFile(e.target.files[0])}/> */}
@@ -616,7 +616,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                     color="blue-gray"
                     className="mb-1 mt-10 font-semibold text-lg"
                   >
-                    Logo Image
+                    {t("logoImage")}
                   </Typography>
                   <div
                     {...getRootPropsLogo()}
@@ -630,7 +630,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                         className="w-[100px] h-[100px] mt-4 rounded-lg"
                       />
                     ) : (
-                      <p>Drag & drop an image here, or click to select one</p>
+                      <p>{t("drag")}</p>
                     )}
                   </div>
                   {/* <Input type="file" onChange={(e) => setLogoImageFile(e.target.files[0])}/> */}
@@ -643,7 +643,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                     color="blue-gray"
                     className="mb-1 mt-10 font-semibold text-lg"
                   >
-                    Company Name
+                    {t("companyName")}
                   </Typography>
                   <Input
                     // maxLength={16}
@@ -662,7 +662,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                     color="blue-gray"
                     className="mb-1 mt-10 font-semibold text-lg"
                   >
-                    Company Description
+                    {t("companyDesc")}
                   </Typography>
                   <Input
                     // maxLength={50}
@@ -681,7 +681,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                     color="blue-gray"
                     className="mb-1 mt-10 font-semibold text-lg"
                   >
-                    Company Main Phone
+                    {t("mainPhone")}
                   </Typography>
                   <Input
                     maxLength={16}
@@ -701,7 +701,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                     color="blue-gray"
                     className="mb-1 mt-10 font-semibold text-lg"
                   >
-                    Company Second Phone
+                    {t("secondPhone")}
                   </Typography>
                   <Input
                     maxLength={16}
@@ -722,7 +722,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                       color="blue-gray"
                       className="mb-1 mt-10 font-semibold text-lg"
                     >
-                      MP3
+                      {t("mp3")}
                     </Typography>
                     <div
                       {...getRootPropsMP3()}
@@ -745,7 +745,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                           />
                         </div>
                       ) : (
-                        <p>Drag & drop an MP3 here, or click to select one</p>
+                        <p>{t("drag")}</p>
                       )}
                     </div>
                     {/* <Input type="file" onChange={(e) => setMp3File(e.target.files[0])}/> */}
@@ -760,7 +760,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                       color="blue-gray"
                       className="mb-1 mt-10 font-semibold text-lg"
                     >
-                      PDF
+                      {t("PDF")}
                     </Typography>
                     <div
                       {...getRootPropsPDF()}
@@ -779,7 +779,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                           />
                         </div>
                       ) : (
-                        <p>Drag & drop an PDF here, or click to select one</p>
+                        <p>{t("drag")}</p>
                       )}
                     </div>
                     {/* <Input type="file" onChange={(e) => setPdfFile(e.target.files[0])}/> */}
@@ -794,7 +794,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                       color="blue-gray"
                       className="mb-1 mt-10 font-semibold text-lg"
                     >
-                      PDF Name
+                      {t("pdfName")}
                     </Typography>
                     <Input
                       maxLength={16}
@@ -813,7 +813,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                     color="blue-gray"
                     className="mb-1 mt-10 font-semibold text-lg"
                   >
-                    Choose Font
+                    {t("chooseFont")}
                   </Typography>
                   <Select
                     id="font-select"
@@ -839,7 +839,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                   <span className="text-white flex justify-center items-center w-10 h-10 text-center rounded-full bg-mainColor">
                     2
                   </span>{" "}
-                  Company Social Media
+                  {t("companySocial")}
                 </h1>
                 <div className="flex items-center gap-5 flex-wrap">
                   <FaFacebook
@@ -1007,7 +1007,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                       color="blue-gray"
                       className="mb-1 mt-5 font-semibold text-lg"
                     >
-                      Facebook Link
+                      {t("facebook")}
                     </Typography>
                     <Input
                       placeholder="facebook.com"
@@ -1027,7 +1027,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                       color="blue-gray"
                       className="mb-1 mt-5 font-semibold text-lg"
                     >
-                      Instgram Link
+                      {t("instgram")}
                     </Typography>
                     <Input
                       placeholder="instgram.com"
@@ -1047,7 +1047,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                       color="blue-gray"
                       className="mb-1 mt-5 font-semibold text-lg"
                     >
-                      Youtube Link
+                      {t("youtube")}
                     </Typography>
                     <Input
                       placeholder="youtube.com"
@@ -1067,7 +1067,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                       color="blue-gray"
                       className="mb-1 mt-5 font-semibold text-lg"
                     >
-                      Tiktok Link
+                      {t("tiktok")}
                     </Typography>
                     <Input
                       placeholder="tiktok.com"
@@ -1087,7 +1087,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                       color="blue-gray"
                       className="mb-1 mt-5 font-semibold text-lg"
                     >
-                      Whatsapp Number
+                      {t("whatsapp") + " " +t("number")}
                     </Typography>
                     <div className="relative flex w-full">
                       <Menu placement="bottom-start">
@@ -1143,7 +1143,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                       color="blue-gray"
                       className="mb-1 mt-5 font-semibold text-lg"
                     >
-                      Linkedin
+                      {t("linkedin")}
                     </Typography>
                     <Input
                       placeholder="Linkedin"
@@ -1163,7 +1163,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                       color="blue-gray"
                       className="mb-1 mt-5 font-semibold text-lg"
                     >
-                      Behance Link
+                      {t("behance")}
                     </Typography>
                     <Input
                       placeholder="behance.com"
@@ -1183,7 +1183,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                       color="blue-gray"
                       className="mb-1 mt-5 font-semibold text-lg"
                     >
-                      portfolio Link
+                      {t("portfolio")}
                     </Typography>
                     <Input
                       placeholder="www.ofxegypt.com"
@@ -1203,7 +1203,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                       color="blue-gray"
                       className="mb-1 mt-5 font-semibold text-lg"
                     >
-                      Snapchat Link
+                      {t("Snapchat")}
                     </Typography>
                     <Input
                       placeholder="snapchat.com"
@@ -1223,7 +1223,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                       color="blue-gray"
                       className="mb-1 mt-5 font-semibold text-lg"
                     >
-                      {`X(twitter)`} Link
+                      {t("twitter")}
                     </Typography>
                     <Input
                       placeholder="x.com"
@@ -1243,7 +1243,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                       color="blue-gray"
                       className="mb-1 mt-5 font-semibold text-lg"
                     >
-                      Other Link
+                      {t("others")}
                     </Typography>
                     <Input
                       placeholder="ex: drive link"
@@ -1263,7 +1263,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                       color="blue-gray"
                       className="mb-1 mt-5 font-semibold text-lg"
                     >
-                      Other Link Name
+                      {t("url") + " " + t("name")}
                     </Typography>
                     <Input
                       placeholder="ex: drive link"
@@ -1285,7 +1285,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                       <span className="text-white mt-5 flex justify-center items-center w-10 h-10 text-center rounded-full bg-mainColor">
                         3
                       </span>{" "}
-                      <span className="mt-5">Menu</span>
+                      <span className="mt-5">{t("menu")}</span>
                     </h1>
                     <div>
                       <div className="flex flex-wrap gap-5">
@@ -1296,7 +1296,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                             color="blue-gray"
                             className="mb-1 mt-5 font-semibold text-lg"
                           >
-                            Menu
+                            {t("menu")}
                           </Typography>
                           <div
                             {...getRootPropsImage()}
@@ -1316,7 +1316,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                               </div>
                             ) : (
                               <p>
-                                Drag & drop pdf here, or click to select one
+                               {t("drag")}
                               </p>
                             )}
                           </div>
@@ -1340,7 +1340,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                         ? "4"
                         : "3"}
                     </span>{" "}
-                    <span className="mt-5">Branches</span>
+                    <span className="mt-5">{t("Branches")}</span>
                   </h1>
                   <div>
                     {branches.map((branch, index) => (
@@ -1352,7 +1352,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                             color="blue-gray"
                             className="mb-1 mt-5 font-semibold text-lg"
                           >
-                            Branch Name
+                            {t("branch")} {t("name")}
                           </Typography>
                           <Input
                             placeholder="New Cairo"
@@ -1371,7 +1371,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                             color="blue-gray"
                             className="mb-1 mt-5 font-semibold text-lg"
                           >
-                            Branch Location
+                            {t("branch")} {t("location")}
                           </Typography>
                           <Input
                             placeholder="location link from GPS"
@@ -1394,7 +1394,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                             color="blue-gray"
                             className="mb-1 mt-5 font-semibold text-lg"
                           >
-                            Branch Number
+                            {t("branch")} {t("number")}
                           </Typography>
                           <Input
                             placeholder="Branch Number"
@@ -1412,7 +1412,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                           onClick={() => removeBranch(index)}
                           className="text-red-600 font-semibold mt-5"
                         >
-                          Remove Branch -
+                          {t("branch")} -
                         </button>
                       </div>
                     ))}
@@ -1423,7 +1423,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                         onClick={addBranch}
                         className="text-2xl font-normal text-black px-3 py-1 bg-gray-400 text-center block"
                       >
-                        Add Branch +
+                         {t("branch")} +
                       </button>
                     </div>
                   </div>
@@ -1459,7 +1459,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                     }}
                     className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-5 hover:bg-secondColor"
                   >
-                    Pay for use
+                    {t("payForUse")}
                   </button>
                 )}
               </div>
@@ -1490,7 +1490,7 @@ const PackageOneTwo = ({ user, refresh, valid }) => {
                   href={`https://backend.ofx-qrcode.com/download-qrcode/${downloadImage}`}
                   className="bg-mainColor px-10 py-3 font-semibold text-white hover:bg-secondColor w-full"
                 >
-                  Download
+                  {t("download")}
                 </a>
               </Dialog>
             </div>

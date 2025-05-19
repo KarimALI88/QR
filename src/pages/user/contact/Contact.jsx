@@ -6,12 +6,13 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { Spinner } from "@material-tailwind/react";
 import Footer from "../../../components/user/footer/Footer";
+import { useTranslation } from "react-i18next";
 
 const Contact = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false)
-
+  const { t } = useTranslation()
   const contactUs = async () => {
     setLoading(true)
     try {
@@ -39,7 +40,7 @@ const Contact = () => {
       <div className="my-10 px-10">
         {/* title */}
         <h1 className="text-center font-black text-5xl text-mainColor my-5 mx-auto">
-          Contact US
+          {t("contactUs")}
         </h1>
         {/* inputs */}
         <div>
@@ -51,12 +52,12 @@ const Contact = () => {
                 size="lg"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                label="Email Address"
+                label={t("email")}
               />
             </div>
             <div className="my-2">
               <Textarea
-                label="Your message"
+                label={t("message")}
                 rows={8}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}

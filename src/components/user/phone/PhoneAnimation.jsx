@@ -8,7 +8,7 @@ import {
   FaLinkedin,
   FaSnapchatSquare,
   FaTiktok,
-  FaGlobe 
+  FaGlobe,
 } from "react-icons/fa";
 import { Collapse, Button, Card } from "@material-tailwind/react";
 import { FaLocationDot } from "react-icons/fa6";
@@ -16,6 +16,7 @@ import { FaPhoneAlt } from "react-icons/fa";
 import altImage from "../../../assets/imgs/loginImage.jpg";
 import altLogo from "../../../assets/imgs/tabIcon.jpg";
 import { RiTwitterXFill } from "react-icons/ri";
+import { useTranslation } from "react-i18next";
 
 const PhoneAnimation = ({
   image,
@@ -42,10 +43,11 @@ const PhoneAnimation = ({
   pdfName,
   otherLinkName,
   tiktok,
-  portfolio
+  portfolio,
 }) => {
+  const { t } = useTranslation() 
   return (
-    <div className="flex justify-center rounded-3xl items-center h-fit mx-auto max-w-[100%] md:fixed md:right-16 md:top-28">
+    <div className="flex justify-center rounded-3xl items-center h-fit mx-auto max-w-[100%] md:fixed md:end-16 md:top-28">
       <div
         className="w-80 h-[500px] bg-white rounded-3xl shadow-lg border-8 border-black relative "
         style={{ fontFamily: selectedFont }}
@@ -110,7 +112,7 @@ const PhoneAnimation = ({
             {description || "marketing agency"}
           </p>
 
-          {(!facebook &&
+          {!facebook &&
             !instgram &&
             !youtube &&
             !twitter &&
@@ -118,11 +120,11 @@ const PhoneAnimation = ({
             !behance &&
             !other &&
             !linkedin &&
-            !snapchat) && (
-            <p>
-              <FaFacebook size={40} style={{ color }} />
-            </p>
-          )}
+            !snapchat && (
+              <p>
+                <FaFacebook size={40} style={{ color }} />
+              </p>
+            )}
           {/* social media icons */}
           <div
             className={`flex gap-5 items-start px-3 py-5 ${
@@ -160,7 +162,7 @@ const PhoneAnimation = ({
             {youtube && <FaYoutube size={40} style={{ color }} />}
             {snapchat && <FaSnapchatSquare size={40} style={{ color }} />}
             {twitter && <RiTwitterXFill size={40} style={{ color }} />}
-            {portfolio && <FaGlobe  size={40} style={{ color }} />}
+            {portfolio && <FaGlobe size={40} style={{ color }} />}
             {other && (
               <div className="flex flex-col gap-1">
                 <FaLink size={40} style={{ color }} />

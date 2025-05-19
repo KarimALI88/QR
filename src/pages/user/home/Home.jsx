@@ -10,6 +10,7 @@ import { IoMdPhonePortrait } from "react-icons/io";
 import { AppContext } from "../../../context/AppContext";
 import Support from "../../../components/user/support/Support";
 import { useTranslation } from "react-i18next";
+import OurFeatures from "../../../components/user/features/OurFeatures";
 
 const Home = ({ country, user }) => {
   const [packages, setPackages] = useState([]);
@@ -96,6 +97,11 @@ const Home = ({ country, user }) => {
           </div>
         </div>
       )}
+      {/* ---------------------------------------------------------------- */}
+      {/* our features */}
+      <div className="my-16 mx-auto max-w-7xl">
+        <OurFeatures />
+      </div>
       {/* ---------------------------------------------------------------- */}
       <Footer />
     </div>
