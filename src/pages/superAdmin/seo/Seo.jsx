@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { Spinner } from "@material-tailwind/react";
 import { AppContext } from "../../../context/AppContext";
 import { useNavigate } from 'react-router-dom';
-
+import BlogEditor from "../../../components/admin/sidebar/BlogEditor"
 const Seo = () => {
   const [title, setTitle] = useState("");
   const [subTitle, setSubTitle] = useState("");
@@ -42,74 +42,17 @@ const Seo = () => {
       setLoading(false);
     }
   };
+
+  const handleSaveBlog = (blogData) => {
+    console.log('Blog data to save:', blogData);
+    // Here you would typically send the data to your backend API
+    alert('Blog saved successfully!');
+  };
+
   return (
     <div>
       <div className="my-10 px-10">
-        {/* add news */}
-        <div className="my-10 mx-auto text-center">
-          <Button
-            className="bg-black text-white px-3"
-            onClick={() => navigate("/seo-table")}
-          >
-            View News
-          </Button>
-        </div>
-        {/* title */}
-        <h1 className="text-center font-black text-5xl text-mainColor my-5 mx-auto">
-          Add News
-        </h1>
-        {/* inputs */}
-        <div>
-          <div className="flex flex-col gap-3 sm:w-3/2 md:w-1/2 mx-auto">
-            <div className="my-5">
-              <Input
-                type="text"
-                color="black"
-                size="lg"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                label="title"
-              />
-            </div>
-            <div className="my-5">
-              <Input
-                type="text"
-                color="black"
-                size="lg"
-                value={subTitle}
-                onChange={(e) => setSubTitle(e.target.value)}
-                label="sub title"
-              />
-            </div>
-            <div className="my-5">
-              <Input
-                type="file"
-                color="black"
-                size="lg"
-                onChange={(e) => setMainImage(e.target.files[0])}
-                label="main image"
-              />
-            </div>
-            <div className="my-2">
-              <Textarea
-                label="Description"
-                rows={8}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </div>
-            {/* submit */}
-            <div className="float-right">
-              <button
-                onClick={addNews}
-                // disabled={message.length === 0 || email.length === 0}
-                className="bg-mainColor w-[100%] px-5 py-5 font-semibold text-center text-white my-2 hover:bg-secondColor mx-auto block"
-              >
-                {loading ? <Spinner className="mx-auto" /> : "Submit"}
-              </button>
-            </div>
-          </div>
-        </div>
+        <BlogEditor onSave={handleSaveBlog}/>
       </div>
     </div>
   );
