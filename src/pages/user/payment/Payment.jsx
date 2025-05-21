@@ -250,18 +250,18 @@ const Payment = ({ user, setRefresh }) => {
                                 if (period === "annually") {
                                   payGeidea(pack?.price_EGP, pack?.id);
                                 } else if (period === "monthly") {
-                                  if (pack?.id === 2) {
+                                  if (pack?.id == 2) {
                                     payGeidea(99.0, pack?.id);
-                                  } else if (pack?.id === 3) {
+                                  } else if (pack?.id == 3) {
                                     payGeidea(150.0, pack?.id);
-                                  } else if (pack?.id === 1) {
+                                  } else if (pack?.id == 1) {
                                     createSubscription(pack?.id);
                                   }
                                 }
                               }}
                               className="flex items-center justify-center gap-3 text-xl font-semibold bg-mainColor hover:bg-secondColor text-white px-6 py-2 rounded-md w-full transition-all duration-300"
                             >
-                              {pack?.id === 1 ? t("subscribeNow") : t("buyNow")}
+                              {pack?.id == 1 ? t("subscribeNow") : t("buyNow")}
                             </button>
                           </div>
                         </div>
