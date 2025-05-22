@@ -67,7 +67,7 @@ const NewsTable = () => {
                 Title
               </th>
               <th className="p-4 border-b border-gray-300 text-gray-600 text-lg font-semibold">
-                Subtitle
+                content
               </th>
               <th className="p-4 border-b border-gray-300 text-gray-600 text-lg font-semibold">
                 Description
@@ -97,7 +97,7 @@ const NewsTable = () => {
                 </td>
                 <td className="p-4 border-b border-gray-200">
                   <img
-                    src={`https://backend.ofx-qrcode.com/storage/${row?.feature}`}
+                    src={`${row?.feature}`}
                     alt="main image"
                     className="w-24 h-12"
                   />

@@ -35,7 +35,7 @@ const Blogs = () => {
         url: `${import.meta.env.VITE_API_LINK}/blogs`,
       });
       console.log("response of blogs", response);
-      //   response.data && setNews(response.data)
+        response.data && setNews(response.data)
     } catch (error) {
       console.error("error on get news", error);
     }
@@ -58,18 +58,19 @@ const Blogs = () => {
         <div className="my-10 mx-auto p-5 flex flex-wrap gap-4 justify-center items-center">
           {/* one blog */}
           {news.map((blog, index) => (
-            <Card className="max-w-[24rem] overflow-hidden" key={index}>
+            <Card className="w-72 overflow-hidden" key={index}>
               <CardHeader
                 floated={false}
                 shadow={false}
                 color="transparent"
-                className="m-0 rounded-none cursor-pointer"
+                className="m-0 rounded-none cursor-pointer mx-auto w-72 h-72 text-center"
               >
                 <img
                   src={blog?.feature}
                   alt={blog?.title}
-                  onClick={() => navigate(`/blogs/${blog?.id}`)}
+                  onClick={() => navigate(`/blogs/${blog?.slug}`)}
                   loading="lazy"
+                  className="mx-auto"
                 />
               </CardHeader>
               <CardBody>
