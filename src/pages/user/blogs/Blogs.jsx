@@ -78,7 +78,7 @@ const Blogs = () => {
                   variant="h4"
                   color="blue-gray"
                   className="text-right cursor-pointer"
-                  onClick={() => navigate(`/blogs/${blog?.id}`)}
+                  onClick={() => navigate(`/blogs/${blog?.slug}`)}
                 >
                   {blog?.title}
                 </Typography>
