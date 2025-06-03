@@ -38,7 +38,7 @@ const SpecificBlog = () => {
         {/* image with title */}
         <figure className="relative h-96 w-full">
           <img
-            className="h-full w-full rounded-xl object-cover object-center"
+            className="h-full w-full rounded-xl object-contain"
             src={blog?.feature}
             alt="nature image"
             loading="lazy"

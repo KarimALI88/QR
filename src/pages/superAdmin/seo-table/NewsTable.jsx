@@ -90,10 +90,10 @@ const NewsTable = () => {
                   <p className="text-gray-800">{row?.title}</p>
                 </td>
                 <td className="p-4 border-b border-gray-200">
-                  <p className="text-gray-800">{row?.description2}</p>
+                  <p className="text-gray-800">{row?.description2.slice(0, 20)}....</p>
                 </td>
                 <td className="p-4 border-b border-gray-200">
-                  <p className="text-gray-800">{row?.description1}</p>
+                  <p className="text-gray-800">{row?.description1.slice(0, 20)}....</p>
                 </td>
                 <td className="p-4 border-b border-gray-200">
                   <img
